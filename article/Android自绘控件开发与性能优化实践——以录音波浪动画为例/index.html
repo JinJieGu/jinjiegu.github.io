@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Android自绘控件开发与性能优化实践——以录音波浪动画为例 - JayGoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="gujinjie.top/article/Android自绘控件开发与性能优化实践——以录音波浪动画为例/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/good.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                            
+                              <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                            
+                              <a class="tag" href="/tags/#性能优化" title="性能优化">性能优化</a>
+                            
+                              <a class="tag" href="/tags/#控件开发" title="控件开发">控件开发</a>
+                            
+                        </div>
+                        <h1>Android自绘控件开发与性能优化实践——以录音波浪动画为例</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JayGoo on
+                            2017-07-29
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JayGoo的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/works/">works</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p><img src="/cdn/20170822150341686327784.jpg" alt="这里写图片描述"></p>
+<p>本文实战性较强，主要目的是通过一个自定义控件的开发，引出我对自定义控件性能优化的一些思考和实践，欢迎各位喜欢移动开发的小伙伴来拍砖~</p>
+<a id="more"></a>
+<p>本文由于篇幅有限，只讲解思路，并没有放出大量源代码，如果对本项目感兴趣，文末会放出Demo，可以自行去Github上fork和star。</p>
+<hr>
+<h1><span id="动画效果">动画效果</span></h1>
+<p>这是最近正在开发功能里的一个录音控件，我们的UI设计说做成某软件的效果，于是仿照它做了一个，相似度还是很高的：</p>
+<p><img src="/cdn/20170822150341681394396.gif" alt="这里写图片描述"></p>
+<hr>
+<h1><span id="知识储备">知识储备</span></h1>
+<p>众所周知，一般自绘动画我们都是在View中实现的，一般会重写onMeasure（测量）、onLayout（布局）、onDraw（绘制）三个方法。</p>
+<p>Android系统为了简化线程开发，将这三个过程都放在主线程中执行，以保证绘制系统的线程安全。</p>
+<p>整个绘制过程通过一个Choreographer定时器驱动调用更新，每16ms会刷新一次，通过树状结构存储的 ViewGroup，依次递归的调用到每个 View 的 onMeasure、onLayout、onDraw 方法，从而最后将每个 View 都绘制出来（为了保证绘制效率，并不是每个View的这些方法每个绘制周期都会调用，那些没有变化的不会被重绘）。</p>
+<p>但是由于普通的 View 都处于主线程中，Android 除了绘制之外，在主线程中还需要处理用户的各种点击事件。很多情况，在主线程中还需要运行额外的用户处理逻辑、轮询消息事件等。 如果主线程过于繁忙，不能及时的处理和响应用户的输入，会让用户的体验急剧降低。如果更严重的情况，当主线程延迟时间达到5s的时候，还会触发 ANR（Application Not Responding）。 如果界面的绘制和动画比较复杂，计算量比较大的情况，就不再适合使用 View 这种方式来绘制了。</p>
+<p>Android考虑到这种场景，提出了SurfaceView机制，它可以在非主线程进行图形绘制，释放了主线程的压力，所以我们可以把View的绘制放到SurfaceView中完成。如果对SurfaceView不太熟悉，可以自行百度，或参看demo中封装好的RenderView，这里由于篇幅限制，这里就不作详细介绍了。</p>
+<hr>
+<h1><span id="动画实现">动画实现</span></h1>
+<p>看了一下要实现的效果，感觉是由四条振幅不等的正弦曲线组成，这些曲线振幅中间比较高，两边比较低，应该有一个对称的衰减系数，然后这些曲线根据声音的大小上下波动，保持一个速率向右运动。</p>
+<p>这里再取回还给高中老师的数学知识，下面是正弦曲线的公式：y=Asin（ωx+φ）+k，其中A 代表的是振幅，对应的波峰和波谷的高度，即 y 轴上的距离；ω 是角速度，换成频率是 2πf，能够控制波形的宽度；φ 是初始相位，能够决定正弦曲线的初始 x 轴位置；k 是偏距，能够控制在 y 轴上的偏移量。</p>
+<p>那么我们只需根据时间改变φ，那么曲线就可以实现移动，通过一个对称衰减函数乘以A，就可实现曲线衰减变化，通过改变A的值可以实现上下波动。恩，完美，开干！</p>
+<p>这里我要推荐大家一个绘图网站 <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">https://www.desmos.com/calculator</a> ，它可以帮你将函数转换成相应的图形，十分方便。<br>
+函数很简单，正弦就行，主要是衰减函数的选取，这里要找一个对称的衰减函数，如图所示：<br>
+<img src="/cdn/20170822150341689743685.png" alt="衰减函数"><br>
+我们只要将每个点的x分别映射到衰减函数的一个对称区间，根据函数计算出相应的衰减系数，就可以实现振幅不同的波动曲线了。<br>
+最后通过一些调整，我们可以大致可以得出和目标效果图相似的曲线：<br>
+<img src="/cdn/20170822150341691690951.png" alt="曲线函数"><br>
+接下来，我们只需要在 SurfaceView 中使用 Path，通过上面的公式计算出一个个的点，然后画直线连接起来就行啦！效果如图所示：<br>
+<img src="/cdn/20170822150341694776583.png" alt="静态效果"></p>
+<p>然后就是让它动起来了，前面也说了，可以根据时间改变曲线的相位值φ来实现移动，我在封装好的RenderView中实现了一个叫做onRender的方法，它主要是代替onDraw工作的，我们传入时间millisPassed，定义位移系数offsetSpeed，那么相位值φ = π * millisPassed / offsetSpeed，每次渲染周期都将φ代入函数就可以让曲线实现位移效果了。最后再给一个volume变量，volume乘以一个初始振幅amplitude和根据横坐标算出的衰减系数，作为纵坐标，便实现了曲线形状和根据声音大小波动的效果。</p>
+<p>这里再总结下大致实现步骤：</p>
+<ul>
+<li>计算出函数曲线和对称衰减函数</li>
+<li>根据函数计算出需要绘制的点，通过Path连线</li>
+<li>根据时间改变曲线的φ，实现曲线位移效果</li>
+<li>根据volume和衰减函数改变振幅，实现曲线上下波动</li>
+</ul>
+<h1><span id="动画优化">动画优化</span></h1>
+<p>你以为效果实现就完事那就大错特错了！当我把动画运行到一个性能较差的低端机时，看到CPU的占有率达到30%多，有时候还会一卡一卡的时候，惊呆了……和想象的不一样啊！到底是哪里出了问题呢？<br>
+我们可以通过Android Studio的Monitor工具的CPU method trace查看到底是哪些方法占用了我的CPU：</p>
+<p><img src="/cdn/20170822150341698135867.jpg" alt="优化前"></p>
+<p>从CPU trace中可以看出calcValue和path的lineTo方法很耗时，占了一半的CPU时间，那么有什么方法可以降低呢？</p>
+<h2><span id="降低绘制密度">降低绘制密度</span></h2>
+<p>Ok，让我们review下绘制过程，第二步的时候我们需要计算曲线的点，然后通过Path连线这些点，而现在的手机屏幕1960x1080已经成为了标配，如果我们把宽度的像素点叫做采样点，每次我们要把每个采样点的x代入函数求出y，然后调用lineTo连线，那么我们每16ms都需要做出大量的计算。</p>
+<p>但是事实上人的肉眼是有一定容忍度的，特别是快速运动的动画，一些失真的地方，肉眼很难分辨，所以我们没必要把1080个点每个都算出来，经过试验发现我们只要在60个以上的采样点，效果还是十分的平滑，粗略计算，这样做可以将计算量减少到原来的1/16，于是可以释放大量的CPU时间（由于采样点的减少，图形会出现锯齿，我们可以通过Paint的抗锯齿属性优化）。</p>
+<p>总结：通过动态调节自定义的绘制密度，在绘制密度与最终实现效果中找到一个平衡点（即不影响最后的视觉效果，同时还能最大限度的减少计算量），这个是最直接，也最简单的优化方法。</p>
+<h2><span id="减少重复实时计算量">减少重复实时计算量</span></h2>
+<p>虽然现在的设备的CPU已经足够强大，但是由于每16ms中，系统要做大量工作，为了保证动画流畅稳定，我们还是要尽量的减少一些重复的计算。</p>
+<p>最常用的方法就是使用查表法，利用空间换时间（注意把握空间和时间的关系，莫要一味追求时间而牺牲大量内存空间，那么就得不偿失了）。</p>
+<p>学过计算机的都知道，CPU在计算加减乘是非常快的，但是除法是比较慢的，特别是浮点数除法，我们可以将这些浮点运算转换成整数除法，除数、被除数乘以一个统一的精确度，用到时再除以精确度，这个方法在大量浮点计算时是很有效的，但是注意处理整形溢出。另外还要避免一些乘方、开平方根等运算的重复计算。</p>
+<p>就本例来讲，calcValue方法是为了计算每个点代表的衰减系数，但其实我们计算衰减函数的时候对于每次固定的x，我们算出的衰减系数都是一样，这就会产生大量重复的计算。我们可以把这些计算好的值直接放入表中，然后通过查表的方式，下次就不需要重复计算这些复杂运算了。关于存储，如果数量不是很多建议使用SparseArray，它可以避免自动装箱，节约不少时间。理论上是这样的，但其实由于本例的衰减函数不是很复杂，这种做法的优化空间并不是很大，而且由于前面已经降低了绘制密度，已经减少了大量的计算，统计了下，耗时节约了几ms左右，但这确实也是一个优化的好方向，特别是一些复杂的运算，还是很有意义的。</p>
+<p>总结：尽量减少重复运算，对重复复杂的计算，可以适当使用空间换时间。尽量减少浮点数除法运算。</p>
+<p>经过前两步的优化，再看一下目前的CPU trace，发现已经降低了很多，动画也流畅了起来。</p>
+<p><img src="/cdn/20170822150341700157191.png" alt="优化后"></p>
+<h2><span id="内存泄漏">内存泄漏</span></h2>
+<p>CPU占有率降下去了，动画也流畅了，不过还有问题需要特别注意，那就是内存泄漏。</p>
+<p>Android 在内存分配和释放方面，采用了 JAVA 的垃圾回收 GC 模式。 当分配的内存不再使用的时候，系统会定时帮我们自动清理。这给我们应用开发带来了极大的便利，我们从此不再需要过多的关注内存的分配与回收，也因此减少很多内存使用的风险。但是由于一些不正确的操作，当一个对象已经不需要再使用了，本该被回收时，而另外一个正在使用的对象持有它的引用从而导致它不能被回收，这就导致本该被回收的对象不能被回收而停留在堆内存中，内存泄漏就产生了，内存泄漏时导致程序OOM的原因之一，而OOM就意味着Crash。</p>
+<p>常见的内存泄漏检测方法是通过手动GC以及监听Java heap的情况，通过查看Reference Tree的层级确定是否内存泄漏，通过MAT工具，分析具体泄漏原因，但是，不得不说，这个方法确实很复杂，如果不是很熟练，很难发现隐藏的一些内存泄漏，这里推荐使用LeakCanary，通过代码接入的方式，监听内存泄漏，它会以插件的形式伴随程序一起，如果发生内存泄漏，LeakCanary会给出泄漏的层级，十分清晰。</p>
+<p>就本例，我通过多次创建销毁Activity，检测程序是否发生了内存泄漏。<br>
+结果LeakCanary提示程序发生了内存泄漏，如图所示<br>
+<img src="/cdn/20170822150341702366284.png" alt="内存泄漏"></p>
+<p>RenderThread持有了Activity的隐式context，导致Activity不能释放资源，<br>
+追踪到代码，我们发现这样一段代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public RenderThread(SurfaceHolder holder) &#123;</span><br><span class="line">           super(&quot;RenderThread&quot;);</span><br><span class="line">		surfaceHolder = holder </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 Java 中，非静态匿名内部类会持有其外部类的隐式引用，所以RenderThread所持有的context就是holder和它的Runable方法持有的引用，而Activity销毁时，因为Thread的持有强引用导致无法及时的释放掉内存，从而导致内存泄漏。</p>
+<p>解决方案就是，将RenderThread改为私有的静态内部类，这样它便不会持有其外部类的引用，另外可以对surfaceHolder使用弱引用，确保GC可以及时释放掉holder。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">surfaceHolder = new WeakReference&lt;&gt;(holder);</span><br></pre></td></tr></table></figure>
+<p>获取surfaceHolder时可以使用（注意判空）<code>surfaceHolder.get()</code></p>
+<p>总结：当然内存泄露不只这一类情况，情况还有很多，百度也有一大堆，就不再累述。如果想了解更多的内存优化方面的，可以关注<a href="http://hukai.me/blog/archives/" target="_blank" rel="noopener">胡凯的博客</a>，他从各个方面讲解性能优化，干货很多，目前我也只是消化了一部分，并应用到项目，任重而道远，有兴趣的可以关注一下。</p>
+<h2><span id="优化内存">优化内存</span></h2>
+<p>尽量减少内存的分配次数，因为每次GC都是会耗一定时间的，如果放到平时倒无所谓，但如果放到一个16ms的定时器中，如果GC的频率过高也会引起动画有卡顿感，合理的减少内存的分配次数还可以有效的避免产生内存抖动问题，优化动画体验。<br>
+这里其实已经做得不错，主要是总结下一些常用的方案：</p>
+<ol>
+<li>减少对象的重复创建，例如Paint，Path，Rect等</li>
+<li>减少大量临时对象的创建，对于那些无法避免，每次又必须分配的，我们可以采用对象池模型的方式来分配对象。对象池来解决频繁创建与销毁的问题，但是这里需要注意结束使用之后，需要手动释放对象池中的对象。</li>
+<li>减少一些资源操作，例如getColor，这个方法中会创建多个 StringBuilder 的变量</li>
+</ol>
+<h1><span id="总结">总结</span></h1>
+<p>通过一系列的优化，动画在中端手机上CPU稳定在2~3%左右，内存在2MB左右，在一些低端手机CPU占有率在控制在10%左右，内存在15MB左右（为什么内存这么高？我还没有研究），不过欣慰的是两者动画都十分流畅。</p>
+<p>本文介绍了从需求开始，如何一步步开发一个自定义控件，并通过降低绘制密度、减少重复实时计算量、避免和解决内存泄漏、如何优化内存等四方面对控件的性能进行了优化，希望能给大家平时开发工作带来一些启发和帮助，也希望大家可以提出更多更好的优化方案~</p>
+<p>限于笔者的水平和经验有限，本文如果有纰漏和错误的地方，欢迎大家指出。如果大家有更多更好的建议，欢迎一起分享讨论，共同进步。</p>
+<h1><span id="github">Github</span></h1>
+<p><a href="https://github.com/Jay-Goo/WaveLineView" target="_blank" rel="noopener">https://github.com/Jay-Goo/WaveLineView</a><br>
+欢迎各位Star，Mark</p>
+<blockquote>
+<p>原创不易，文章转载请注明出处。</p>
+</blockquote>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/article/Kotlin --让Android开发更优雅更效率/" data-toggle="tooltip" data-placement="top" title="Kotlin --让Android开发更优雅更效率">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/article/9Path图片绘制/" data-toggle="tooltip" data-placement="top" title="Android自定义View-9Path图片绘制">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/cdn/pay_ali.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/cdn/pay_wechat.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share" data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                        
+                          <a class="tag" href="/tags/#性能优化" title="性能优化">性能优化</a>
+                        
+                          <a class="tag" href="/tags/#控件开发" title="控件开发">控件开发</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/Google_acmer" target="_blank">CSDN Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/JinJieGu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JayGoo 2019 
+                    <br>
+                    Theme by <a href="https://github.com/YenYuHsuan/hexo-theme-beantech/">Hexo-BeanTech</a> 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("gujinjie.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'gujinjie.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="gujinjie.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

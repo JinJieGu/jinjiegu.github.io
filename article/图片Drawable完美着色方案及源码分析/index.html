@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          图片Drawable完美着色方案及源码分析 - JayGoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="gujinjie.top/article/图片Drawable完美着色方案及源码分析/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                            
+                              <a class="tag" href="/tags/#Android基础" title="Android基础">Android基础</a>
+                            
+                              <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                            
+                              <a class="tag" href="/tags/#Android工具类" title="Android工具类">Android工具类</a>
+                            
+                              <a class="tag" href="/tags/#源码解析" title="源码解析">源码解析</a>
+                            
+                        </div>
+                        <h1>图片Drawable完美着色方案及源码分析</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JayGoo on
+                            2017-08-28
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JayGoo的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/works/">works</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <blockquote>
+<p>莫看江面平如镜,要看水底万丈深。</p>
+</blockquote>
+<p>最近开发过程中有个需求是不同的角色使用不同的颜色的图片，如果使用传统方案，需要UI切很多张不同颜色的相同形状的图，并根据不同的角色在它们之间切换，代码的巨大开销以及apk大小的增加。于是便思考有没有更好的解决方案——通过只改变图片颜色的方式。</p>
+ <a id="more"></a>
+<h1><span id="drawablecompat">DrawableCompat</span></h1>
+<p>Google 在v4支持库中引入了<code>DrawableCompat</code>类，它介绍了前Lollipop设备的色彩功能。它有一个完整的API，甚至支持色调列表和镜像的RTL布局，但它是一个重量级的用例，我们还必须包装Drawable与<code>wrap()</code>方法才能使用它。</p>
+<h1><span id="drawableutils">DrawableUtils</span></h1>
+<p>以下是用Kotlin编写的<strong>DrawableUtils.kt</strong><br>
+通过传入Drawable或资源id和颜色，即可生成相应颜色的图片。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//给drawable着色</span><br><span class="line">fun tintDrawable(drawable: Drawable?, colors: ColorStateList): Drawable? &#123;</span><br><span class="line">    if (drawable == null)return null</span><br><span class="line">    val wrappedDrawable = DrawableCompat.wrap(drawable)</span><br><span class="line">    DrawableCompat.setTintList(wrappedDrawable, colors)</span><br><span class="line">    return wrappedDrawable</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//给drawable着色</span><br><span class="line">fun tintDrawable(drawableId: Int, colors: ColorStateList): Drawable? &#123;</span><br><span class="line">    return tintDrawable(getDrawable(drawableId), colors)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用效果如下：</p>
+<p><img src="/cdn/20170828150391817572484.png" alt="这里写图片描述"></p>
+<h1><span id="优化与扩展">优化与扩展</span></h1>
+<h2><span id="mutate方法">mutate方法</span></h2>
+<p>使用中我发现一个问题，如果我对一个相同的图片赋值两次颜色后，实际生成的图片只有一种颜色，例如：</p>
+<p><img src="/cdn/20170828150391851429161.png" alt="这里写图片描述"></p>
+<p>这是什么原因呢？等会我们在<strong>源码解析</strong>中再详细解释，先看看如何解决：<br>
+Drawable提供了一个<code>mutate()</code>方法，我们可以对生成后的Drawable调用<code>mutate()</code>方法来解决这个问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//给drawable着色</span><br><span class="line">fun tintDrawable(drawable: Drawable?, colors: ColorStateList): Drawable? &#123;</span><br><span class="line">    if (drawable == null)return null</span><br><span class="line">    val wrappedDrawable = DrawableCompat.wrap(drawable)</span><br><span class="line">    DrawableCompat.setTintList(wrappedDrawable, colors)</span><br><span class="line">    //*****变化在这里*****</span><br><span class="line">	wrappedDrawable.mutate()   </span><br><span class="line">    return wrappedDrawable</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//给drawable着色</span><br><span class="line">fun tintDrawable(drawableId: Int, colors: ColorStateList): Drawable? &#123;</span><br><span class="line">    return tintDrawable(getDrawable(drawableId), colors)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="扩展">扩展</span></h2>
+<p>通过上面封装的方法可以达到变色的基本需求。但实际使用中有更多的使用场景，这种基础方案可能无法满足我们的需求。我们可以利用ColorStateList继续进行扩展：</p>
+<ul>
+<li>我们可以使用 ColorStateList 根据 View 的状态着色成不同的颜色：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;!- color_selector.xml -&gt;</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;  </span><br><span class="line">&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;  </span><br><span class="line">    &lt;item android:color=&quot;@color/red&quot; android:state_focused=&quot;true&quot; /&gt;</span><br><span class="line">    &lt;item android:color=&quot;@color/gray&quot; /&gt;</span><br><span class="line">&lt;/selector&gt;</span><br></pre></td></tr></table></figure>
+<p>然后这样使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tintDrawable(drawable, getResources().getColorStateList(R.color.color_selector))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>利用StateListDrawable直接封装成代码版图片selector</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">val stateListDrawable = StateListDrawable()</span><br><span class="line">stateListDrawable.addState(intArrayOf(android.R.attr.state_selected), selectedDrawable)//有状态的必须写在上面</span><br><span class="line">stateListDrawable.addState(intArrayOf(), normalDrawable)//没有状态的必须写在下面</span><br><span class="line">tintDrawable(stateListDrawable, colors)</span><br></pre></td></tr></table></figure>
+<h1><span id="完整代码">完整代码</span></h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * ================================================</span><br><span class="line"> * 作    者：JayGoo</span><br><span class="line"> * 版    本：</span><br><span class="line"> * 创建日期：2017/8/22</span><br><span class="line"> * 描    述: Drawable变色工具类</span><br><span class="line"> * ================================================</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">//给drawable着色</span><br><span class="line">fun tintDrawable(drawable: Drawable?, colors: ColorStateList): Drawable? &#123;</span><br><span class="line">    if (drawable == null)return null</span><br><span class="line">    val wrappedDrawable = DrawableCompat.wrap(drawable)</span><br><span class="line">    DrawableCompat.setTintList(wrappedDrawable, colors)</span><br><span class="line">    wrappedDrawable.mutate()</span><br><span class="line">    return wrappedDrawable</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//给drawable着色</span><br><span class="line">fun tintDrawable(drawableId: Int, colors: ColorStateList): Drawable? &#123;</span><br><span class="line">    return tintDrawable(getDrawable(drawableId), colors)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//生成Selected的Selector</span><br><span class="line">fun createSelectorByStateSelected(selectedDrawable: Drawable?, normalDrawable: Drawable?): StateListDrawable? &#123;</span><br><span class="line">    if (selectedDrawable == null || normalDrawable == null)return null</span><br><span class="line">    val stateListDrawable = StateListDrawable()</span><br><span class="line">    stateListDrawable.addState(intArrayOf(android.R.attr.state_selected), selectedDrawable)//有状态的必须写在上面</span><br><span class="line">    stateListDrawable.addState(intArrayOf(), normalDrawable)//没有状态的必须写在下面</span><br><span class="line">    return stateListDrawable</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//根据drawableId获取Drawable</span><br><span class="line">fun getDrawable(drawableId: Int): Drawable? &#123;</span><br><span class="line">    return ResourcesCompat.getDrawable(SMApp.getInstance().resources, drawableId, null)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="drawablecompat源码解析">DrawableCompat源码解析</span></h1>
+<p>俗话说得好，要知其然知其所以然。工具类代码简单总结起来是以下三步：</p>
+<ul>
+<li><code>DrawableCompat.wrap(drawable)</code></li>
+<li><code>DrawableCompat.setTintList(wrappedDrawable, colors)</code></li>
+<li><code>wrappedDrawable.mutate()</code></li>
+</ul>
+<p>那么接下来请跟随我一起研究研究这三步都干了什么：</p>
+<h2><span id="wrap">wrap()</span></h2>
+<p>首先先看下<code>DrawableCompat.wrap()</code>的源码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static Drawable wrap(@NonNull Drawable drawable) &#123;</span><br><span class="line">        return IMPL.wrap(drawable);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>很简单，就一句代码，那么<code>IMPL</code>它到底是个什么鬼呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * Select the correct implementation to use for the current platform.</span><br><span class="line">  */</span><br><span class="line"> static final DrawableCompatBaseImpl IMPL;</span><br><span class="line"> static &#123;</span><br><span class="line">     final int version = android.os.Build.VERSION.SDK_INT;</span><br><span class="line">     if (version &gt;= 23) &#123;</span><br><span class="line">         IMPL = new DrawableCompatApi23Impl();</span><br><span class="line">     &#125; else if (version &gt;= 21) &#123;</span><br><span class="line">         IMPL = new DrawableCompatApi21Impl();</span><br><span class="line">     &#125; else if (version &gt;= 19) &#123;</span><br><span class="line">         IMPL = new DrawableCompatApi19Impl();</span><br><span class="line">     &#125; else if (version &gt;= 17) &#123;</span><br><span class="line">         IMPL = new DrawableCompatApi17Impl();</span><br><span class="line">     &#125; else &#123;</span><br><span class="line">         IMPL = new DrawableCompatBaseImpl();</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>很明显，这是根据不同的 API Level 选择不同的实现类.再往下看一点，我们发现<code>DrawableCompatApi23Impl</code>继承于<code>DrawableCompatApi21Impl</code>，然后一直向下继承直至<code>DrawableCompatBaseImpl</code>。那么我们就从<code>DrawableCompatApi23Impl</code>一直往下看<code>wrap</code>在各个版本的Impl中都干了什么：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">   @RequiresApi(23)</span><br><span class="line">   static class DrawableCompatApi23Impl extends DrawableCompatApi21Impl &#123;</span><br><span class="line">     	 ...</span><br><span class="line">     	 </span><br><span class="line">       @Override</span><br><span class="line">       public Drawable wrap(Drawable drawable) &#123;</span><br><span class="line">           // No need to wrap on M+</span><br><span class="line">           //直接返回原始Drawable实例</span><br><span class="line">           return drawable;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">      ...</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   @RequiresApi(21)</span><br><span class="line">   static class DrawableCompatApi21Impl extends DrawableCompatApi19Impl &#123;</span><br><span class="line">       ...</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public Drawable wrap(Drawable drawable) &#123;</span><br><span class="line">           //当前传入的Drawable实例不属于TintAwareDrawable</span><br><span class="line">           if (!(drawable instanceof TintAwareDrawable)) &#123;</span><br><span class="line">               return new DrawableWrapperApi21(drawable);</span><br><span class="line">           &#125;</span><br><span class="line">           return drawable;</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">    @RequiresApi(19)</span><br><span class="line">   static class DrawableCompatApi19Impl extends DrawableCompatApi17Impl &#123;</span><br><span class="line">       ...</span><br><span class="line"></span><br><span class="line">       @Override</span><br><span class="line">       public Drawable wrap(Drawable drawable) &#123;</span><br><span class="line">           //当前传入的Drawable实例不属于TintAwareDrawable</span><br><span class="line">           if (!(drawable instanceof TintAwareDrawable)) &#123;</span><br><span class="line">               return new DrawableWrapperApi19(drawable);</span><br><span class="line">           &#125;</span><br><span class="line">           return drawable;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">//DrawableCompatApi17Impl使用的是DrawableCompatBaseImpl的wrap()</span><br><span class="line">   static class DrawableCompatBaseImpl &#123;</span><br><span class="line">       ...</span><br><span class="line"></span><br><span class="line">       public Drawable wrap(Drawable drawable) &#123;</span><br><span class="line">           //当前传入的Drawable实例不属于TintAwareDrawable</span><br><span class="line">           if (!(drawable instanceof TintAwareDrawable)) &#123;</span><br><span class="line">               return new DrawableWrapperApi14(drawable);</span><br><span class="line">           &#125;</span><br><span class="line">           return drawable;</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>从上面的源码很清晰的看出来<code>wrap()</code>方法在各个版本的Impl的实现，API大于等于23时，直接返回原来的drawable，API大于等于21时，生成一个<code>DrawableWrapperApi21</code>实例，API大于等于19时，生成一个<code>DrawableWrapperApi19</code>实例，API小于19时，生成一个<code>DrawableWrapperApi14</code>实例。接下来，我们一起看看这三个类的构造方法，了解它们都做了什么：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">@RequiresApi(21)</span><br><span class="line">class DrawableWrapperApi21 extends DrawableWrapperApi19 &#123;</span><br><span class="line"></span><br><span class="line">    DrawableWrapperApi21(Drawable drawable) &#123;</span><br><span class="line">        super(drawable);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@RequiresApi(19)</span><br><span class="line">class DrawableWrapperApi19 extends DrawableWrapperApi14 &#123;</span><br><span class="line"></span><br><span class="line">    DrawableWrapperApi19(Drawable drawable) &#123;</span><br><span class="line">        super(drawable);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@RequiresApi(14)</span><br><span class="line">class DrawableWrapperApi14 extends Drawable</span><br><span class="line">        implements Drawable.Callback, DrawableWrapper, TintAwareDrawable &#123;</span><br><span class="line">   /**</span><br><span class="line">     * Creates a new wrapper around the specified drawable.</span><br><span class="line">     *</span><br><span class="line">     * @param dr the drawable to wrap</span><br><span class="line">     */</span><br><span class="line">    DrawableWrapperApi14(@Nullable Drawable dr) &#123;</span><br><span class="line">        mState = mutateConstantState();</span><br><span class="line">        // Now set the drawable...</span><br><span class="line">        setWrappedDrawable(dr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从他们的构造方法看来并没有太大的差别，都是使用了<code>DrawableWrapperApi14</code>的方法，只是扩展了一些方法。那么我们继续向下探究<code>mutateConstantState()</code>和<code>setWrappedDrawable()</code>方法，看看到底干了什么。<br>
+首先是<code>mutateConstantState()</code>方法，让我们一直向下寻根究底：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//返回一个新的constant state</span><br><span class="line">DrawableWrapperState mutateConstantState() &#123;</span><br><span class="line">        return new DrawableWrapperStateBase(mState, null);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//继承父类DrawableWrapperState的构造方法</span><br><span class="line">DrawableWrapperStateBase(@Nullable DrawableWrapperState orig, @Nullable Resources res) &#123;</span><br><span class="line">            super(orig, res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//初始化一些属性值</span><br><span class="line"> DrawableWrapperState(@Nullable DrawableWrapperState orig, @Nullable Resources res) &#123;</span><br><span class="line">            if (orig != null) &#123;</span><br><span class="line">                mChangingConfigurations = orig.mChangingConfigurations;</span><br><span class="line">                mDrawableState = orig.mDrawableState;</span><br><span class="line">                mTint = orig.mTint;</span><br><span class="line">                mTintMode = orig.mTintMode;</span><br><span class="line">            &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一路跟踪下来发现<code>mutateConstantState()</code>其实是生成一个新的默认的状态值<code>DrawableWrapperState</code>给drawable。</p>
+<p>接下来再寻根究底的看看<code>setWrappedDrawable()</code>都干了什么：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * Sets the current wrapped &#123;@link Drawable&#125;</span><br><span class="line">  */</span><br><span class="line"> public final void setWrappedDrawable(Drawable dr) &#123;</span><br><span class="line">     if (mDrawable != null) &#123;</span><br><span class="line">         mDrawable.setCallback(null);</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     mDrawable = dr;</span><br><span class="line"></span><br><span class="line">     if (dr != null) &#123;</span><br><span class="line">         dr.setCallback(this);</span><br><span class="line">         // Only call setters for data that&apos;s stored in the base Drawable.</span><br><span class="line">         setVisible(dr.isVisible(), true);</span><br><span class="line">         setState(dr.getState());</span><br><span class="line">         setLevel(dr.getLevel());</span><br><span class="line">         setBounds(dr.getBounds());</span><br><span class="line">         if (mState != null) &#123;</span><br><span class="line">             mState.mDrawableState = dr.getConstantState();</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     invalidateSelf();</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>这里涉及到了几个方法，它们的作用分别是：</p>
+<ul>
+<li><code>setVisible(boolean visible, boolean restart)</code>用于控制Drawable实例是否执行动画,对于AnimationDrawable实例会产生效果，控制是否执行动画</li>
+<li><code>setState(final int[] stateSet)</code>由于<code>DrawableWrapperState</code>构造函数中初始化的值，其实这个函数是为了移除与Drawable实例关联的ColorFilter</li>
+<li><code>setLevel</code>直接使用的是其父类Drawable中的方法，由于<code>DrawableWrapperState</code>构造函数中初始化的值导致其实这一步什么都没有干。</li>
+<li><code>setBounds</code>为新产生的<code>DrawableWrapperApi14</code>实例设置其绘制范围与原始Drawable实例一致</li>
+</ul>
+<p><strong>总结：</strong><code>DrawableCompat.wrap(@NonNull Drawable drawable)</code>在SDK版本 &gt;= 23时直接返回了原来的Drawable实例，其他情况返回了<code>DrawableWrapperApi14</code>的一个新实例，为其生成一个<code>DrawableWrapperState</code>，并且移除了该新实例关联过的ColorFilter，将该新实例的绘制范围和原始Drawable实例保持一致。</p>
+<h2><span id="settintlist">setTintList</span></h2>
+<p>接下来再寻根究底的看看<code>setTintList()</code>都干了什么：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"> public static void setTintList(@NonNull Drawable drawable, @Nullable ColorStateList tint) &#123;</span><br><span class="line">        IMPL.setTintList(drawable, tint);</span><br><span class="line">&#125;</span><br><span class="line">  @RequiresApi(23)</span><br><span class="line">    static class DrawableCompatApi23Impl extends DrawableCompatApi21Impl &#123;</span><br><span class="line">      	 ...</span><br><span class="line">        //未单独实现，使用的是父类的setTintList</span><br><span class="line">       ...</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @RequiresApi(21)</span><br><span class="line">    static class DrawableCompatApi21Impl extends DrawableCompatApi19Impl &#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">         @Override</span><br><span class="line">        public void setTintList(Drawable drawable, ColorStateList tint) &#123;</span><br><span class="line">        	  //使用Drawable原生的setTintList</span><br><span class="line">            drawable.setTintList(tint);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">	//DrawableCompatApi19Impl、DrawableCompatApi17Impl</span><br><span class="line">	//使用的是DrawableCompatBaseImpl的setTintList()</span><br><span class="line">    static class DrawableCompatBaseImpl &#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">         public void setTintList(Drawable drawable, ColorStateList tint) &#123;</span><br><span class="line">            if (drawable instanceof TintAwareDrawable) &#123;</span><br><span class="line">                ((TintAwareDrawable) drawable).setTintList(tint);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;        </span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>从源码可以看出 <code>API&gt;=21</code>时使用的是Drawable的<code>setTintList</code>，当<code>API&lt;21</code>时使用的是TintAwareDrawable的<code>setTintList</code>。</p>
+<h3><span id="tintawaredrawablesettintlist">TintAwareDrawable.setTintList()</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">  public void setTintList(ColorStateList tint) &#123;</span><br><span class="line">      /** </span><br><span class="line">       *  1:在上面分析DrawableCompat.wrap时候，mState的值如下：</span><br><span class="line">       *  mState（DrawableWrapperState）中，下面成员变量的值都是默认值:</span><br><span class="line">       *  int mChangingConfigurations;</span><br><span class="line">       *  Drawable.ConstantState mDrawableState;</span><br><span class="line">       *  ColorStateList mTint = null;</span><br><span class="line">       *  PorterDuff.Mode mTintMode = DEFAULT_TINT_MODE;</span><br><span class="line">       *</span><br><span class="line">       *  2:在DrawableCompat.setTint时候，mState.mTint不再为空值</span><br><span class="line">       */</span><br><span class="line">      mState.mTint = tint;</span><br><span class="line">      updateTint(getState());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 之前DrawableCompat.wrap已经执行过一次updateTint，</span><br><span class="line">   * 现在DrawableCompat.setTint第二次执行！！</span><br><span class="line">   */</span><br><span class="line">  private boolean updateTint(int[] state) &#123;</span><br><span class="line">      //isCompatTintEnabled()返回true</span><br><span class="line">      if (!isCompatTintEnabled()) &#123;</span><br><span class="line">          // If compat tinting is not enabled, fail fast</span><br><span class="line">          return false;</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      //此时mState.mTint已经在setTintList中赋值不为null</span><br><span class="line">      final ColorStateList tintList = mState.mTint;</span><br><span class="line">      </span><br><span class="line">      //mState.mTintMode依然为默认值不为null</span><br><span class="line">      final PorterDuff.Mode tintMode = mState.mTintMode;</span><br><span class="line">      if (tintList != null &amp;&amp; tintMode != null) &#123;</span><br><span class="line">          //两者都不为空，因而执行if条件下代码</span><br><span class="line">          //获取当前状态下对应的颜色</span><br><span class="line">          final int color = tintList.getColorForState(state, tintList.getDefaultColor());</span><br><span class="line">          </span><br><span class="line">          /**</span><br><span class="line">           *  mColorFilterSet默认是false</span><br><span class="line">           *  color即为setTint时候传入的颜色</span><br><span class="line">           *  mCurrentColor默认值是0</span><br><span class="line">           *  tintMode是mState中的mTintMode=DEFAULT_TINT_MODE = PorterDuff.Mode.SRC_IN</span><br><span class="line">           *  mCurrentMode默认值是null</span><br><span class="line">           */</span><br><span class="line">          if (!mColorFilterSet || color != mCurrentColor || tintMode != mCurrentMode) &#123;</span><br><span class="line">              //对Drawable实例产生着色的，本质上还是执行了Drawable中的setColorFilter方法。</span><br><span class="line">              setColorFilter(color, tintMode);</span><br><span class="line">              mCurrentColor = color;</span><br><span class="line">              mCurrentMode = tintMode;</span><br><span class="line">              mColorFilterSet = true;</span><br><span class="line">              return true;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">          mColorFilterSet = false;</span><br><span class="line">          clearColorFilter();</span><br><span class="line">      &#125;</span><br><span class="line">      return false;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="drawablesettintlist">Drawable.setTintList()</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public void setTintList(@Nullable ColorStateList tint) &#123;</span><br><span class="line">    //你没有看错，竟然是个空方法！！！！</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原因是我们在获取Drawable原始实例的时，获取的其实是Drawable的子类实例，在Drawable子类里对setTintList做了重写。</p>
+<h2><span id="mutate">mutate</span></h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * Make this drawable mutable. This operation cannot be reversed. A mutable</span><br><span class="line">  * drawable is guaranteed to not share its state with any other drawable.</span><br><span class="line">  * This is especially useful when you need to modify properties of drawables</span><br><span class="line">  * loaded from resources. By default, all drawables instances loaded from</span><br><span class="line">  * the same resource share a common state; if you modify the state of one</span><br><span class="line">  * instance, all the other instances will receive the same modification.</span><br><span class="line">  *</span><br><span class="line">  * Calling this method on a mutable Drawable will have no effect.</span><br><span class="line">  *</span><br><span class="line">  * @return This drawable.</span><br><span class="line">  * @see ConstantState</span><br><span class="line">  * @see #getConstantState()</span><br><span class="line">  */</span><br><span class="line"> public @NonNull Drawable mutate() &#123;</span><br><span class="line">     return this;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>单纯看源码解释可能比较抽象，说的通俗一点，我们通过Resource获取drawable文件夹下的一张资源图片，在获取Drawable初始实例时候如果不使用<code>mutate()</code>，那么我们对这个Drawable进行着色，不仅改变了当前Drawable实例的颜色，以后任何通过这个图片获取到的Drawable实例，都会具有之前设置的颜色。所以如果我们对一张资源图片的着色不是APP全局生效的，就需要使用<code>mutate()</code>。</p>
+<p>Android为了优化系统性能，同一张资源图片生成的Drawable实例在内存中只存在一份，在不使用mutate的情况下，修改任意Drawable都会全局发生变化。使用<code>mutate()</code>，Android系统也没有把Drawable实例又单独拷贝一份，仅仅是单独存放了状态值，很小的一部分数据，Drawable实例在内存中仍然保持1份，因而并不会影响系统的性能。<br>
+下面用两张图更能形象的描述这一过程：</p>
+<ul>
+<li><strong>不使用mutate:</strong></li>
+</ul>
+<p><img src="/cdn/20170828150391864789741.png" alt="这里写图片描述"></p>
+<ul>
+<li><strong>使用mutate后:</strong></li>
+</ul>
+<p><img src="/cdn/20170828150391880271316.png" alt="这里写图片描述"></p>
+<h1><span id="参考">参考</span></h1>
+<p><a href="https://race604.com/tint-drawable/" target="_blank" rel="noopener">Drawable 着色的后向兼容方案</a></p>
+<p><a href="http://www.jianshu.com/p/658fc7f2d4f4" target="_blank" rel="noopener">其实你不懂：Drawable着色(tint)的兼容方案源码解析</a></p>
+<blockquote>
+<p>原创不易，文章转载请注明出处。</p>
+</blockquote>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/article/为什么你越来越穷/" data-toggle="tooltip" data-placement="top" title="年轻的你在抱怨什么">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Kotlin --让Android开发更优雅更效率/" data-toggle="tooltip" data-placement="top" title="Kotlin --让Android开发更优雅更效率">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/cdn/pay_ali.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/cdn/pay_wechat.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share" data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#Android基础" title="Android基础">Android基础</a>
+                        
+                          <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                        
+                          <a class="tag" href="/tags/#Android工具类" title="Android工具类">Android工具类</a>
+                        
+                          <a class="tag" href="/tags/#源码解析" title="源码解析">源码解析</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/Google_acmer" target="_blank">CSDN Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/JinJieGu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JayGoo 2019 
+                    <br>
+                    Theme by <a href="https://github.com/YenYuHsuan/hexo-theme-beantech/">Hexo-BeanTech</a> 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("gujinjie.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'gujinjie.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="gujinjie.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Kotlin小技巧总结 - JayGoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="gujinjie.top/article/Kotlin小技巧总结/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                            
+                              <a class="tag" href="/tags/#Kotlin" title="Kotlin">Kotlin</a>
+                            
+                        </div>
+                        <h1>Kotlin小技巧总结</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JayGoo on
+                            2018-07-12
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JayGoo的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/works/">works</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <blockquote>
+<p>学习犹如逆水行舟,不进则退。</p>
+</blockquote>
+<p><img src="/cdn/share_kotlin_logo.png" alt="image"></p>
+<a id="more"></a>
+<h1><span id="可选参数">可选参数</span></h1>
+<p>可选参数使得方法调用更加灵活，而不必传递 null 或默认值。</p>
+<pre><code>fun doSomething(what: String, time: Int = 0){
+   ...
+}
+
+doSomething(&quot;eat&quot;)
+doSomething(&quot;eat&quot;, 1000)
+</code></pre>
+<hr>
+<h1><span id="static-layout-import">Static Layout Import</span></h1>
+<p>Android 中最常用的代码之一是使用 findViewById() 来获取对应 View。</p>
+<p>有一些解决方案，如 Butterknife 库，可以节省很多代码，但是 Kotlin 允许你从一个导入的布局导入对视图的所有引用，现在在Activity中和Fragment中都可以很方便的使用，节约了大量的代码。</p>
+<hr>
+<h1><span id="lazy懒加载">lazy（懒加载）</span></h1>
+<p>延迟加载能让程序启动时间更快，也能让我们更有效率的使用内存。</p>
+<p>lazy初始化两种方式</p>
+<pre><code>val lazyString: String by lazy {
+    &quot;JayGoo&quot;
+}
+
+fun initSomeThing(): String = ...
+val lazyString = lazy { initSomeThing() }
+val string = lazyString.value
+</code></pre>
+<p>当第一次使用 lazyString时， lazy 闭包会调用，它一般可用在单例模式当中。</p>
+<hr>
+<h1><span id="lateinit">lateinit</span></h1>
+<p>lateinit修饰符允许声明非空类型，并在对象创建后（构造函数调用后）初始化。不使用lateinit则需要声明可空类型并且要有额外的空安全检查操作。</p>
+<pre><code>var string: String? = null
+string?.length
+
+lateinit var lazyString: String
+
+...
+
+lazyString = &quot;init&quot;
+</code></pre>
+<p><strong>注意：lazy和lateinit是Kotlin的两种延迟加载方式，但两者有以下区别：</strong></p>
+<ul>
+<li>lateinit 只用于变量 var，而 lazy 只用于常量 val</li>
+<li>lazy 应用于单例模式，而且当且仅当变量被第一次调用的时候，委托方法才会执行</li>
+<li>lateinit 则用于只能生命周期流程中进行获取或者初始化的变量</li>
+<li>lateinit修饰的变量/属性不能是 原始数据类型（Int、Char、Long、Float、Double、Short、Byte）</li>
+</ul>
+<hr>
+<h1><span id="安全类型转换">安全类型转换</span></h1>
+<p>Kotlin中类型转换的关键字是<code>as</code>，但是如果类型错误就会引起异常崩溃，所以我们可以使用<code>as?</code>实现安全类型转换，如果转换失败就会返回null。</p>
+<pre><code>//unsafe
+var c = A as B
+//safe
+var c = A as? B
+</code></pre>
+<hr>
+<h1><span id="泛型的">泛型的*</span></h1>
+<p>Kotlin的泛型我认为是没有Java好用的，虽然官方说<code>*</code>等价于Java中的<code>?</code>，但是类，接口和函数全都不能星号投影.</p>
+<p>返回参数类型可以不具体指定，用*号来引用上界即可，也就是我们用Any类型就行，它的含义<code>Foo&lt;*&gt;=Foo&lt;out Any&gt;</code>。</p>
+<p>如果<code>T</code>没有指定类型，那么默认的类型就是<code>Any?</code>。</p>
+<hr>
+<p>举个例子：</p>
+<pre><code>interface  Model&lt;T: Any, V&gt; {
+    fun &lt;K&gt; run()
+}
+//错误用法
+class Data: Model&lt;*, *&gt; {
+    override fun &lt;*&gt; run() {
+    ...
+    }
+}
+//正确用法
+class Data: Model&lt;Any, Any&gt; {
+    override fun &lt;Any&gt; run() {
+        val a : kotlin.Any? = null
+        if (a is  Model&lt;*, *&gt;){
+			...
+        }
+        var list:ArrayList&lt;*&gt; = arrayListOf(1)
+    }	    
+}
+</code></pre>
+<hr>
+<h1><span id="中缀表示法">中缀表示法</span></h1>
+<p>可以利用<code>infix</code>关键字定义中缀函数：</p>
+<pre><code>	infix fun Int.add(x:Int):Int{
+	    return this+x
+	}
+	
+	fun printAdd(){
+	    val value=2 add 3//中缀表示法调用add函数
+	    print(&quot;the value is $value&quot;)
+	}
+</code></pre>
+<hr>
+<h1><span id="超多lambdas支持">超多Lambdas支持</span></h1>
+<p>例如常见的<code>setOnClickListener</code>、<code>setOnLongClickListener</code>、<code>runOnUiThread</code>等等，搭配Kotlin官方<a href="https://github.com/Kotlin/anko" target="_blank" rel="noopener">anko</a>库更优雅。</p>
+<pre><code>	btn?.setOnClickListener{ ... }
+	
+	btn.setOnTouchListener { v, event -&gt;
+	 ...
+	}
+	
+	runOnUiThread { ... }
+</code></pre>
+<hr>
+<h1><span id="集合操作">集合操作</span></h1>
+<p>kotlin封装了大量的函数来支持集合操作，功能是否强大，篇幅有限，附上<a href="http://www.maiziedu.com/article/9999/" target="_blank" rel="noopener">传送门</a>。</p>
+<ul>
+<li>聚合操作</li>
+<li>筛选操作</li>
+<li>映射操作</li>
+<li>元素操作</li>
+<li>生成操作</li>
+<li>排序操作</li>
+</ul>
+<hr>
+<h1><span id="两个需要注意的地方">两个需要注意的地方</span></h1>
+<hr>
+<h1><span id="1-慎用非空字段">1、慎用非空字段</span></h1>
+<p>Kotlin的变量默认为非空字段，空字段需要在类型后面加?，如：</p>
+<pre><code>var a: String = &quot;&quot;
+var b: String? = null
+</code></pre>
+<p>Kotlin的空检查可以帮我们规避很多空指针问题，但是如果你在使用非空参数变量时，需要特别小心，例如一个网络回调中，一些无法确定的参数字段，一定要用可空类型?，编译器无法实现空检查，如果线上的某条数据是null，很可能直接引起crash。</p>
+<pre><code>...
+void networkResponse(model: Model){
+...
+}
+</code></pre>
+<p>例如这个例子，可能model在大多数情况下都是非空的，一旦服务端返回空数据model，那么程序会直接崩溃，而这种情况是编译器无法判断的。</p>
+<hr>
+<h1><span id="2-kotlin配置不当可能导致源码泄露">2、Kotlin配置不当可能导致源码泄露</span></h1>
+<p>之前看过一篇文章，是一个旧项目引入Kotlin，但由于配置不当，导致了源码泄露！原因是打包资源合并时将<code>kt</code>文件当作资源文件一起打包了，并没有进行任何的混淆处理。<br>
+他的错误配置如下：</p>
+<pre><code>android {
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+        }
+    }
+}
+</code></pre>
+<p>解决方案如下（附 <a href="https://juejin.im/post/5a56db296fb9a01c975a26ef" target="_blank" rel="noopener">原文链接</a>）：</p>
+<p>将资源目录和代码目录区分开来，不再混杂在一起。将资源和代码分开，使得相关文件在物理上保持了隔离，对整个项目来说，整体结构也更加清晰。</p>
+<hr>
+<h1><span id="扩展函数">扩展函数</span></h1>
+<p>扩展函数是指在一个类上增加一种新的行为，甚至我们没有这个类代码的访问权限。在Java中，通常会实现很多带有static方法的工具类，而Kotlin中扩展函数的一个优势是我们不需要在调用方法的时候把整个对象当作参数传入，它表现得就像是属于这个类的一样，而且我们可以使用this关键字和调用所有public方法。</p>
+<hr>
+<h2><span id="函数扩展">函数扩展</span></h2>
+<p>简单来说，Kotlin扩展函数允许我们在不改变已有类的情况下，为类添加新的函数。例如，我们能够为Activity中添加新的方法，让我们以更简单术语显示toast，并且这个函数不需要传入任何context，它可以被任何Context或者它的子类调用，比如Activity或者Service：</p>
+<pre><code>//声明扩展函数
+fun Context.toast(message: CharSequence, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, message, duration).show()
+}
+
+//使用它
+toast(&quot;Hello&quot;)
+toast(&quot;Hello&quot;, Toast.LENGTH_SHORT)
+toast(message = &quot;Hello&quot;, length = Toast.LENGTH_SHORT)
+</code></pre>
+<p>类似的这种我们还可以把<code>LayoutInflater.from(context).inflate</code>赋予ViewGroup；将图片加载框架赋予ImageView；将时间格式化转换赋予Long，扩展View的dp转换函数等等……</p>
+<p>有一点值得注意：扩展函数并不是真正地修改了原来的类，它的这些作用效果是以静态导入的方式来实现的。扩展函数可以被声明在任何文件中，因此有个通用的方式是把一系列有关的函数放在一个工具类当中。</p>
+<hr>
+<h2><span id="属性扩展">属性扩展</span></h2>
+<p>扩展函数也可以是一个属性，所以我们可以通过相似的方法来扩展属性。<br>
+例如我们可以给View声明一个<code>quickPaddingLeft</code>扩展属性，那么就不需要每次设置四个值了。</p>
+<pre><code>var View.quickPaddingLeft: Int
+    set(value) {
+        setPadding(value, paddingTop, paddingRight, paddingBottom)
+    }
+
+    get() {
+        return paddingLeft
+    }
+</code></pre>
+<hr>
+<h2><span id="操作符扩展">操作符扩展</span></h2>
+<p>我们可以使用扩展函数扩展我们已经存在的类来让第三方的库能提供更多的操作。<br>
+比如我们可以去像访问List的方式去访问 ViewGroup 的 view：</p>
+<pre><code>operator fun ViewGroup.get(position: Int): View = 	getChildAt(position)
+</code></pre>
+<p>于是我们就可以像这样非常简单地从一个 ViewGroup 中通过 position 得到一个 view：</p>
+<pre><code>val container: ViewGroup = findViewById(R.id.container)
+val view = container[2]
+</code></pre>
+<hr>
+<p><strong>最后总结一下扩展函数的优点：</strong></p>
+<ul>
+<li>函数扩展功能使得我们可以为现有的类添加新的函数，实现某一具体功能 。</li>
+<li>属性扩展允许定义在类或者kotlin文件中，不允许定义在函数中。</li>
+<li>扩展函数是静态解析的，并未对原类添加函数或属性，对类本身没有任何影响。</li>
+<li>扩展函数可以有效的减少代码量，让代码更加整洁，纯粹。</li>
+</ul>
+<hr>
+<h1><span id="kotlin-标准库常用扩展函数集合">Kotlin 标准库常用扩展函数集合</span></h1>
+<hr>
+<ul>
+<li><strong>apply</strong><br>
+apply 是 Any 的扩展函数，因而所有类型都能调用。<br>
+apply 接受一个lambda表达式作为参数，并在apply调用时立即执行，apply返回原来的对象。<br>
+<strong>apply 主要作用是将多个初始化代码链式操作，提高代码可读性。</strong></li>
+</ul>
+<pre><code>	val task = Runnable { println(&quot;do something amazing&quot;) }
+	val thread = Thread(task)
+	thread.setDaemon(true)
+	thread.start()
+
+
+上面这段代码可以简化为：
+
+	val task = Runnable { println(&quot;do something amazing&quot;) }
+	Thread(task).apply { setDaemon(true) }.start()
+</code></pre>
+<hr>
+<ul>
+<li><strong>let</strong><br>
+let 和 apply 类似， 唯一的不同是返回值，let返回的不是原来的对象，而是闭包里面的值，参数为it</li>
+</ul>
+<pre><code>    val dog = Dog()
+    print(dog.let {
+        val ears = &quot;耳朵&quot;
+        val eyes = it.eyes
+        ears
+    })
+
+这段代码的返回值就是`“耳朵”`
+</code></pre>
+<hr>
+<ul>
+<li>
+<p><strong>with</strong><br>
+with 是一个顶级函数， 当你想调用对象的多个方法但是不想重复对象引用，比如代码：</p>
+<pre><code>val dog: Dog = Dog()
+dog.ears = &quot;111&quot;
+dog.eyes = &quot;222&quot;
+...
+</code></pre>
+<p>可以用 with 这样写：</p>
+<pre><code>with(dog) {
+    ears = &quot;111&quot;
+    eyes = &quot;222&quot;
+    ...
+}
+</code></pre>
+</li>
+</ul>
+<hr>
+<ul>
+<li>
+<p><strong>run</strong><br>
+run 是 with和let 的组合，例如：</p>
+<pre><code>val dog = Dog()
+print(dog.run {
+    legs = &quot;111&quot;
+    ears = &quot;222&quot;
+    eyes = it.eyes
+    legs
+})
+</code></pre>
+<p>打印结果为<code>111</code></p>
+</li>
+</ul>
+<hr>
+<p>#小推荐</p>
+<ul>
+<li>
+<p>这篇文章是扩展函数的一个关于扩展函数对ViewHolder的封装应用，感兴趣的可以看看<a href="http://ohmerhe.com/2016/08/02/kotlin_one_method_no_viewholder/" target="_blank" rel="noopener"> Kotlin一个扩展函数，从此丢掉ViewHolder</a></p>
+</li>
+<li>
+<p>一个收集扩展函数的网站   <a href="http://kotlinextensions.com/" target="_blank" rel="noopener">点我传送</a></p>
+</li>
+</ul>
+<hr>
+<h1><span id="更多特性等你探究">更多特性等你探究</span></h1>
+<ul>
+<li>函数式编程</li>
+<li>轻量级线程：协程</li>
+<li>KotlinNative</li>
+<li>等等。。。</li>
+</ul>
+<hr>
+<h1><span id="thank-you">Thank You !</span></h1>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Android跨进程通信：图文详解 Binder机制原理/" data-toggle="tooltip" data-placement="top" title="Android跨进程通信：图文详解 Binder机制原理">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/cdn/pay_ali.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/cdn/pay_wechat.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share" data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">可选参数</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Static Layout Import</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">lazy（懒加载）</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">lateinit</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">安全类型转换</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">泛型的*</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">中缀表示法</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">超多Lambdas支持</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">9.</span> <span class="toc-nav-text">集合操作</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">10.</span> <span class="toc-nav-text">两个需要注意的地方</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">11.</span> <span class="toc-nav-text">1、慎用非空字段</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">12.</span> <span class="toc-nav-text">2、Kotlin配置不当可能导致源码泄露</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">13.</span> <span class="toc-nav-text">扩展函数</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">13.1.</span> <span class="toc-nav-text">函数扩展</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">13.2.</span> <span class="toc-nav-text">属性扩展</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">13.3.</span> <span class="toc-nav-text">操作符扩展</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">14.</span> <span class="toc-nav-text">Kotlin 标准库常用扩展函数集合</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">15.</span> <span class="toc-nav-text">更多特性等你探究</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">16.</span> <span class="toc-nav-text">Thank You !</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#Kotlin" title="Kotlin">Kotlin</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/Google_acmer" target="_blank">CSDN Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/JinJieGu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JayGoo 2019 
+                    <br>
+                    Theme by <a href="https://github.com/YenYuHsuan/hexo-theme-beantech/">Hexo-BeanTech</a> 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("gujinjie.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'gujinjie.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="gujinjie.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

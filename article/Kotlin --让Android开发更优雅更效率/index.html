@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Kotlin --让Android开发更优雅更效率 - JayGoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="gujinjie.top/article/Kotlin --让Android开发更优雅更效率/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                            
+                              <a class="tag" href="/tags/#Kotlin" title="Kotlin">Kotlin</a>
+                            
+                        </div>
+                        <h1>Kotlin --让Android开发更优雅更效率</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JayGoo on
+                            2017-08-19
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JayGoo的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/works/">works</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <blockquote>
+<p>学习犹如逆水行舟,不进则退。</p>
+</blockquote>
+<p><img src="/cdn/20170823150341818573768.jpg" alt="这里写图片描述"></p>
+<p>亲爱的读者你好，首先我先声明一下，这并不是一篇技术性很强的文章，你看了这篇文章，也不会几分钟就能掌握Kotlin（其实也不可能）。我给这篇文章的定位是：如果你看完这篇文章后，就迫不及待的想尝试在你的项目中使用Kotlin，那么这篇文章就成功了~</p>
+<a id="more"></a>
+<h1><span id="kotlin的前世今生">Kotlin的前世今生</span></h1>
+<p>Kotlin的作者是大名鼎鼎的Jetbrains公司。它有一系列耳熟能详的产品，诸如Android开发兄弟们天天用的Android Studio，还有比较有名的IntelliJ IDEA，WebStorm，PhpStorm等。</p>
+<p>其实Kotlin在2015年都已经有人在使用了，只不过因为在2017年Google I/O大会上被官方推荐为Android的官方语言之一后，成为了大热。目前国内一些有名的公司也都在推荐使用Kotlin开发，前段时间看到国外开发者论坛上说Google负责Android安全的团队已经将Kotlin作为主力开发语言了，相信未来你再看Android源码的时候就可能是Kotlin编写的了。</p>
+<h1><span id="kotlin好在哪里呢">Kotlin好在哪里呢</span></h1>
+<p>听我扯了半天的皮，下面我来列举一些Kotlin在日常开发中一些实例，让你知道为什么Kotlin让Android开发更优雅更效率。</p>
+<h2><span id="和java无缝连接">和Java无缝连接</span></h2>
+<p>其实在项目组引入一门新语言，最害怕的是和现开发语言出现兼容问题，这也是一些小伙伴不敢轻易尝试的原因。Ok，经过一段时间的使用和一些论坛的讨论，我发现他们真的兼容的很无缝！无缝到让你感觉不到他们是不同的语言（除了语法不一样）！官方点说就是他们都是基于JVM的一种高级语言，最后编译后都变成了字节码，Kotlin 的标准库更多的是对 Java 库的扩展，基于这个设计思路，你丝毫不需要担心 Kotlin 对 Java 代码的引用，你甚至可以在 Kotlin 当中使用 Java 反射，反正只要是 Java 有的，Kotlin 都有。形象点说，就像一个人（程序）穿了两件不同颜色的衣服（Java、Kotlin），不管怎么来回换衣服，最后脱了衣服（编译好）都还是同一个人。</p>
+<p>Kotlin 的标准库更多的是对 Java 库的扩展，基于这个设计思路，你丝毫不需要担心 Kotlin 对 Java 代码的引用，你甚至可以在 Kotlin 当中使用 Java 反射，反正只要是 Java 有的，Kotlin 都有，它们可以像调用自己的函数一样调用对方的，无论是第三方库，还是热更新，SDK云云都可以无任何兼容问题。</p>
+<h2><span id="学习门槛极低">学习门槛极低</span></h2>
+<p>就我个人经历来说，我当时是下午快下班的时候看了两个小时左右的Kotlin语法，第二天就可以大致使用了（当然遇到不会的还是查阅相关资料，哈哈）。其实就我个人感觉而言，其实Kotlin的语法有点像Python（IOS小伙伴说Kotlin像Swift），因为当时回家我也在学Python，就觉得它们的语法真的好相似，当时我怕学混了，还特意把Python的进度放慢了，嘿嘿，原谅我很笨，没法同时记。</p>
+<p>其实，作为一名Android开发工程师，学Kotlin语法就更简单了，因为Android Studio直接可以将Java转为Kotlin，不光支持整个文件转换（不推荐大文件，会有好多报错，review费时还易出错），而且还可以直接复制粘贴进行转换，如果你有哪里语法搞不明白了，直接粘贴过去一对比就学会了，是不是很方便呢？那么问题来了，为什么编译器会支持的这么到位？别问我为什么，请往前翻去看《Kotlin的前世今生》。</p>
+<p>最后，推荐一个网站，是Java和Kotlin一些常用语法对比（两个小时主要就是看这个了）：<br>
+<a href="http://www.jcodecraeer.com/demo/from-java-to-kotlin/index.html" target="_blank" rel="noopener">http://www.jcodecraeer.com/demo/from-java-to-kotlin/index.html</a></p>
+<h2><span id="findviewbyid">findViewById</span></h2>
+<p>Android小伙伴都对这个方法既爱既恨，它是用来查询我们当前页面的View的，当一个页面有很多View时，我们就需要写一大堆这玩意，最可恨的是对不同类型的View还要强制类型转换，复制完还要改来改去的，非常不方便。后来就有了一些诸如ButterKnife等等的代码注解工具来分担，注解工具确实省力，但是因为需要变量声明，再加注解，也是有很多代码，那么我们看下Kotlin是怎么做的。</p>
+<p>举个简单的例子，给一个id = &quot;nameTextView&quot;的TextView设置一段文本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Java版：</span><br><span class="line"></span><br><span class="line">TextView nameTextView = (TextView)findViewById(R.id.nameTextView);</span><br><span class="line">nameTextView.setText(&quot;hello Java&quot;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Kotlin版：</span><br><span class="line"></span><br><span class="line">nameTextView.text = &quot;hello Kotlin&quot;</span><br></pre></td></tr></table></figure>
+<p>看到区别了吗？Kotlin不需声明，不需findViewById，不需类型转换，直接拿来id就可以用，简单粗暴，看下源码就知道，其实它已经自动帮你写好了注解，所以你可以直接通过id去找到那个View，而你只需将布局文件import即可，例如：<code>import kotlinx.android.synthetic.main.activity_main.*</code></p>
+<h2><span id="强大的数据类">强大的数据类</span></h2>
+<p>在项目中我们有好多JavaBean，其中不乏好多setter，getter方法，虽然编译器可以帮我们一键生成，但大多数的setter，getter方法我们由于不会再次拓展，导致其实它们占据了大量的行数，十分的冗余。而Kotlin会自动帮你的变量实现setter，getter方法，你只需重写你需要扩展的setter，getter方法即可，其实，上面那个TextView的setText()方法就是典型的一个例子。</p>
+<h2><span id="变态的函数扩展">变态的函数扩展</span></h2>
+<p>函数扩展可以让你对任意类进行扩展，而不用继承等等复杂的操作，你甚至可以连 class 和 interface 都不写， 直接在文件中定义一堆方法，具体语法是fun + 类型.函数(参数)，然后就可以指定类型全局调用（未指定则所有类型都可以调用），而Java中，你需要写一个和文件名相同的public类，然后类名+’.’+方法名。</p>
+<p>举个栗子！拿Toast来说，到处都可以用到，我们新建个kt文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fun Context.toast(message:String,length : Int = Toast.LENGTH_SHORT)&#123;</span><br><span class="line">Toast.makeText(this,message,length).show()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后你就可以在所有Context类型中使用toast这个函数了，是不是非常的方便简洁？这段代码可以写在任意可以编译到的文件中，值的注意的是，如果写在了class内部，则是局部生效。当然还有好多其他类似的，例如扩展属性等等，我就不详细介绍了。</p>
+<h2><span id="空指针异常">空指针异常</span></h2>
+<p>Null是Java中最常见的陷阱之一，在很多时候不得不写非空判断来增加代码的安全性，随着业务的增长，非空的判断会越来越多，难免会失去控制，也会让代码变得非常的臃肿难懂，而Kotlin的一大特色就是空安全，kotlin定义变量时区分两种类型：</p>
+<ul>
+<li>var mNullable: Any? = null 可空</li>
+<li>var mNonNull: Any = XXX 非空</li>
+</ul>
+<p>当mNullable变量未判空时，编译是无法通过的，也就是说所有为Null的变量都是你允许的，这就杜绝了很多的遗漏的空指针异常。除此之外，Kotlin的判空语句也是非常简洁的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Java:</span><br><span class="line">if(mNullable != null)&#123;</span><br><span class="line">	mNullable.length = 1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Kotlin:</span><br><span class="line">mNullable?.length = 1</span><br></pre></td></tr></table></figure>
+<h2><span id="lambda">Lambda</span></h2>
+<p>Lambda也不是什么新鲜玩意，在gradle、js之类的其他语言中早就玩烂了。java8中也有，不过官方迟迟不上咱也没办法。 Lambda本身是一个函数片段，作为一等公民，它可以作为高阶函数的参数或返回值。个人而言，我喜欢以匿名类来理解它。<br>
+对比一些代码，或许更为直观：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Java:</span><br><span class="line">//监听器</span><br><span class="line">button.setOnClickListener(new View.OnClickListener()&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void onClick(View v) &#123;</span><br><span class="line">        //do something</span><br><span class="line">    &#125;</span><br><span class="line">&#125;); </span><br><span class="line"></span><br><span class="line">//子线程</span><br><span class="line">new Thread(new Runnable() &#123;</span><br><span class="line">	@Override</span><br><span class="line">	public void run() &#123;</span><br><span class="line">	//do something</span><br><span class="line">	&#125;</span><br><span class="line">&#125;).start();</span><br><span class="line"></span><br><span class="line">Kotlin:</span><br><span class="line">//监听器</span><br><span class="line">button.setOnClickListener &#123;toast(&quot;hello kotlin&quot;)&#125;</span><br><span class="line"></span><br><span class="line">//子线程</span><br><span class="line">Thread(Runnable &#123;</span><br><span class="line">    //do something</span><br><span class="line">&#125;).start()</span><br></pre></td></tr></table></figure>
+<p>有没有感觉到代码清晰整洁了好多？当然这只是一些最最简单地用法，还有更多更高级的用法，如果感兴趣可以自己去查阅。</p>
+<h2><span id="字符串">字符串</span></h2>
+<p>开发中经常遇到一些字符串拼接，Java常用用’+'进行拼接，或者StringBuilder等流式拼接，但如果多个变量拼接成一个字符串时，就会写的很麻烦，而Kotlin中支持字符串模板，就是支持用符号来取值，使用美元符号$来取得变量的值，对比后你就会发现Kotlin是多么友好了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Java:</span><br><span class="line"></span><br><span class="line">int a,b,c,d,e;</span><br><span class="line">String str = &quot;a:&quot;+a+&quot; b:&quot;+b+&quot; c:&quot;+c+&quot; d:&quot;+d+&quot; a+b=&quot;+(a+b);</span><br><span class="line"></span><br><span class="line">Kotlin:</span><br><span class="line">var a,b,c,d,e</span><br><span class="line">var str = &quot;a:$a b:$b c:$c d:$d a+b=$&#123;a+b&#125;&quot;</span><br></pre></td></tr></table></figure>
+<h2><span id="更多小细节等你发现">更多小细节等你发现</span></h2>
+<ul>
+<li>不需要写分号</li>
+<li>支持类型推断，不用写一堆类型</li>
+<li>流式集合操作 map(), forEach()</li>
+<li>更简洁更强大的when代替switch，匹配类型，值和范围还有参数，自动break</li>
+<li>接口的默认实现</li>
+<li>Array.get(index)默认重载为Array[index]</li>
+<li>强大的集合和丰富的方法</li>
+<li>等等……</li>
+</ul>
+<h1><span id="总结">总结</span></h1>
+<p>最后借用Kotlin的官方文档的介绍来当本文的总结：</p>
+<ul>
+<li>兼容性：Kotlin 与 JDK 6 完全兼容，保障了 Kotlin 应用程序可以在较旧的 Android 设备上运行而无任何问题。Kotlin 工具在 Android Studio 中会完全支持，并且兼容 Android 构建系统。</li>
+<li>性能：由于非常相似的字节码结构，Kotlin 应用程序的运行速度与 Java 类似。 随着 Kotlin 对内联函数的支持，使用 lambda 表达式的代码通常比用 Java 写的代码运行得更快。</li>
+<li>互操作性：Kotlin 可与 Java 进行 100％ 的互操作，允许在 Kotlin 应用程序中使用所有现有的 Android 库 。这包括注解处理，所以数据绑定和 Dagger 也是一样。</li>
+<li>占用：Kotlin 具有非常紧凑的运行时库，可以通过使用 ProGuard 进一步减少。 在实际应用程序中，Kotlin 运行时只增加几百个方法以及 .apk 文件不到 100K 大小。</li>
+<li>编译时长：Kotlin 支持高效的增量编译，所以对于清理构建会有额外的开销，增量构建通常与 Java 一样快或者更快。</li>
+<li>学习曲线：对于 Java 开发人员，Kotlin 入门很容易。包含在 Kotlin 插件中的自动 Java 到 Kotlin 的转换器有助于迈出第一步。</li>
+</ul>
+<p>当然在生产环境中，稳定高于一切仍然是不二法则。追求新技术，一方面会给团队带来开发和维护上的学习成本，另一方面也要承担未来某些情况下因为对新技术不熟悉而产生未知问题的风险，也正是知道这些，我在使用之前也私下做了很多的调研和求证，最终才决定使用它在生产环境的。</p>
+<p>作为公司里第一个吃螃蟹的人（赶在宏杰之前，哈哈，某人很生气~），在使用Kotlin的一个月里，我已经被它的便捷和优雅所征服，在生产环境中使用新语言开发并没有拖慢我的工作进度，反而更简洁的代码，让我更专心于重要业务逻辑，这也是我决定将Kotlin推荐给大家的重要原因，希望能给大家的开发带来效率上的提升和帮助。</p>
+<p>限于笔者水平和理解有限，可能存在一些纰漏和错误的地方，欢迎大家指出。</p>
+<h1><span id="附录">附录</span></h1>
+<ul>
+<li><a href="https://hltj.gitbooks.io/kotlin-reference-chinese/content/txt/android-overview.html" target="_blank" rel="noopener">官方中文文档</a></li>
+<li><a href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2017/0605/8036.html" target="_blank" rel="noopener">[译]20个学习Kotlin的优质资源</a></li>
+</ul>
+<blockquote>
+<p>原创不易，文章转载请注明出处。</p>
+</blockquote>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/article/图片Drawable完美着色方案及源码分析/" data-toggle="tooltip" data-placement="top" title="图片Drawable完美着色方案及源码分析">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Android自绘控件开发与性能优化实践——以录音波浪动画为例/" data-toggle="tooltip" data-placement="top" title="Android自绘控件开发与性能优化实践——以录音波浪动画为例">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/cdn/pay_ali.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/cdn/pay_wechat.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share" data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#Kotlin" title="Kotlin">Kotlin</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/Google_acmer" target="_blank">CSDN Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/JinJieGu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JayGoo 2019 
+                    <br>
+                    Theme by <a href="https://github.com/YenYuHsuan/hexo-theme-beantech/">Hexo-BeanTech</a> 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("gujinjie.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'gujinjie.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="gujinjie.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

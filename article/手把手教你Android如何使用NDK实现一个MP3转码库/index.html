@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          手把手教你Android如何使用NDK实现一个MP3转码库 - JayGoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="gujinjie.top/article/手把手教你Android如何使用NDK实现一个MP3转码库/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                            
+                              <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                            
+                              <a class="tag" href="/tags/#NDK" title="NDK">NDK</a>
+                            
+                              <a class="tag" href="/tags/#音频转码" title="音频转码">音频转码</a>
+                            
+                        </div>
+                        <h1>手把手教你Android如何使用NDK实现一个MP3转码库</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JayGoo on
+                            2018-04-19
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JayGoo的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/works/">works</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>通过本文你可以学到以下知识：</p>
+<ul>
+<li>如何实现一个Android MP3转码库</li>
+<li>一些和音频转码相关的基础知识</li>
+<li>如何使用NDK将C/C++项目移植到Android端，并使用Java调用C/C++代码</li>
+<li>如何使用CMake构建NDK项目</li>
+<li>如何生成不同CPU架构所需的动态链接库</li>
+</ul>
+<a id="more"></a>
+<h1><span id="为什么要使用ndk">为什么要使用NDK</span></h1>
+<p>在日常开发中，我们可能会遇到以下场景：</p>
+<ul>
+<li>我们会遇到一些对性能要求苛刻的需求，例如图片处理、音视频转码等。</li>
+<li>项目需要使用一些其他的优秀C/C++开源库</li>
+<li>更好的代码的保护，由于apk的Java层代码很容易被反编译，而C/C++库反编译难度较大，我们可以将App的一些重要信息（如AppKey、AppSecret、秘钥等）放到C/C++库中封装起来调用。</li>
+</ul>
+<h1><span id="工具简介">工具简介</span></h1>
+<h3><span id="lame">Lame</span></h3>
+<p>LAME是目前最好的MP3编码器，速度快，效果好，特别是中高码率和VBR编码方面。</p>
+<h3><span id="ndk">NDK</span></h3>
+<p>原生开发工具包，即帮助我们开发原生代码的一系列工具，包括但不限于编译工具、一些公共库、开发IDE等。它提供了完整的一套将C/C++ 代码编译成静态/动态库的工具，而 <code>Android.mk</code> 和 <code>Application.mk</code> 你可以认为是描述编译参数和一些配置的文件。比如指定使用C++11还是C++14编译，会引用哪些共享库，并描述关系等，还会指定编译的<code>abi</code>。只有有了这些 NDK 中的编译工具才能准确的编译 C/C++代码。</p>
+<h3><span id="cmake简介">CMake简介</span></h3>
+<p><code>CMake</code>是一个跨平台的编译工具，它并不会直接编译出对象，而是根据自定义的语言规则（<code>CMakeLists.txt</code>）生成 对应 makefile 或 project 文件，然后再调用底层的编译。Android Studio 2.2以后开始支持<code>CMake</code>，所以现在我们有2种方式来编译C/C++ 代码。一个是 <code>ndk-build + Android.mk + Application.mk</code> 组合，另一个是 <code>CMake + CMakeLists.txt</code> 组合，它们都不会影响我们的Android代码和C/C++ 代码，只是构建方式和结构不同。</p>
+<p>**<code>CMake</code>相对<code>ndk-build</code>的优点在于：**无需手动生成Java的头文件、相对于mk文件配置更简单、可以自动生成对应<code>abi</code>的<code>*.so</code>动态链接库、支持设置断点调试（我认为这是最方便的地方）、可以引用其他已经生成的so库。</p>
+<h1><span id="准备工作">准备工作</span></h1>
+<ol>
+<li>在Android Studio 上安装好NDK和CMake，网上教程很多这里就不再赘述。</li>
+<li>下载<a href="http://lame.sourceforge.net/" target="_blank" rel="noopener">Lame</a>源码。</li>
+</ol>
+<h1><span id="项目结构">项目结构</span></h1>
+<p>￼通过这张图我们可以更形象的理解CMake构建NDK的结构和方式。<br>
+<img src="/cdn/20180425114251847.png" alt="这里写图片描述"></p>
+<p><em>Tips：如果你对CMake刚接触，可以先用Android Studio创建一个项目，然后勾选上<code>Include C++ support</code>选项，去看下demo的结构，帮助理解，我就是这样做的，效果还不错。</em></p>
+<h1><span id="lame源码移植">Lame源码移植</span></h1>
+<ol>
+<li>首先在<code>src/main/</code>目录下新建一个<code>cpp</code>文件夹，我们可以将Lame源码中<code>libmp3lame</code>拷贝到<code>cpp</code>文件夹下，当然这里我们也可以重命名，例如我命名为<code>lamemp3</code>（以下介绍我将沿用此名）。</li>
+<li>将Lame源码中的<code>include</code>文件夹下的<code>lame.h</code>复制到<code>lamemp3</code>文件夹中。</li>
+<li>剔除<code>lamemp3</code>中不必要的文件和目录，只保留<code>.c</code>和<code>.h</code>文件，因为其他文件大多都是批处理文件，对于Android不是必需的。</li>
+<li>修改<code>util.h</code>的源码。在570行找到<code>ieee754_float32_t</code>数据类型，将其修改为<code>float</code>类型，因为<code>ieee754_float32_t</code>是Linux或者是Unix下支持的数据类型，在Android下并不支持。</li>
+<li><code>set_get.h</code>中24行将<code>include &lt;lame.h&gt;</code>改为<code>include &quot;lame.h&quot;</code>。</li>
+<li>在<code>id3tag.c</code>和<code>machine.h</code>两个文件里，將<code>HAVE_STRCHR</code>和<code>HAVE_MEMCPY</code>的ifdef结构体注释掉，不然编译会报错。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#ifdef STDC_HEADERS</span><br><span class="line"># include &lt;stdlib.h&gt;</span><br><span class="line"># include &lt;string.h&gt;</span><br><span class="line">#else</span><br><span class="line">/*</span><br><span class="line"># ifndef HAVE_STRCHR</span><br><span class="line">#  define strchr index</span><br><span class="line">#  define strrchr rindex</span><br><span class="line"># endif</span><br><span class="line">*/</span><br><span class="line">char   *strchr(), *strrchr();</span><br><span class="line">/*</span><br><span class="line"># ifndef HAVE_MEMCPY</span><br><span class="line">#  define memcpy(d, s, n) bcopy ((s), (d), (n))</span><br><span class="line">#  define memmove(d, s, n) bcopy ((s), (d), (n))</span><br><span class="line"># endif</span><br><span class="line">*/</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<h1><span id="cmakelists编写">CMakeLists编写</span></h1>
+<p>在<code>src</code>中新建一个名为<code>CMakeLists.txt</code>的文件（注意，这里的<code>CMakeLists.txt</code>不一定非要放到这里，只要它的位置和<code>build.gradle</code>文件的配置相对应就行）。</p>
+<p>我们看下<code>CMakeLists.txt</code>的内容，这里我把注释已经写得很详细了，大家看下就明白了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"># 指定CMake最低版本</span><br><span class="line">cmake_minimum_required(VERSION 3.4.1)</span><br><span class="line"></span><br><span class="line"># 定义常量</span><br><span class="line">set(SRC_DIR src/main/cpp/lamemp3)</span><br><span class="line"></span><br><span class="line"># 指定关联的头文件目录</span><br><span class="line">include_directories(src/main/cpp/lamemp3)</span><br><span class="line"></span><br><span class="line"># 查找在某个路径下的所有源文件</span><br><span class="line">aux_source_directory(src/main/cpp/lamemp3 SRC_LIST)</span><br><span class="line"></span><br><span class="line"># 设置 *.so 文件输出路径，要放在在add_library之前，不然不会起作用</span><br><span class="line">set(CMAKE_LIBRARY_OUTPUT_DIRECTORY $&#123;PROJECT_SOURCE_DIR&#125;/src/main/jniLibs/$&#123;ANDROID_ABI&#125;)</span><br><span class="line"></span><br><span class="line"># 声明库名称、类型、源码文件</span><br><span class="line">add_library(lame-mp3-utils SHARED src/main/cpp/lame-mp3-utils.cpp $&#123;SRC_LIST&#125;)</span><br><span class="line"></span><br><span class="line"># 定位某个NDK库，这里定位的是log库</span><br><span class="line">find_library( # Sets the name of the path variable.</span><br><span class="line">              log-lib</span><br><span class="line"></span><br><span class="line">              # Specifies the name of the NDK library that</span><br><span class="line">              # you want CMake to locate.</span><br><span class="line">              log )</span><br><span class="line"></span><br><span class="line"># 将NDK库链接到native库中，这样native库才能调用NDK库中的函数</span><br><span class="line">target_link_libraries( # Specifies the target library.</span><br><span class="line">                       lame-mp3-utils</span><br><span class="line"></span><br><span class="line">                       # Links the target library to the log library</span><br><span class="line">                       # included in the NDK.</span><br><span class="line">                       $&#123;log-lib&#125; )</span><br></pre></td></tr></table></figure>
+<h1><span id="buildgradle配置">build.gradle配置</span></h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    ......</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        ......</span><br><span class="line">        externalNativeBuild &#123;</span><br><span class="line">            cmake &#123;</span><br><span class="line">                cppFlags &quot;&quot;//设置cpp配置参数，c文件请使用CFlags</span><br><span class="line">                abiFilters &apos;armeabi-v7a&apos;,&apos;arm64-v8a&apos;,&apos;mips&apos;,&apos;armeabi&apos;,&apos;mips64&apos;,&apos;x86&apos;,&apos;x86_64&apos; //要支持的abi</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    externalNativeBuild &#123;</span><br><span class="line">        cmake &#123;</span><br><span class="line">            path &quot;CMakeLists.txt&quot;//配置文件路径</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>你可能在build时会遇到以下错误：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Execution failed for task &apos;:library:transformNativeLibsWithMergeJniLibsForDebug&apos;.</span><br><span class="line">&gt; More than one file was found with OS independent path &apos;lib/x86_64/liblame-mp3-utils.so&apos;</span><br></pre></td></tr></table></figure>
+<p>解决方案是在build.gradle中添加如下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">packagingOptions &#123;</span><br><span class="line">       pickFirst &apos;lib/armeabi-v7a/liblame-mp3-utils.so&apos;</span><br><span class="line">       pickFirst &apos;lib/arm64-v8a/liblame-mp3-utils.so&apos;</span><br><span class="line">       pickFirst &apos;lib/armeabi/liblame-mp3-utils.so&apos;</span><br><span class="line">       pickFirst &apos;lib/x86/liblame-mp3-utils.so&apos;</span><br><span class="line">       pickFirst &apos;lib/mips/liblame-mp3-utils.so&apos;</span><br><span class="line">       pickFirst &apos;lib/mips64/liblame-mp3-utils.so&apos;</span><br><span class="line">       pickFirst &apos;lib/x86_64/liblame-mp3-utils.so&apos;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>这里的<code>pickFirst</code>官方文档给出的解释是：</p>
+<blockquote>
+<p>Paths that match a first-pick pattern will be selected into the APK.<br>
+If more than one path matches the first-pick, only the first found will be selected.<br>
+通俗点讲，如果有两个重复的匹配，它会选择你设置的第一匹配项。</p>
+</blockquote>
+<h1><span id="编写java-native方法">编写Java native方法</span></h1>
+<p>这里我在代码中注释已经写得非常详细了，关于一些参数我会在下面做更详细的解释。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">public class Mp3Converter &#123;</span><br><span class="line"></span><br><span class="line">    static  &#123;</span><br><span class="line">        System.loadLibrary(&quot;lame-mp3-utils&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * init lame</span><br><span class="line">     * @param inSampleRate</span><br><span class="line">     *              input sample rate in Hz</span><br><span class="line">     * @param channel</span><br><span class="line">     *              number of channels</span><br><span class="line">     * @param mode</span><br><span class="line">     *              0 = CBR, 1 = VBR, 2 = ABR.  default = 0</span><br><span class="line">     * @param outSampleRate</span><br><span class="line">     *              output sample rate in Hz</span><br><span class="line">     * @param outBitRate</span><br><span class="line">     *              rate compression ratio in KHz</span><br><span class="line">     * @param quality</span><br><span class="line">     *              quality=0..9. 0=best (very slow). 9=worst.&lt;br /&gt;</span><br><span class="line">     *              recommended:&lt;br /&gt;</span><br><span class="line">     *              2 near-best quality, not too slow&lt;br /&gt;</span><br><span class="line">     *              5 good quality, fast&lt;br /&gt;</span><br><span class="line">     *              7 ok quality, really fast</span><br><span class="line">     */</span><br><span class="line">    public native static void init(int inSampleRate, int channel, int mode,</span><br><span class="line">                                   int outSampleRate, int outBitRate, int quality);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * file convert to mp3</span><br><span class="line">     * it may cost a lot of time and better put it in a thread</span><br><span class="line">     * @param input</span><br><span class="line">     *          file path to be converted</span><br><span class="line">     * @param mp3</span><br><span class="line">     *          mp3 output file path</span><br><span class="line">     */</span><br><span class="line">    public native  static void convertMp3(String input, String mp3);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * get converted bytes in inputBuffer</span><br><span class="line">     * @return</span><br><span class="line">     *          converted bytes in inputBuffer</span><br><span class="line">     *          to ignore the deviation of the file size,when return to -1 represents convert complete</span><br><span class="line">     */</span><br><span class="line">    public native static long getConvertBytes();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * get library lame version</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public native static String getLameVersion();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="编写调用cc的cpp">编写调用C/C++的cpp</span></h1>
+<p>先看一个上面Java文件中<code>native init(args...)</code> 方法在C++里是如何关联和调用的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">extern &quot;C&quot; JNIEXPORT void JNICALL</span><br><span class="line">Java_jaygoo_library_converter_Mp3Converter_init(JNIEnv *env, jclass type, jint inSampleRate,</span><br><span class="line">                                               jint channel, jint mode, jint outSampleRate,</span><br><span class="line">                                               jint outBitRate, jint quality) &#123;</span><br><span class="line">    lameInit(inSampleRate, channel, mode, outSampleRate, outBitRate, quality);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>extern &quot;C&quot;</code>因为我们写的是cpp是C++文件，所以当我们调用一些C文件的方法时需要加上<code>extern &quot;C&quot;</code>，不然会提示找不到方法。</li>
+<li><code>Java_jaygoo_library_converter_Mp3Converter_init</code>这里方法名是和Java文件中的native方法对应的，只有这样才能让Java native方法找到对应的cpp方法。格式是：<code>Java_包名_类名_方法名</code>，这里包名的<code>.</code>用<code>_</code>代替，所以我们native的方法名命名尽量采用不要包含<code>_</code>，但如果真的包含了，那么在cpp文件中用<code>1</code>代替Java native 中的<code>_</code>。</li>
+<li><code>JNIEXPORT void JNICALL</code>JNI的关键字，表示此函数是要被JNI调用的。</li>
+<li><code>JNIEnv *env</code>JNIEnv是指向JNINativeInterface结构的指针，当我们需要调用JNI方法时，都需要通过这个指针才能进行调用。</li>
+</ul>
+<p>其实我们还可以通过Android Studio来自动生成这些方法和参数，在Android Studio中点击native方法名，快捷键<code>alt+enter</code>即可自动生成了。</p>
+<p>看到这里，大家基本对如何编写cpp代码有一定的了解，接下来我来介绍下<code>lame-mp3-utils.cpp</code>的实现，由于篇幅有限，这里就只介绍一些关键的代码。</p>
+<hr>
+<h2><span id="init">init</span></h2>
+<p>这里主要是对Lame进行一些初始化，主要的参数包括：</p>
+<ol>
+<li>inSampleRate 要转换的音频文件采样率</li>
+<li>mode 音频编码模式，包括VBR、ABR、CBR</li>
+<li>outSampleRate 转换后音频文件采样率</li>
+<li>outBitRate 输出的码率</li>
+<li>quality 压缩质量（具体数值含义上面注释已经写的很清楚了）</li>
+</ol>
+<p>这里的代码没什么可看的，主要是调用一些Lame自带的方法设置一些配置参数，最后调用<code>lame_init_params(lame)</code>完成初始化，这里我对上面参数中出现的名词做下解释：</p>
+<ul>
+<li><code>采样率</code>每秒从连续信号中提取并组成离散信号的采样个数，单位Hz。数值越高，音质越好，常见的如8000Hz、11025Hz、22050Hz、32000Hz、44100Hz等。</li>
+<li><code>码率</code>又称比特率是指每秒传送的比特(bit)数，单位kbps，越高音质越好（相同编码格式下）。</li>
+<li><code>CBR</code>常数比特率编码，码率固定，速度较快，但压缩的文件相比其他模式较大，音质也不会有很大提高，适用于流式播放方案，Lame默认的方案是这种。</li>
+<li><code>VBR</code>动态比特率编码，码率不固定。适用于下载后在本地播放或者在读取速度有限的设备播放，体积和为<code>CBR</code>的一半左右，但是输出码率不可控。</li>
+<li><code>ABR</code>平均比特率编码，是Lame针对CBR不佳的文件体积比和VBR生成文件大小不定的特点独创的编码模式。是一种折中方案，码率基本可控，但是好像用的不多。</li>
+</ul>
+<h2><span id="convertmp3jstring-jinputpath-jstring-jmp3path">convertMp3(jstring jInputPath, jstring jMp3Path)</span></h2>
+<p>首先我们要将<code>jstring</code>转换为c++中的<code>char*</code>后才可以使用，我们可以通过JNI提供的<code>GetStringUTFChars</code>方法完成转换：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const char* cInput = env-&gt;GetStringUTFChars(jInputPath, 0);</span><br><span class="line">const char* cMp3 = env-&gt;GetStringUTFChars(jMp3Path, 0);</span><br></pre></td></tr></table></figure>
+<p>然后我们通过<code>fopen</code>来打开需要操作的文件，用<code>rb</code>来读取输入文件，用<code>wb</code>来写转换后的文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FILE* fInput = fopen(cInputPath,&quot;rb&quot;);</span><br><span class="line">FILE* fMp3 = fopen(cMp3Path,&quot;wb&quot;);</span><br></pre></td></tr></table></figure>
+<p>接下来我们申请两个buffer来缓存文件数据，我们边读边转换，然后再将转换后的数据写入文件。由于Lame的要求，这里的buffer数据必须要不小于7200，下面是具体的转换代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//convert to mp3</span><br><span class="line">   do&#123;</span><br><span class="line">       //这里将输入文件内容读取到inputBuffer中，当全部读取会返回0</span><br><span class="line">       read = static_cast&lt;int&gt;(fread(inputBuffer, sizeof(short int) * 2, 8192, fInput));</span><br><span class="line">       //这里用于计算读取的原文件的byte数，可以用于计算转换的进度</span><br><span class="line">       total +=  read * sizeof(short int)*2;</span><br><span class="line">       nowConvertBytes = total;</span><br><span class="line">       if(read != 0)&#123;</span><br><span class="line">           //这里用lame将inputBuffer转换为MP3格式的数据放入mp3Buffer中</span><br><span class="line">           write = lame_encode_buffer_interleaved(lame, inputBuffer, read, mp3Buffer, BUFFER_SIZE);</span><br><span class="line">           //将转换好的mp3Buffer的数据写入文件</span><br><span class="line">           fwrite(mp3Buffer, sizeof(unsigned char), static_cast&lt;size_t&gt;(write), fMp3);</span><br><span class="line">       &#125;</span><br><span class="line">       //最后全部读取完成后及时flush</span><br><span class="line">       if(read == 0)&#123;</span><br><span class="line">           lame_encode_flush(lame,mp3Buffer, BUFFER_SIZE);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;while(read != 0);</span><br></pre></td></tr></table></figure>
+<p>最后记得转换结束后释放资源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">resetLame();</span><br><span class="line">fclose(fInput);</span><br><span class="line">fclose(fMp3);</span><br><span class="line">env-&gt;ReleaseStringUTFChars(jInputPath, cInput);</span><br><span class="line">env-&gt;ReleaseStringUTFChars(jMp3Path, cMp3);</span><br></pre></td></tr></table></figure>
+<h1><span id="生成不同abi下的so库">生成不同ABI下的so库</span></h1>
+<p>为了支持不同的设备，我们需要根据不同的ABI生成不同的so库来调用，我们可以通过Android Studio的<code>Make</code>来调用<code>CMakeList.txt</code>脚本生成支持各种ABI版本的so库。文件输出路径可以通过配置<code>CMakeList.txt</code>来修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set(CMAKE_LIBRARY_OUTPUT_DIRECTORY $&#123;PROJECT_SOURCE_DIR&#125;/src/main/jniLibs/$&#123;ANDROID_ABI&#125;)</span><br></pre></td></tr></table></figure>
+<p>其中<code>PROJECT_SOURCE_DIR</code>是指脚本所在目录，<code>ANDROID_ABI</code>是指在<code>build.gradle</code>中配置的<code>abiFilters</code>。</p>
+<h2><span id="abi扩展知识">ABI扩展知识</span></h2>
+<p>ABI（Application binary interface）应用程序二进制接口。不同的CPU 与指令集的每种组合都有定义的ABI (应用程序二进制接口)，一段程序只有遵循这个接口规范才能在该CPU上运行，所以同样的程序代码为了兼容多个不同的CPU，需要为不同的ABI构建不同的库文件。当然对于CPU来说，不同的架构并不意味着一定互不兼容。</p>
+<ul>
+<li>armeabi设备只兼容armeabi</li>
+<li>armeabi-v7a设备兼容armeabi-v7a、armeabi</li>
+<li>arm64-v8a设备兼容arm64-v8a、armeabi-v7a、armeabi</li>
+<li>x86设备兼容X86、armeabi</li>
+<li>mips64设备兼容mips64、mips</li>
+<li>mips只兼容mips；</li>
+</ul>
+<h1><span id="github">GitHub</span></h1>
+<p><a href="https://github.com/Jay-Goo/Mp3Converter" target="_blank" rel="noopener">https://github.com/Jay-Goo/Mp3Converter</a></p>
+<h1><span id="参考文献">参考文献</span></h1>
+<p><a href="https://blog.csdn.net/allen315410/article/details/42456661" target="_blank" rel="noopener">https://blog.csdn.net/allen315410/article/details/42456661</a></p>
+<p><a href="https://www.jianshu.com/p/6332418b12b1" target="_blank" rel="noopener">https://www.jianshu.com/p/6332418b12b1</a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/article/记第一次电子设备禁用日感受/" data-toggle="tooltip" data-placement="top" title="记第一次【电子设备禁用日】感受">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Android Thing配置命令札记/" data-toggle="tooltip" data-placement="top" title="Android Thing配置命令札记">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/cdn/pay_ali.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/cdn/pay_wechat.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share" data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                        
+                          <a class="tag" href="/tags/#NDK" title="NDK">NDK</a>
+                        
+                          <a class="tag" href="/tags/#音频转码" title="音频转码">音频转码</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/Google_acmer" target="_blank">CSDN Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/JinJieGu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JayGoo 2019 
+                    <br>
+                    Theme by <a href="https://github.com/YenYuHsuan/hexo-theme-beantech/">Hexo-BeanTech</a> 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("gujinjie.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'gujinjie.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="gujinjie.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

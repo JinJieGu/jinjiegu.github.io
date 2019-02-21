@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Uri详解之——Uri结构与代码提取 - JayGoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="gujinjie.top/article/Uri详解之——Uri结构与代码提取/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                            
+                              <a class="tag" href="/tags/#Android基础" title="Android基础">Android基础</a>
+                            
+                        </div>
+                        <h1>Uri详解之——Uri结构与代码提取</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JayGoo on
+                            2016-08-11
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JayGoo的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/works/">works</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>本文将详细介绍Uri结构与代码提取相关知识，记录一下，以备不时之需。</p>
+<a id="more"></a>
+<h1><span id="一-uri与uri"><strong>一、URI与Uri</strong></span></h1>
+<p>名称如此相像的两个类是有什么区别和联系？</p>
+<p>1、所属的包不同。URI位置在java.net.URI,显然是Java提供的一个类。而Uri位置在android.net.Uri,是由Android提供的一个类。所以初步可以判断，Uri是URI的“扩展”以适应Android系统的需要。</p>
+<p>2、作用的不同。URI类代表了一个URI（这个URI不是类，而是其本来的意义：通用资源标志符——Uniform Resource Identifier)实例。Uri类是一个不可改变的URI引用，包括一个URI和一些碎片，URI跟在“#”后面。建立并且转换URI引用。而且Uri类对无效的行为不敏感，对于无效的输入没有定义相应的行为，如果没有另外制定，它将返回垃圾而不是抛出一个异常。</p>
+<p>通俗来讲：<strong>Uri是Android开发的，扩展了Java中URI的一些功能来特定的适用于Android开发，所以大家在开发时，只使用Android 提供的Uri即可</strong>；</p>
+<hr>
+<h1><span id="二-uri结构"><strong>二、Uri结构</strong></span></h1>
+<h2><span id="1-结构形式"><strong>1、结构形式</strong></span></h2>
+<p>结构由简至繁以此可划分以下三种格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[scheme:]scheme-specific-part[#fragment]  </span><br><span class="line">[scheme:][//authority][path][?query][#fragment]  </span><br><span class="line">[scheme:][//host:port][path][?query][#fragment]</span><br></pre></td></tr></table></figure>
+<h2><span id="2-主要规则"><strong>2、主要规则</strong></span></h2>
+<p><strong>path可以有多个，每个用/连接</strong>，比如<br>
+scheme://authority/path1/path2/path3?query#fragment</p>
+<p>**query参数可以带有对应的值，也可以不带，如果带对应的值用=表示，**如:<br>
+scheme://authority/path1/path2/path3?id = 1#fragment，这里有一个参数id，它的值是1</p>
+<p><strong>query参数可以有多个，每个用&amp;连接</strong><br>
+scheme://authority/path1/path2/path3?id = 1&amp;name = mingming&amp;old#fragment<br>
+这里有三个参数：<br>
+参数1：id，其值是:1<br>
+参数2：name，其值是:mingming<br>
+参数3：old，没有对它赋值，所以它的值是null</p>
+<p>在android中，除了scheme、authority是必须要有的，其它的几个path、query、fragment，<strong>它们每一个可以选择性的要或不要，但顺序不能变</strong>，比如：<br>
+其中&quot;path&quot;可不要：scheme://authority?query#fragment<br>
+其中&quot;path&quot;和&quot;query&quot;可都不要：scheme://authority#fragment<br>
+其中&quot;query&quot;和&quot;fragment&quot;可都不要：scheme://authority/path<br>
+&quot;path&quot;,“query”,&quot;fragment&quot;都不要：scheme://authority<br>
+等等……</p>
+<hr>
+<h1><span id="三-示例"><strong>三、示例</strong></span></h1>
+<p>方便对照查看再写一遍结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[scheme:]scheme-specific-part[#fragment]  </span><br><span class="line">[scheme:][//authority][path][?query][#fragment]  </span><br><span class="line">[scheme:][//host:port][path][?query][#fragment]</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.baidu.com:8080/yourpath/fileName.htm?stove=10&amp;path=32&amp;id=4#harvic</span><br></pre></td></tr></table></figure>
+<p><strong>scheme</strong>：http<br>
+<strong>scheme-specific-part</strong>：<a href="//www.baidu.com:8080/yourpath/fileName.htm?tove=10&amp;path=32&amp;id=4">//www.baidu.com:8080/yourpath/fileName.htm?tove=10&amp;path=32&amp;id=4</a><br>
+注意要带上//，因为除了[scheme:]和[#fragment]部分全部都是scheme-specific-part，当然包括最前面的//；<br>
+<strong>fragment</strong>：最后用#分隔的部分就是fragment，所以这个Uri的fragment是：harvic</p>
+<p>下面就是对scheme-specific-part进行拆分了；<br>
+在scheme-specific-part中，最前端的部分就是<strong>authority</strong>，？后面的部分是<strong>query</strong>，中间的部分就是<strong>path</strong></p>
+<p><strong>authority</strong>：很容易看出scheme-specific-part最新端的部分是：<a href="http://www.baidu.com:8080" target="_blank" rel="noopener">www.baidu.com:8080</a><br>
+<strong>query</strong>：在scheme-specific-part中，？后的部分为：stove=10&amp;path=32&amp;id=4<br>
+<strong>path</strong>：在scheme-specific-part中，<em>除了authority和query其余都是path的部分</em>：/yourpath/fileName.htm</p>
+<p><strong>authority</strong>又一步可以划分为<strong>host:port</strong>形式，其中host:port用冒号分隔，冒号前的是host，冒号后的是port，所以：<br>
+<strong>host</strong>：<a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a><br>
+<strong>port</strong>：8080</p>
+<hr>
+<p>**</p>
+<h1><span id="四-代码提取"><strong>四、代码提取</strong></span></h1>
+<p>方便对照查看再写一遍结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[scheme:]scheme-specific-part[#fragment]  </span><br><span class="line">[scheme:][//authority][path][?query][#fragment]  </span><br><span class="line">[scheme:][//host:port][path][?query][#fragment]</span><br></pre></td></tr></table></figure>
+<p>**<br>
+示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.baidu.com:8080/yourpath/fileName.htm?stove=10&amp;path=32&amp;id=4#harvic</span><br></pre></td></tr></table></figure>
+<p><strong>getScheme()：<strong>获取Uri中的</strong>scheme</strong>字符串部分，在这里即，http</p>
+<p><strong>getSchemeSpecificPart()：</strong><br>
+获取Uri中的<strong>scheme-specific-part</strong>部分，这里是：<a href="//www.baidu.com:8080/yourpath/fileName.htm">//www.baidu.com:8080/yourpath/fileName.htm</a>?</p>
+<p>**getFragment()：**获取Uri中的Fragment部分，即harvic</p>
+<p>**getAuthority()：**获取Uri中Authority部分，<a href="http://xn--www-4l3e.baidu.com:8080" target="_blank" rel="noopener">即www.baidu.com:8080</a></p>
+<p>**getPath()：**获取Uri中path部分，即/yourpath/fileName.htm</p>
+<p>**getQuery()：**获取Uri中的query部分，即stove=10&amp;path=32&amp;id=4</p>
+<p>**getHost()：**获取Authority中的Host字符串，<a href="http://xn--www-4l3e.baidu.com" target="_blank" rel="noopener">即www.baidu.com</a></p>
+<p>**getPost()：**获取Authority中的Port字符串，即8080</p>
+<p><strong>List&lt; String&gt; getPathSegments()：<strong>上面我们的getPath()是把path部分整个获取下来：/yourpath/fileName.htm，getPathSegments()的作用就是</strong>依次提取出Path的各个部分的字符串，以字符串数组的形式输出</strong>。以上面的Uri为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String mUriStr = &quot;http://www.baidu.com:8080/yourpath/fileName.htm?stove=10&amp;path=32&amp;id=4#harvic&quot;;  </span><br><span class="line">Uri mUri = Uri.parse(mUriStr);  </span><br><span class="line">List&lt;String&gt; pathSegList = mUri.getPathSegments();  </span><br><span class="line">for (String pathItem:pathSegList)&#123;  </span><br><span class="line">    Log.d(&quot;TAG&quot;,&quot;pathSegItem:&quot;+pathItem);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>getQueryParameter(String key)：<strong>在上面我们通过getQuery()获取整个query字段：stove=10&amp;path=32&amp;id=4，getQueryParameter(String key)作用就是</strong>通过传进去path中某个Key的字符串，返回他对应的值。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String mUriStr = &quot;http://www.java2s.com:8080/yourpath/fileName.htm?stove=10&amp;path=32&amp;id#harvic&quot;;  </span><br><span class="line">mUri = Uri.parse(mUriStr);  </span><br><span class="line">Log.d(&quot;TAG&quot;,&quot;(stove):&quot;+mUri.getQueryParameter(&quot;stove&quot;));  </span><br><span class="line">Log.d(&quot;TAG&quot;,&quot;(id):&quot;+mUri.getQueryParameter(&quot;id&quot;));</span><br></pre></td></tr></table></figure>
+<p><strong><em>注意：在path中，即使针对某一个KEY不对它赋值是允许的，但在利用getQueryParameter()获取该KEY对应的值时，获取到的是null，所以id的值为null（未赋值）</em></strong></p>
+<hr>
+<p>**</p>
+<h1><span id="五-扩展">五、扩展</span></h1>
+<p>**<br>
+<strong>1、 绝对URI和相对URI</strong></p>
+<p>**绝对URI：**以scheme组件起始的完整格式，如http://www.baidu.com。表示以对标识出现的环境无依赖的方式引用资源。<br>
+**相对URI：**不以scheme组件起始的非完整格式，<a href="http://xn--www-eo8e.baidu.com" target="_blank" rel="noopener">如www.baidu.com</a>。表示以对依赖标识出现的环境有依赖的方式引用资源。</p>
+<p><strong>2、不透明URI和分层URI</strong><br>
+不透明URI：scheme-specific-part组件不是以正斜杠(/)起始的，如mailto:google_acmer@xxx.com。由于不透明URI无需进行分解操作，因此不会对scheme-specific-part组件进行有效性验证。<br>
+分层URI：scheme-specific-part组件是以正斜杠(/)起始的，如http://google_acmer.com。</p>
+<p><strong>URI、URL、URN的区别</strong><br>
+互联网之父Tim Berners-Lee引入用于识别、定位和命名互联网资源的途径——URI、URL和URN。三者彼此关联，URI的范畴位于体系的顶层，URL和URN的范畴位于体系的底层。</p>
+<pre><code>         ![这里写图片描述](http://img.blog.csdn.net/20160811143413601)
+</code></pre>
+<p>URI：Uniform Resource Identifier，统一资源标识符；<br>
+URL：Uniform Resource Locator，统一资源定位符；<br>
+URN：Uniform Resource Name，统一资源名称。</p>
+<p>上图可知URL和URN必须是URI，但URI却不一定是URL或URN。<br>
+URI仅仅是资源名称而已，知道了URI最多就是知道有这么一个名称的资源罢了，至于如何获取（与资源作交互）则是毫无头绪（不能定位或读取/写入资源），而这个资源名称是永久持有还是暂时持有也没有相应的规定，于是就有了URL和URN两个子集。</p>
+<hr>
+<p>更多有关本扩展和标准化(Normalization)、解析化(Resolution)、相对化(Relativization)的知识参见<a href="http://www.cnblogs.com/fsjohnhuang/p/4280369.html" target="_blank" rel="noopener">此链接</a></p>
+<p>文章部分摘取总结自<a href="http://blog.csdn.net/harvic880925/article/details/44679239" target="_blank" rel="noopener">http://blog.csdn.net/harvic880925/article/details/44679239</a>，万分感谢。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/article/Android 听筒扬声器切换（多机型兼容、兼容5.0以上）/" data-toggle="tooltip" data-placement="top" title="Android 听筒扬声器切换（多机型兼容、兼容5.0以上）">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Bitmap优化问题/" data-toggle="tooltip" data-placement="top" title="Bitmap优化问题">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/cdn/pay_ali.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/cdn/pay_wechat.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share" data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#Android基础" title="Android基础">Android基础</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/Google_acmer" target="_blank">CSDN Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/JinJieGu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JayGoo 2019 
+                    <br>
+                    Theme by <a href="https://github.com/YenYuHsuan/hexo-theme-beantech/">Hexo-BeanTech</a> 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("gujinjie.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'gujinjie.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="gujinjie.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
