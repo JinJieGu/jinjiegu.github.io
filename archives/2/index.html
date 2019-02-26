@@ -141,14 +141,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -236,6 +236,48 @@
 
 <div class="post-preview">
 
+    <a href="/article/图片Drawable完美着色方案及源码分析/">
+        <h2 class="post-title">
+            图片Drawable完美着色方案及源码分析
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+莫看江面平如镜,要看水底万丈深。
+
+最近开发过程中有个需求是不同的角色使用不同的颜色的图片，如果使用传统方案，需要UI切很多张不同颜色的相同形状的图，并根据不同的角色在它们之间切换，代码的巨大开销以及apk大小的增加。于是便思考有没有更好的解决方案——通过只改变图片颜色的方式。
+ 
+DrawableCompat
+Google 在v4支持库中引入了DrawableCompat类，它介绍了前L......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by JayGoo on
+            2017-08-28
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Android" title="Android">Android</a>
+            
+              <a href="/tags/#精品博文" title="精品博文">精品博文</a>
+            
+              <a href="/tags/#Android基础" title="Android基础">Android基础</a>
+            
+              <a href="/tags/#Android工具类" title="Android工具类">Android工具类</a>
+            
+              <a href="/tags/#源码解析" title="源码解析">源码解析</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/article/Kotlin --让Android开发更优雅更效率/">
         <h2 class="post-title">
             Kotlin --让Android开发更优雅更效率
@@ -313,6 +355,44 @@ Kotlin的作者是大名鼎鼎的Jetbrains公司。它有一系列耳熟能详�
 
 <div class="post-preview">
 
+    <a href="/article/9Path图片绘制/">
+        <h2 class="post-title">
+            Android自定义View-9Path图片绘制
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+云不积跬步,无以至千里;不积小流,无以成江海
+
+
+实现代码
+计算与定位
+首先计算图片的位置（默认已获得到图片Bitmap对象）
+12345Rect rect = new Rect();rect.left = what you wantrect.top = what you wantrect.right = what you wantrect.bottom = what you want
+绘......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by JayGoo on
+            2017-02-13
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Android" title="Android">Android</a>
+            
+              <a href="/tags/#View绘制" title="View绘制">View绘制</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/article/ Android ANR 错误LOG查看/">
         <h2 class="post-title">
             Android ANR 错误LOG查看
@@ -345,44 +425,6 @@ Kotlin的作者是大名鼎鼎的Jetbrains公司。它有一系列耳熟能详�
               <a href="/tags/#Android" title="Android">Android</a>
             
               <a href="/tags/#那些年踩过的坑" title="那些年踩过的坑">那些年踩过的坑</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/article/9Path图片绘制/">
-        <h2 class="post-title">
-            Android自定义View-9Path图片绘制
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-云不积跬步,无以至千里;不积小流,无以成江海
-
-
-实现代码
-计算与定位
-首先计算图片的位置（默认已获得到图片Bitmap对象）
-12345Rect rect = new Rect();rect.left = what you wantrect.top = what you wantrect.right = what you wantrect.bottom = what you want
-绘......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by JayGoo on
-            2017-02-13
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Android" title="Android">Android</a>
-            
-              <a href="/tags/#View绘制" title="View绘制">View绘制</a>
             
         </div>
     
@@ -580,39 +622,6 @@ Vivo系：忘了什么型号了
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/article/Bitmap优化问题/">
-        <h2 class="post-title">
-            Bitmap优化问题
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            在Android项目中，如果直接使用ImageView显示Bitmap会占用较多的资源，如果图片过大，会造成程序崩溃。为了解决这个问题需要对Bitmap进行压缩，以节省内存。因为项目中用到，所以写下来，以备不时之需。
-
-我们可以使用BitmapFactory的options设置图片压缩比，具体代码如下：
-12345678910111213141516171819202122232425262......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by JayGoo on
-            2016-03-07
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Android" title="Android">Android</a>
-            
-              <a href="/tags/#Android基础" title="Android基础">Android基础</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -658,13 +667,7 @@ Vivo系：忘了什么型号了
     <div class="tags">
         
             
-            <a href="/tags/#Android" title="Android" rel="17">Android</a>
-            
-        
-            
-        
-            
-        
+            <a href="/tags/#Android" title="Android" rel="18">Android</a>
             
         
             
@@ -672,11 +675,21 @@ Vivo系：忘了什么型号了
             
         
             
-            <a href="/tags/#Android基础" title="Android基础" rel="5">Android基础</a>
+        
+            
+            <a href="/tags/#精品博文" title="精品博文" rel="5">精品博文</a>
             
         
             
-            <a href="/tags/#精品博文" title="精品博文" rel="4">精品博文</a>
+            <a href="/tags/#多渠道打包" title="多渠道打包" rel="2">多渠道打包</a>
+            
+        
+            
+        
+            
+        
+            
+            <a href="/tags/#Android基础" title="Android基础" rel="5">Android基础</a>
             
         
             
@@ -687,8 +700,6 @@ Vivo系：忘了什么型号了
         
             
             <a href="/tags/#他山之石" title="他山之石" rel="2">他山之石</a>
-            
-        
             
         
             
@@ -771,7 +782,7 @@ Vivo系：忘了什么型号了
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
 
         <hr>

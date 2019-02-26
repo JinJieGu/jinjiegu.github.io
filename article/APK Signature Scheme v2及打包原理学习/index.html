@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Android Thing配置命令札记 - JayGoo | Blog
+          APK Signature Scheme v2及打包原理学习 - JayGoo | Blog
         
     </title>
 
-    <link rel="canonical" href="gujinjie.top/article/Android Thing配置命令札记/">
+    <link rel="canonical" href="gujinjie.top/article/APK Signature Scheme v2及打包原理学习/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -88,16 +88,18 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#Android Ting" title="Android Ting">Android Ting</a>
+                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
                             
-                              <a class="tag" href="/tags/#IOT" title="IOT">IOT</a>
+                              <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                            
+                              <a class="tag" href="/tags/#多渠道打包" title="多渠道打包">多渠道打包</a>
                             
                         </div>
-                        <h1>Android Thing配置命令札记</h1>
+                        <h1>APK Signature Scheme v2及打包原理学习</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by JayGoo on
-                            2018-01-23
+                            2018-01-17
                         </span>
                     </div>
                 
@@ -239,18 +241,151 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p><strong>记录一些使用Android Ting 过程中常用的命令，以备不时之需</strong></p>
-<a id="more"></a>
-<blockquote>
-<p>我的WIFI账号：Danke_4E883E_5G<br>
-我的WIFI密码：wifi.danke.life</p>
-</blockquote>
-<p><strong>查看wifi情况</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logcat -d | grep Wifi</span><br></pre></td></tr></table></figure>
-<p><strong>重置wifi</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">am startservice -n com.google.wifisetup/.WifiSetupService -a WifiSetupService.Reset</span><br><span class="line"></span><br><span class="line">am startservice \</span><br><span class="line">-n com.google.wifisetup/.WifiSetupService \</span><br><span class="line"></span><br><span class="line">-a WifiSetupService.Connect \</span><br><span class="line"></span><br><span class="line">-e ssid Danke_4E883E_5G \</span><br><span class="line"></span><br><span class="line">-e passphrase wifi.danke.life</span><br></pre></td></tr></table></figure>
-<p><strong>配置wifi</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">am startservice -n com.google.wifisetup/.WifiSetupService -a WifiSetupService.Connect -e ssid Danke_4E883E -e passphrase wifi.danke.life</span><br></pre></td></tr></table></figure>
+                <h1><span id="zip">zip</span></h1>
+<hr>
+<p>想了解APK Signature Scheme v2，就必须简单了解一下zip格式，其简单的数据结构如下：</p>
+<p>[Local file header +filedata + data descriptor]{1,n} + central directory +endofcentral directoryrecord</p>
+<ul>
+<li>[文件头+文件数据+数据描述符]{此处可重复n次}+核心目录+目录结束标识</li>
+</ul>
+<p>核心目录决定zip中每个文件或目录的名称，以及关于条目的其他元数据以及到ZIP文件的偏移量，指向实际条目数据。这允许相对快速地读取zip的文件列表，因为不必读取整个zip查看文件的列表。 只有核心目录中存在的文件或者目录才是有效的。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/531277-23f4714b1f1c971a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/800/format/webp" alt=""></p>
+<p>ZIP文件通过读取核心目录结束标示来进行文件的追加zip，可以只操作核心目录进行删除操作。中央目录中的文件条目的顺序不必与归档中的文件条目的顺序一致。</p>
+<p>ZIP格式使用特定的4字节“签名”来表示文件中的各种结构。每个文件条目由特定签名标记。中央目录记录的结束用其特定签名指示，并且中央目录中的每个条目以4字节的中心文件头部签名开始。</p>
+<p>大多数签名以短整数0x4b50结尾，以小端顺序存储。作为ASCII字符串查看，这是“PK”，发明人Phil Katz的缩写。因此，当在文本编辑器中查看.ZIP文件时，文件的前两个字节通常是“PK”。</p>
+<p>mac可以通过工具 <a href="https://link.jianshu.com?t=http://ridiculousfish.com/hexfiend/files/Hex_Fiend_2.5.dmg" target="_blank" rel="noopener">Hex_Fiend</a>可以更好的理解zip的格式。下面简单讲一个例子</p>
+<p><img src="//upload-images.jianshu.io/upload_images/531277-d07fade63c8caa10.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt=""></p>
+<p>阅读ZIP的文件格式，我们知道目录结束可以通过目录结束标示得到核心目录的偏移位置。目录结束标示以504B0506开始，第16位记录核心目录的偏移量E2020000，也就是738，在编辑器738位置是504B0102，也就是Central directory file header的位置。</p>
+<h1><span id="apk-signature-scheme-v2">APK Signature Scheme v2</span></h1>
+<hr>
+<p>android 7.0（Nougat）引入一项新的应用签名方案<a href="https://link.jianshu.com?t=https://source.android.com/security/apksigning/v2.html" target="_blank" rel="noopener">APK Signature Scheme v2</a>，它是一个对全文件进行签名的方案，能提供更快的应用安装时间、对未授权APK文件的更改提供更多保护，在默认情况下，Android Gradle 2.2.0插件会使用APK Signature Scheme v2和传统签名方案来签署你的应用。</p>
+<p>那么整个APK（ZIP文件格式）会被分为以下四个区块：</p>
+<pre><code>      1. Contents of ZIP entries（from offset 0 until the start of APK Signing Block）
+      2. APK Signing Block
+      3. ZIP Central Directory
+      4. ZIP End of Central Directory
+</code></pre>
+<p><img src="//upload-images.jianshu.io/upload_images/737862-0c87b83377dec6dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/779/format/webp" alt=""></p>
+<p>APK Signature Scheme v2提供更多保护是指除了区块2，在签名之后任意其他区块的更改都无法通过签名验证。v1 中仅验证未解压的文件内容，可以在签名后进行内容的修改，比如在apk META-INF路径下插入渠道文件。</p>
+<ul>
+<li>
+<p>APK签名块(APK Signing Block)</p>
+<p>为了保持与当前APK格式的向后兼容性，v2和APK签名存储在APK Signing Block内，这是一个新的容器，用于支持V2签名方案。在APK文件中，APK Signing Block位于<code>Contents of ZIP entries</code>末尾和ZIP<code>Central Directory</code>之前。</p>
+<p>该块包含ID值对，这种方式使得APK更容易找到该块，APK的v2签名存储在ID为0x7109871a的键值对中。</p>
+</li>
+<li>
+<p>APK Signing Block 格式（所有数字字段都是little-endian）：</p>
+<ul>
+<li>
+<p>size of block 以字节（不包括此字段）（uint64）,也就是 APK Signing Block 实际长度为+8</p>
+</li>
+<li>
+<p>uint64长度前缀ID值对的序列：</p>
+<ul>
+<li>ID （UINT32）</li>
+<li>value （可变长度：内部键值对的长度 - 4个字节）</li>
+</ul>
+</li>
+<li>
+<p>size of block 以字节为单位，与第一个字段（uint64）相同</p>
+</li>
+<li>
+<p>magic “APK Sig Block 42”（16 bytes）</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>我们重点来看一下这个ID-value，它由一个8字节的长度标示＋4字节的ID＋它的负载组成。V2的签名信息是以ID（0x7109871a）的ID-value来保存在这个区块中，不知大家有没有注意这是一组ID-value，也就是说它是可以有若干个这样的ID-value来组成</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Offset</th>
+<th style="text-align:right">Bytes</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:right">8</td>
+<td style="text-align:center">Apk Signing Block 大小，但是不包含本身，也就是实际Block大小需要+8</td>
+</tr>
+<tr>
+<td style="text-align:left">8</td>
+<td style="text-align:right">8</td>
+<td style="text-align:center">键值对的起始标记，存储键值对的大小，也就是后面pair的，key+value 占用的byte</td>
+</tr>
+<tr>
+<td style="text-align:left">16</td>
+<td style="text-align:right">4+n</td>
+<td style="text-align:center">key 为 4byte,value 为变化的</td>
+</tr>
+<tr>
+<td style="text-align:left">@+16</td>
+<td style="text-align:right">8</td>
+<td style="text-align:center">Apk Signing Block同上</td>
+</tr>
+<tr>
+<td style="text-align:left">@+24</td>
+<td style="text-align:right">16</td>
+<td style="text-align:center">magic “APK Sig Block 42”</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>如何找到 APK Signing Block</p>
+<p>首先通过ZIP <code>End of Central Directory</code>中存储的信息找出ZIP <code>Central Directory</code>数据偏移量，然后就可以找到APK Signing Block的位置。<br>
+与此同时存在magic的值为<code>APK Sig Block 42</code>也就表示APK Signing Block的结尾，剩下的通过<code>size of block</code>可以找出APK Signing Block的起始位置。</p>
+<p><code>End of Central Directory</code> 格式如下：</p>
+<p><img src="//upload-images.jianshu.io/upload_images/737862-8bb9d939ce558f46.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/579/format/webp" alt=""></p>
+</li>
+</ul>
+<ul>
+<li>
+<p>提醒</p>
+<p>Android系统在解释APK Signing Block时，忽略未知ID的键值对。</p>
+</li>
+<li>
+<p>签名后的APK完整性验证</p>
+</li>
+</ul>
+<p><img src="//upload-images.jianshu.io/upload_images/737862-9b97265236b83f14.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/716/format/webp" alt=""></p>
+<p>apk-sections.png</p>
+<p>被保护的部分包括1,3,4,这三个部分不能修，但是EOCD中<code>offset of start of central directory,relative to start of archive</code>可以修改。</p>
+<h3><span id="得到的有用信息">得到的有用信息</span></h3>
+<ol>
+<li>
+<p>APK Signing Block 是可变的</p>
+</li>
+<li>
+<p>APK Signing Block是通过已知键值对方式存储，未知ID Android系统将不做处理。</p>
+</li>
+<li>
+<p>只需要生成一个基础包，加入渠道信息不用重新打包</p>
+</li>
+</ol>
+<h1><span id="app渠道如何写入">APP渠道如何写入</span></h1>
+<p>如果一次需要打100渠道包，使用flavors是一件烦人的事情，速度非常慢，有没有更快的方式呢？</p>
+<p>V1: setComment 和 META-INF 中写入Channel信息，能解决这个问题，并且速度非常快。</p>
+<p>V2：V1的方式不可行，因为签名范围扩大到整个zip，改动后会导致apk无法安装，所以只能通过新方式写入。</p>
+<ul>
+<li>
+<p><a href="https://github.com/Meituan-Dianping/walle" target="_blank" rel="noopener">Meituan - Walle</a> 方案概述（<a href="https://tech.meituan.com/2017/01/13/android-apk-v2-signature-scheme.html" target="_blank" rel="noopener">详细原理点这里</a>）：</p>
+<ol>
+<li>对新的应用签名方案生成的APK包中的ID-value进行扩展，提供自定义ID－value（渠道信息），并保存在APK中</li>
+<li>而APK在安装过程中进行的签名校验，是忽略我们添加的这个ID-value的，这样就能正常安装了</li>
+<li>在App运行阶段，可以通过ZIP的<code>EOCD（End of central directory）</code>、<code>Central directory</code>等结构中的信息（会涉及ZIP格式的相关知识，这里不做展开描述）找到我们自己添加的ID-value，从而实现获取渠道信息的功能</li>
+</ol>
+</li>
+</ul>
+<p>Walle完全是基于ZIP文件格式和APK Signing Block存储格式而构建，基于文件的二进制流进行处理，有着良好的处理速度和兼容性，能够满足不同的语言编写的要求，目前walle采用的是Java＋Groovy开发， 该工具主要有四部分组成： 1. 用于写入ID-value信息的Java类库 2. Gradle构建插件用来和Android的打包流程进行结合 3. 用于读取ID-value信息的Java类库 4. 用于供<code>com.android.application</code>使用的读取渠道信息的AAR</p>
+<p>这样，每打一个渠道包只需复制一个APK，然后在APK中添加一个ID-value即可，这种打包方式速度非常快，对一个30M大小的APK包只需要100多毫秒（包含文件复制时间）就能生成一个渠道包，而在运行时获取渠道信息只需要大约几毫秒的时间。</p>
+<h1><span id="参考">参考</span></h1>
+<p><a href="https://tech.meituan.com/2017/01/13/android-apk-v2-signature-scheme.html" target="_blank" rel="noopener">https://tech.meituan.com/2017/01/13/android-apk-v2-signature-scheme.html</a><br>
+<a href="https://www.jianshu.com/p/a82758475ff5" target="_blank" rel="noopener">https://www.jianshu.com/p/a82758475ff5</a><br>
+<a href="https://www.jianshu.com/p/8d4396ce231f" target="_blank" rel="noopener">https://www.jianshu.com/p/8d4396ce231f</a></p>
+
                 
 
                 <hr>
@@ -258,12 +393,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/article/手把手教你Android如何使用NDK实现一个MP3转码库/" data-toggle="tooltip" data-placement="top" title="手把手教你Android如何使用NDK实现一个MP3转码库">&larr; Previous Post</a>
+                            <a href="/article/Android Thing配置命令札记/" data-toggle="tooltip" data-placement="top" title="Android Thing配置命令札记">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/article/APK Signature Scheme v2及打包原理学习/" data-toggle="tooltip" data-placement="top" title="APK Signature Scheme v2及打包原理学习">Next Post &rarr;</a>
+                            <a href="/article/Android快速多渠道打包上线实践/" data-toggle="tooltip" data-placement="top" title="Android快速多渠道打包上线实践">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -315,6 +450,18 @@
             <!-- Tabe of Content -->
             <!-- Table of Contents -->
 
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">zip</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">APK Signature Scheme v2</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.0.1.</span> <span class="toc-nav-text">得到的有用信息</span></a></li></ol></li></ol><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">APP渠道如何写入</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">参考</span></a></li>
+        
+        </div>
+      </aside>
+    
+
                 
             <!-- Sidebar Container -->
             <div class="
@@ -329,9 +476,11 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#Android Ting" title="Android Ting">Android Ting</a>
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
                         
-                          <a class="tag" href="/tags/#IOT" title="IOT">IOT</a>
+                          <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                        
+                          <a class="tag" href="/tags/#多渠道打包" title="多渠道打包">多渠道打包</a>
                         
                     </div>
                 </section>

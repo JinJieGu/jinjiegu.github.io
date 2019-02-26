@@ -141,14 +141,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -471,6 +471,43 @@ Java提供了种类丰富的锁，每种锁因其特性的不同，在适当的�
 
 <div class="post-preview">
 
+    <a href="/article/APK Signature Scheme v2及打包原理学习/">
+        <h2 class="post-title">
+            APK Signature Scheme v2及打包原理学习
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            zip
+
+想了解APK Signature Scheme v2，就必须简单了解一下zip格式，其简单的数据结构如下：
+[Local file header +filedata + data descriptor]{1,n} + central directory +endofcentral directoryrecord
+
+[文件头+文件数据+数据描述符]{此处可重复n次}+核心目录+目录结......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by JayGoo on
+            2018-01-17
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Android" title="Android">Android</a>
+            
+              <a href="/tags/#精品博文" title="精品博文">精品博文</a>
+            
+              <a href="/tags/#多渠道打包" title="多渠道打包">多渠道打包</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/article/Android快速多渠道打包上线实践/">
         <h2 class="post-title">
             Android快速多渠道打包上线实践
@@ -576,48 +613,6 @@ Java提供了种类丰富的锁，每种锁因其特性的不同，在适当的�
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/article/图片Drawable完美着色方案及源码分析/">
-        <h2 class="post-title">
-            图片Drawable完美着色方案及源码分析
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-莫看江面平如镜,要看水底万丈深。
-
-最近开发过程中有个需求是不同的角色使用不同的颜色的图片，如果使用传统方案，需要UI切很多张不同颜色的相同形状的图，并根据不同的角色在它们之间切换，代码的巨大开销以及apk大小的增加。于是便思考有没有更好的解决方案——通过只改变图片颜色的方式。
- 
-DrawableCompat
-Google 在v4支持库中引入了DrawableCompat类，它介绍了前L......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by JayGoo on
-            2017-08-28
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Android" title="Android">Android</a>
-            
-              <a href="/tags/#Android基础" title="Android基础">Android基础</a>
-            
-              <a href="/tags/#精品博文" title="精品博文">精品博文</a>
-            
-              <a href="/tags/#Android工具类" title="Android工具类">Android工具类</a>
-            
-              <a href="/tags/#源码解析" title="源码解析">源码解析</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -659,13 +654,7 @@ Google 在v4支持库中引入了DrawableCompat类，它介绍了前L......
     <div class="tags">
         
             
-            <a href="/tags/#Android" title="Android" rel="17">Android</a>
-            
-        
-            
-        
-            
-        
+            <a href="/tags/#Android" title="Android" rel="18">Android</a>
             
         
             
@@ -673,11 +662,21 @@ Google 在v4支持库中引入了DrawableCompat类，它介绍了前L......
             
         
             
-            <a href="/tags/#Android基础" title="Android基础" rel="5">Android基础</a>
+        
+            
+            <a href="/tags/#精品博文" title="精品博文" rel="5">精品博文</a>
             
         
             
-            <a href="/tags/#精品博文" title="精品博文" rel="4">精品博文</a>
+            <a href="/tags/#多渠道打包" title="多渠道打包" rel="2">多渠道打包</a>
+            
+        
+            
+        
+            
+        
+            
+            <a href="/tags/#Android基础" title="Android基础" rel="5">Android基础</a>
             
         
             
@@ -688,8 +687,6 @@ Google 在v4支持库中引入了DrawableCompat类，它介绍了前L......
         
             
             <a href="/tags/#他山之石" title="他山之石" rel="2">他山之石</a>
-            
-        
             
         
             
@@ -772,7 +769,7 @@ Google 在v4支持库中引入了DrawableCompat类，它介绍了前L......
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
 
         <hr>
