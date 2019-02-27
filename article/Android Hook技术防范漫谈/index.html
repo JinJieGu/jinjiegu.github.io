@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Android Hook技术防范漫谈 - JayGoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="gujinjie.top/article/Android Hook技术防范漫谈/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                            
+                              <a class="tag" href="/tags/#Hook" title="Hook">Hook</a>
+                            
+                              <a class="tag" href="/tags/#他山之石" title="他山之石">他山之石</a>
+                            
+                        </div>
+                        <h1>Android Hook技术防范漫谈</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JayGoo on
+                            2019-01-06
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JayGoo的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/works/">works</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <blockquote>
+<p><strong>他山之石，可以攻玉。专注搬运优质文章~</strong></p>
+<p>本文出自 <a href="https://tech.meituan.com/2018/02/02/android-anti-hooking.html" target="_blank" rel="noopener">https://tech.meituan.com/2018/02/02/android-anti-hooking.html</a> 如有侵权，请联系我删除</p>
+</blockquote>
+<h2><span id="背景">背景</span></h2>
+<p>当下，数据就像水、电、空气一样无处不在，说它是“21世纪的生产资料”一点都不夸张，由此带来的是，各行业对于数据的争夺热火朝天。随着互联网和数据的思维深入人心，一些灰色产业悄然兴起，数据贩子、爬虫、外挂软件等等也接踵而来，互联网行业中各公司竞争对手之间不仅业务竞争十分激烈，黑科技的比拼也越发重要。随着移动互联网的兴起，爬虫和外挂也从单一的网页转向了App，其中利用Android平台下Dalvik模式中的<code>Xposed Installer</code>和<code>Cydia Substrate</code>框架对App的函数进行Hook这一招，堪称老牌经典。</p>
+<p>接下来，本文将分别介绍针对这两种框架的防护技术。</p>
+<h2><span id="xposed-installer">Xposed Installer</span></h2>
+<h3><span id="原理">原理</span></h3>
+<h4><span id="zygote">Zygote</span></h4>
+<p>在Android系统中App进程都是由Zygote进程“孵化”出来的。Zygote进程在启动时会创建一个虚拟机实例，每当它“孵化”一个新的应用程序进程时，都会将这个Dalvik虚拟机实例复制到新的App进程里面去，从而使每个App进程都有一个独立的Dalvik虚拟机实例。</p>
+<p>Zygote进程在启动的过程中，除了会创建一个虚拟机实例之外还会将<code>Java Rumtime</code>加载到进程中并注册一些Android核心类的JNI（Java Native Interface，Java本地接口）方法。一个App进程被Zygote进程孵化出来的时候，不仅会获得Zygote进程中的虚拟机实例拷贝，还会与Zygote进程一起共享<code>Java Rumtime</code>，也就是可以将<code>XposedBridge.jar</code>这个Jar包加载到每一个Android App进程中去。安装<code>Xposed Installer</code>之后，系统<code>app_process</code>将被替换，然后利用Java的<code>Reflection</code>机制覆写内置方法，实现功能劫持。下面我们来看一下细节。</p>
+<h4><span id="hook和replace">Hook和Replace</span></h4>
+<p><code>Xposed Installer</code>框架中真正起作用的是对方法的Hook和Replace。在Android系统启动的时候，Zygote进程加载<code>XposedBridge.jar</code>，将所有需要替换的Method通过<code>JNI</code>方法<code>hookMethodNative</code>指向Native方法<code>xposedCallHandler</code>，这个方法再通过调用<code>handleHookedMethod</code>这个Java方法来调用被劫持的方法转入Hook逻辑。</p>
+<p>上面提到的<code>hookMethodNative</code>是<code>XposedBridge.jar</code>中的私有的本地方法，它将一个方法对象作为传入参数并修改Dalvik虚拟机中对于该方法的定义，把该方法的类型改变为Native并将其实现指向另外一个B方法。</p>
+<p>换言之，当调用那个被Hook的A方法时，其实调用的是B方法，调用者是不知道的。在hookMethodNative的实现中，会调用<code>XposedBridge.jar</code>中的<code>handleHookedMethod</code>这个方法来传递参数。<code>handleHookedMethod</code>这个方法类似于一个统一调度的Dispatch例程，其对应的底层的C++函数是<code>xposedCallHandler</code>。而<code>handleHookedMethod</code>实现里面会根据一个全局结构<code>hookedMethodCallbacks</code>来选择相应的Hook函数并调用他们的<code>before</code>和<code>after</code>函数，当多模块同时Hook一个方法的时候<code>Xposed</code>会自动根据<code>Module</code>的优先级来排序。</p>
+<p>调用顺序如下：A.before -&gt; B.before -&gt; original method -&gt; B.after -&gt; A.after。</p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/73b15237.png" alt=""></p>
+<h3><span id="检测">检测</span></h3>
+<p>在做Android App的安全防御中检测点众多，<code>Xposed Installer</code>检测是必不可少的一环。对于Xposed框架的防御总体上分为两层：Java层和Native层。</p>
+<h4><span id="java层检测">Java层检测</span></h4>
+<p>需要说明的是，Java层的检测基本只能检测出基础的<code>Xposed Installer</code>框架，而不能防护其对App内方法的Hook，如果框架中带有反检测则Java层检测大多不起作用。</p>
+<p>下面列出Java层的检测点，仅供参考。</p>
+<p><strong>① 通过PackageManager查看安装列表</strong></p>
+<p>最简单的检测，我们调用Android提供的<code>PackageManager</code>的API来遍历系统中App的安装情况来辨别是否有安装<code>Xposed Installer</code>相关的软件包。</p>
+<pre><code>PackageManager packageManager = context.getPackageManager();
+List applicationInfoList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+for (ApplicationInfo applicationInfo: applicationInfoList) {
+    if (applicationInfo.packageName.equals(&quot;de.robv.android.xposed.installer&quot;)) {
+        // is Xposed TODO... }
+    }
+</code></pre>
+<p>通常情况下使用<code>Xposed Installer</code>框架都会屏蔽对其的检测，即Hook掉<code>PackageManager的getInstalledApplications</code>方法的返回值，以便过滤掉<code>de.robv.android.xposed.installer</code>来躲避这种检测。</p>
+<p><strong>② 自造异常读取栈</strong></p>
+<p><code>Xposed Installer</code>框架对每个由Zygote孵化的App进程都会介入，因此在程序方法异常栈中就会出现<code>Xposed</code>相关的“身影”，我们可以通过自造异常<code>Catch</code>来读取异常堆栈的形式，用以检查其中是否存在<code>Xposed</code>的调用方法。</p>
+<pre><code>try {
+    throw new Exception(&quot;blah&quot;);
+} catch(Exception e) {
+    for (StackTraceElement stackTraceElement: e.getStackTrace()) {
+        // stackTraceElement.getClassName() stackTraceElement.getMethodName() 是否存 在Xposed
+    }
+}
+
+
+E/GEnvironment: no such table: preference (code 1): while compiling: SELECT keyguard_show_livewallpaper FROM preference
+...
+at com.meituan.test.extpackage.ExtPackageManager.checkUpdate(ExtPackageManager.java:127)
+at com.meituan.test.MiFGService$1.run(MiFGService.java:41)
+at android.os.Looper.loop(Looper.java:136)
+at android.app.ActivityThread.main(ActivityThread.java:5072)
+at java.lang.reflect.Method.invokeNative(Native Method)
+at java.lang.reflect.Method.invoke(Method.java:515)
+...
+at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:793)
+at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:609)
+at de.robv.android.xposed.XposedBridge.main(XposedBridge.java:132) //发现Xposed模块
+at dalvik.system.NativeStart.main(Native Method)
+</code></pre>
+<p>​</p>
+<p><strong>③ 检查关键Java方法被变为Native JNI方法</strong></p>
+<p>当一个Android App中的<code>Java</code>方法被莫名其妙地变成了<code>Native JNI</code>方法，则非常有可能被<code>Xposed Hook</code>了。由此可得，检查关键方法是不是变成<code>Native JNI</code>方法，也可以检测是否被Hook。</p>
+<p>通过反射调用<code>Modifier.isNative(method.getModifiers())</code>方法可以校验方法是不是<code>Native JNI</code>方法，Xposed同样可以篡改<code>isNative</code>这个方法的返回值。</p>
+<p><strong>④ 反射读取XposedHelper类字段</strong></p>
+<p>通过反射遍历<code>XposedHelper</code>类中的<code>fieldCache</code>、<code>methodCache</code>、<code>constructorCache</code>变量，读取HashMap缓存字段，如字段项的key中包含App中唯一或敏感方法等，即可认为有<code>Xposed</code>注入。</p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/aad203b3.png" alt=""></p>
+<pre><code>boolean methodCache = CheckHook(clsXposedHelper, &quot;methodCache&quot;, keyWord);
+
+private static boolean CheckHook(Object cls, String filedName, String str) {
+    boolean result = false;
+    String interName;
+    Set keySet;
+    try {
+        Field filed = cls.getClass().getDeclaredField(filedName);
+        filed.setAccessible(true);
+        keySet = filed.get(cls)).keySet();
+        if (!keySet.isEmpty()) {
+            for (Object aKeySet: keySet) {
+                interName = aKeySet.toString().toLowerCase();
+                if (interName.contains(&quot;meituan&quot;) || interName.contains(&quot;dianping&quot;) ) {
+                    result = true;
+                    break;
+                	} 
+                }
+            }
+		...
+    return result;
+}
+</code></pre>
+<h4><span id="native层检测">Native层检测</span></h4>
+<p>由上文可知，无论在Java层做何种检测，Xposed都可以通过Hook相关的API并返回指定的结果来绕过检测，只要有方法就可以被Hook。如果仅在Java层检测就显得很徒劳，为了有效提搞检测准确率，就须做到Java和Native层同时检测。每个App在系统中都有对应的加载库列表，这些加载库列表在<code>/proc/</code>下对应的<code>pid/maps</code>文件中描述，在Native层读取<code>/proc/self/maps</code>文件不失为检测Xposed Installer的有效办法之一。由于<code>Xposed Installer</code>通常只能Hook Java层，因此在Native层使用C来解析<code>/proc/self/maps</code>文件，搜检App自身加载的库中是否存在<code>XposedBridge.jar</code>、相关的Dex、Jar和So库等文件。</p>
+<pre><code>bool is_xposed()
+{
+   bool rel = false;
+   FILE *fp = NULL;
+   char* filepath = &quot;/proc/self/maps&quot;;
+   ...
+   string xp_name = &quot;XposedBridge.jar&quot;;
+   fp = fopen(filepath,&quot;r&quot;)) 
+   while (!feof(fp))                                 
+   {
+       fgets(strLine,BUFFER_SIZE,fp);                    
+       origin_str = strLine;
+       str = trim(origin_str);
+       if (contain(str,xp_name))
+       {
+           rel = true; //检测到Xposed模块
+           break;
+       }
+   }
+	...
+}
+</code></pre>
+<h2><span id="cydia-substrate">Cydia Substrate</span></h2>
+<h3><span id="原理">原理</span></h3>
+<p><code>Cydia Substrate</code>注入Hook的一个典型流程如下图所示，在Java层配置注入的关键So库<code>libsubstrate.so</code>和<code>libsubstratedvm.so</code>。考虑到Java层检测强度太低，Substrate的检测主要在Native层来实现。</p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/f95f9fb3.png" alt=""></p>
+<h3><span id="检测">检测</span></h3>
+<h4><span id="动态加载式检测">动态加载式检测</span></h4>
+<p>读取<code>/proc/self/maps</code>，列出了App中所有加载的文件。</p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/0f11bb96.png" alt=""></p>
+<p>上图为<code>Cydia Substrate</code>在Android 4.4上注入后的进程maps表，其中<code>libsubstrate.so</code>和<code>libsubstrate-dvm.so</code>两个文件为Substrate必载入文件。通过<code>IDA Pro</code>分析对其分析。</p>
+<p>先来看<code>libsubstrate-dvm.so</code>的导出表，共有9个函数导出。</p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/b316c7be.png" alt=""></p>
+<p>当进程maps表中出现<code>libsubstrate-dvm.so</code>，可以尝试去load该so文件并调用<code>MSJavaHookMethod</code>方法，它会返回该方法的地址即判定为恶意模块（第三方程序）。</p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/386774e9.png" alt=""></p>
+<pre><code>void* lookup_symbol(char* libraryname,char* symbolname)  
+{
+    void *imagehandle = dlopen(libraryname, RTLD_GLOBAL | RTLD_NOW);
+    if (imagehandle != NULL){
+        void * sym = dlsym(imagehandle, symbolname);
+        if (sym != NULL){
+            return sym; //发现Cydia Substrate相关模块
+            }
+      ...
+}
+</code></pre>
+<p>该方式基于载入库文件的文件名或文件路径和导出函数来判断是否为恶意模块，如果完全依赖此方式来判断可能会误判，但也不失为检测方式的一个点。</p>
+<h4><span id="基于方法特征码检测">基于方法特征码检测</span></h4>
+<p>特征码即用来判断某段数据属于哪个计算机字段。在非Root环境下一般一个正常App在启动时候，系统会调度相关大小的内存、空间给App使用，此时App的运行环境内产生的数据、内存、存储等是独立于其它App的（即独立运行在沙箱中）。因为处于运行沙箱环境中的进程对沙箱的内存有最高读写权限，当我们的App进程被恶意模块附加或注入时，就可以通过对当前进程的PID所对应的maps中加载的模块进行合法校验。这里的模块校验我们可以采取对单个模块内容取样来判断是否为恶意模块，这种方式被定义为“基于方法的特征码检测”。</p>
+<p>下面对一段程序段中<code>OpcodeSample</code>方法来提取特征码。</p>
+<p>方法原型：</p>
+<pre><code>#define  LOGD(fmt, args...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG, fmt, ##args)    
+void OpcodeSample(int a ,int b){  
+    int c,d,e;
+    c = a + b;
+    d = a * b;
+    e = a / b;
+    LOGD(&quot;Hello It's c !%s\n&quot;, c);  
+    LOGD(&quot;Hello It's d !%s\n&quot;, d);  
+    LOGD(&quot;Hello It's e !%s\n&quot;, e);  
+    return;
+}
+</code></pre>
+<p>通过<code>IDA Pro</code>对其分析。</p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/de414efd.png" alt=""></p>
+<p>左侧红色方框代表为<code>OpcodeSample</code>方法的操作码，右边为操作码对应ARM平台的指令集。我们要在左侧的操作码中取出一段作为<code>OpcodeSample</code>的定位特征码，选用<code>__android_log_print</code>方法调用指令集上下文，来确定特征码。</p>
+<pre><code>第一次取样：&quot;03 20 31 46 42 46 FF F7 ?? EA&quot;
+</code></pre>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/7e5b131d.png" alt=""></p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/cfcd8880.png" alt=""></p>
+<p>通过第一次取样，查找结果有三处相似，再进一步分析。这次我们加入一个常量取样：</p>
+<pre><code>第二次取样：&quot;7E 44 ?? ?? F8 44 03 20 31 46 42 46 FF F7 ?? EA&quot;
+</code></pre>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/e2acf820.png" alt=""></p>
+<p>继而得出唯一特征码，到此，我们对特征码方法取样有了初步的了解。下面来把它转为实用的技能——动态加载式检测+特征码结合。</p>
+<p>我们对<code>libsubstrate-dvm.so</code>中导出函数<code>MSJavaHookMethod</code>来精准定位。</p>
+<p><code>IDA PRO</code>导出函数表如图：</p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/acda9a8e.png" alt=""></p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/1e1f4e26.png" alt=""></p>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/50f8e492.png" alt=""></p>
+<pre><code>第三次取样：&quot;55 57 56 53 E8 CC 14 ?? ?? 81 C3 DB ?? ?? ?? 8D 64 ?? ?? 8B 83 F4 ?? ?? ??&quot;
+</code></pre>
+<p><img src="https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018a/d38f4f7b.png" alt=""></p>
+<p>以上即为对<code>Cydia Substrate</code>的注入检测识别，通过检测<code>/proc/self/maps</code>下的加载<code>so</code>库列表得到各个库文件绝度路径，通过<code>fopen</code>函数将<code>so</code>库的内容以16进制读进来放在内存里面进行规则比对，采用字符串模糊查找来检测是否命中黑名单中的方法特征码。</p>
+<h2><span id="总结">总结</span></h2>
+<p>在安全对抗领域，相比攻击方，防守方历来处于弱势的一方。上文所提到的<code>Xposed Installer</code>和<code>Cydia Substrate</code>的检测也仅仅是保障App安全的手段之一。App安全的防御不应仅仅依赖于此，应该构建起整体的安全防御闭环，尽可能在所有已知的可能攻击点都追加检测，再配合代码加固，将防御代码隐藏。遗憾的是App防御代码隐藏再深也终究会被破解，仅仅依赖于客户端的防御显然是不足的。移动互联网领域的整体安全防御应该是走端云结合协作之道，共同防御，方能在攻防对抗中占据优势地位。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Kotlin小技巧总结/" data-toggle="tooltip" data-placement="top" title="Kotlin小技巧总结">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/cdn/pay_ali.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/cdn/pay_wechat.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share" data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">背景</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Xposed Installer</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">原理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.1.</span> <span class="toc-nav-text">Zygote</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.2.</span> <span class="toc-nav-text">Hook和Replace</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">检测</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.2.1.</span> <span class="toc-nav-text">Java层检测</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.2.2.</span> <span class="toc-nav-text">Native层检测</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Cydia Substrate</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">原理</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">检测</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.2.1.</span> <span class="toc-nav-text">动态加载式检测</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.2.2.</span> <span class="toc-nav-text">基于方法特征码检测</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">总结</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#Hook" title="Hook">Hook</a>
+                        
+                          <a class="tag" href="/tags/#他山之石" title="他山之石">他山之石</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/Google_acmer" target="_blank">CSDN Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/JinJieGu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JayGoo 2019 
+                    <br>
+                    Theme by <a href="https://github.com/YenYuHsuan/hexo-theme-beantech/">Hexo-BeanTech</a> 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("gujinjie.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'gujinjie.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="gujinjie.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
