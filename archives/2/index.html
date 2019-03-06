@@ -134,14 +134,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -233,6 +233,80 @@
             
                 <!-- Main Content -->
 
+
+<div class="post-preview">
+
+    <a href="/article/Android快速多渠道打包上线实践/">
+        <h2 class="post-title">
+            Android快速多渠道打包上线实践
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            前言
+今天向大家介绍的便是目前我们智课批改项目组使用的App多渠道打包方案，目前这个方案已经经过几个迭代的检验，效率和稳定性都有保障，希望能对大家的多渠道上线打包有所帮助。
+
+传统打包方案
+12345678910//build.gradleproductFlavors &#123;	channel&#123;			manifestPlaceholders =[CHANNEL_ID_VALUE......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by JayGoo on
+            2018-01-07
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Android" title="Android">Android</a>
+            
+              <a href="/tags/#精品博文" title="精品博文">精品博文</a>
+            
+              <a href="/tags/#多渠道打包" title="多渠道打包">多渠道打包</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/Android如何快速写满存储空间/">
+        <h2 class="post-title">
+            Android 如何快速写满存储空间
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            测试中经常会遇到一些临界条件测试，例如测试SD卡存储满的状况，下面介绍如何一条命令去实现它。
+
+方法一：
+通过如下 adb 命令在 /mnt/sdcard/ 目录下产生一个名为 bigfile 的文件，让其自动增长到磁盘剩余空间大小。
+1adb shell dd if=/dev/zero of=/mnt/sdcard/bigfile
+方法二：
+使用的是android sdk工具创建一个sdc......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by JayGoo on
+            2017-12-21
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Android" title="Android">Android</a>
+            
+              <a href="/tags/#Android基础" title="Android基础">Android基础</a>
+            
+              <a href="/tags/#临界测试" title="临界测试">临界测试</a>
+            
+        </div>
+    
+
+</div>
+<hr>
 
 <div class="post-preview">
 
@@ -545,81 +619,6 @@ Caused by: java.lang.NoClassDefFoundError: Failed resolution of:Lcom/networkbenc
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/article/兼容Android N 调用相册和相机获取图片及Crash- FileUriExposedException解决方案/">
-        <h2 class="post-title">
-            兼容Android N 调用相册和相机获取图片及Crash-FileUriExposedException解决方案
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            问题描述：
-Android N 调用相册和相机获取图片抛出Crash-FileUriExposedException
-
-原因
-Android N 文件系统权限发生了变化 ，为了提高私有文件的安全性，在targetSdk版本为N或者以后版本的app中，其私有目录将会限制访问。这可以防止私有文件元数据的泄露，比如文件大小或者是文件是否存在。但这给开发者带来了很多不利的影响：
-文件的owner不能......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by JayGoo on
-            2017-02-07
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Android" title="Android">Android</a>
-            
-              <a href="/tags/#那些年踩过的坑" title="那些年踩过的坑">那些年踩过的坑</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/article/Android 听筒扬声器切换（多机型兼容、兼容5.0以上）/">
-        <h2 class="post-title">
-            Android 听筒扬声器切换（多机型兼容、兼容5.0以上）
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            本以为听筒扬声器切换是个很简单的切换，没想到搞了快一天。网络上各种答案，各种坑，浪费了大量的时间，记录一下成果。
-
-亲测有效机型（案例有限、仅供参考）
-三星系：SM-A9000、SM-S5
-魅族系：魅蓝E（yun os）、魅蓝note5
-小米系：红米1s、小米note
-Vivo系：忘了什么型号了
-代码
-123456789101112131415161718192021222324252627......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by JayGoo on
-            2017-02-07
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Android" title="Android">Android</a>
-            
-              <a href="/tags/#那些年踩过的坑" title="那些年踩过的坑">那些年踩过的坑</a>
-            
-              <a href="/tags/#Android基础" title="Android基础">Android基础</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -685,7 +684,7 @@ Vivo系：忘了什么型号了
             
         
             
-            <a href="/tags/#他山之石" title="他山之石" rel="3">他山之石</a>
+            <a href="/tags/#他山之石" title="他山之石" rel="5">他山之石</a>
             
         
             
@@ -703,15 +702,19 @@ Vivo系：忘了什么型号了
             
         
             
+        
+            
             <a href="/tags/#Kotlin" title="Kotlin" rel="2">Kotlin</a>
             
         
             
         
             
-            <a href="/tags/#随笔" title="随笔" rel="3">随笔</a>
+        
             
         
+            
+            <a href="/tags/#随笔" title="随笔" rel="3">随笔</a>
             
         
             
@@ -782,7 +785,7 @@ Vivo系：忘了什么型号了
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
 
         <hr>
