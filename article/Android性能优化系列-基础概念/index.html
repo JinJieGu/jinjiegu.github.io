@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Android性能优化系列-基础概念篇 - JayGoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="gujinjie.top/article/Android性能优化系列-基础概念/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                            
+                              <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                            
+                              <a class="tag" href="/tags/#性能优化" title="性能优化">性能优化</a>
+                            
+                        </div>
+                        <h1>Android性能优化系列-基础概念篇</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JayGoo on
+                            2018-10-11
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JayGoo的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/works/">works</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1><span id="前言">前言</span></h1>
+<hr>
+<p>最近项目不太急，就整理一些Android性能优化的知识，以备以后复习查阅。</p>
+<h1><span id="一-java的内存区域如何划分">一、Java的内存区域如何划分</span></h1>
+<hr>
+<h4><span id="jvm角度分析">JVM角度分析</span></h4>
+<p>Java的内存区域分为：堆（Heap），栈（Stacks）方法区（MethodArea），运行时常量池（RuntimeConstant Pool），本地方法栈（NativeMethod Stacks），PC Register(PC寄存器)<br>
+<img src="//upload-images.jianshu.io/upload_images/1836169-916706398169b50d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/468/format/webp" alt=""></p>
+<h4><span id="操作系统上的进程角度分析">操作系统上的进程角度分析</span></h4>
+<p>Java的内存区域分为：堆（Heap），栈（Stacks），数据段（data segment），代码段（code segment）</p>
+<hr>
+<h2><span id="堆heap和栈stack">堆(Heap)和栈(Stack)</span></h2>
+<p>在这问题中，我们主要要弄清楚，什么是堆，什么是栈，堆栈内存有什么区别？</p>
+<ul>
+<li>Heap内存的分配也叫做动态内存分配，java中运行环境用来分配给对象和JRE类的内存都在堆内存，C/C++有时候可以用malloc或者new来申请分配一个内存。在C/C++可能需要自己负责释放（java里面直接依赖GC机制）。</li>
+<li>Stack内存是相对于线程Thread而言的, 在执行函数(方法)时，函数一些内部变量的存储都可以放在栈上面创建，函数执行结束的时候这些存储单元就会自动被释放掉。栈内存包括分配的运算速度很快，因为内置在处理器的里面的。当然容量有限。<strong>它保存线程中方法中短期存在的变量值和对Heap中对象的引用等.</strong></li>
+</ul>
+<p>区别：堆是不连续的内存区域，堆空间比较灵活也特别大。 栈式一块连续的内存区域，大小是有操作系统觉决定的。堆管理很麻烦，频繁地new/remove会造成大量的内存碎片，这样就会慢慢导致效率低下。对于栈的话，他先进后出，进出完全不会产生碎片，运行效率高且稳定。</p>
+<p>我们通常说的内存泄露，GC，是针对Heap内存的. 因为Stack内存在函数出栈的时候就销毁了。<br>
+比如说这个类</p>
+<pre><code> public class People{
+        int a = 1;
+        Student s1 = new Student();
+        public void XXX(){
+            int b = 1;
+            Student s2 = new Student();
+        }
+    }
+</code></pre>
+<p>请问a的内存在哪里，b的内存在哪里，s1，s2的内存在哪里？记住下面两句话。</p>
+<ul>
+<li>成员变量全部存储在堆中(包括基本数据类型，引用及引用的对象实体)，因为他们属于类，类对象最终还是要被new出来的。</li>
+<li>局部变量的基本数据类型和引用存储于栈当中，引用的对象实体存储在堆中。因为他们属于方法当中的变量，生命周期会随着方法一起结束。</li>
+</ul>
+<p>所以答案就是a，s1,s2对象都堆中，b和s2对象引用在栈中。</p>
+<hr>
+<h1><span id="二-java有哪些引用以及应用场景">二、Java有哪些引用，以及应用场景</span></h1>
+<hr>
+<h2><span id="对象的生命周期">对象的生命周期</span></h2>
+<p>在了解这些引用之前首先要先了解为什么会需要这些类型的引用呢，这里就需要先了解Java对象的生命周期。<br>
+在<code>Java</code>中，对象的生命周期包括以下几个阶段：</p>
+<ol>
+<li>创建阶段(<code>Created</code>)</li>
+<li>应用阶段(<code>In Use</code>)</li>
+<li>不可见阶段(<code>Invisible</code>)</li>
+<li>不可达阶段(<code>Unreachable</code>)</li>
+<li>收集阶段(<code>Collected</code>)</li>
+<li>终结阶段(<code>Finalized</code>)</li>
+<li>对象空间重分配阶段(<code>De-allocated</code>)</li>
+</ol>
+<h4><span id="1-创建阶段created">1、创建阶段(Created)</span></h4>
+<p>在创建阶段系统通过下面的几个步骤来完成对象的创建过程</p>
+<ul>
+<li>为对象分配存储空间</li>
+<li>开始构造对象</li>
+<li>从超类到子类对static成员进行初始化</li>
+<li>超类成员变量按顺序初始化，递归调用超类的构造方法</li>
+<li>子类成员变量按顺序初始化，子类构造方法调用</li>
+<li>一旦对象被创建，并被分派给某些变量赋值，这个对象的状态就切换到了应用阶段</li>
+</ul>
+<h4><span id="2-应用阶段in-use">2、应用阶段(<code>In Use</code>)</span></h4>
+<p>对象至少被一个强引用持有着。</p>
+<h4><span id="3-不可见阶段invisible">3、不可见阶段(<code>Invisible</code>)</span></h4>
+<p>当一个对象处于不可见阶段时，说明程序本身不再持有该对象的任何强引用，虽然该这些引用仍然是存在着的。 简单说就是程序的执行已经超出了该对象的作用域了。</p>
+<h4><span id="4-不可达阶段unreachable">4、不可达阶段(<code>Unreachable</code>)</span></h4>
+<p>对象处于不可达阶段是指该对象不再被任何强引用所持有。<br>
+与“不可见阶段”相比，“不可见阶段”是指程序不再持有该对象的任何强引用，这种情况下，该对象仍可能被<code>JVM</code>等系统下的某些已装载的静态变量或线程或<code>JNI</code>等强引用持有着，这些特殊的强引用被称为”<code>GC root</code>”。存在着这些<code>GC root</code>会导致对象的内存泄露情况，无法被回收。</p>
+<h4><span id="5-收集阶段collected">5、收集阶段(<code>Collected</code>)</span></h4>
+<p>当垃圾回收器发现该对象已经处于“不可达阶段”并且垃圾回收器已经对该对象的内存空间重新分配做好准备时，则对象进入了“收集阶段”。如果该对象已经重写了<code>finalize()</code>方法，则会去执行该方法的终端操作。<br>
+这里要特别说明一下：不要重载finazlie()方法！原因有两点：</p>
+<ol>
+<li>
+<p>会影响JVM的对象分配与回收速度。在分配该对象时，JVM需要在垃圾回收器上注册该对象，以便在回收时能够执行该重载方法；在该方法的执行时需要消耗CPU时间且在执行完该方法后才会重新执行回收操作，即至少需要垃圾回收器对该对象执行两次GC。</p>
+</li>
+<li>
+<p>可能造成该对象的再次“复活” 。在finalize()方法中，如果有其它的强引用再次持有该对象，则会导致对象的状态由“收集阶段”又重新变为“应用阶段”。这个已经破坏了Java对象的生命周期进程，且“复活”的对象不利用后续的代码管理。</p>
+</li>
+</ol>
+<h4><span id="6-终结阶段finalized">6、终结阶段(<code>Finalized</code>)</span></h4>
+<p>当对象执行完finalize()方法后仍然处于不可达状态时，则该对象进入终结阶段。在该阶段是等待垃圾回收器对该对象空间进行回收。</p>
+<h4><span id="7-对象空间重新分配阶段de-allocated">7、对象空间重新分配阶段(<code>De-allocated</code>)</span></h4>
+<p>垃圾回收器对该对象的所占用的内存空间进行回收或者再分配了，则该对象彻底消失了，称之为“对象空间重新分配阶段”。</p>
+<hr>
+<h2><span id="四大引用及应用场景">四大引用及应用场景</span></h2>
+<h4><span id="强引用">强引用</span></h4>
+<p>强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾收器绝不会回收它。当内存空间不足，Java虚拟机宁愿抛出<code>OutOfM moryError</code>错误，使程序异常终止，也不会靠随意回收具有强引用 对象来解决内存不足的问题。</p>
+<h4><span id="软引用">软引用</span></h4>
+<p>软引用是用来描述一些还有用但并非必须的对象。对于软引用关联着的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。</p>
+<h4><span id="弱引用">弱引用</span></h4>
+<p>弱引用也是用来描述非必须对象的，他的强度比软引用更弱一些，被弱引用关联的对象，在垃圾回收时，如果这个对象只被弱引用关联（没有任何强引用关联他），那么这个对象就会被回收。</p>
+<blockquote>
+<p>下面一段话摘自《Java核心技术卷1》：<br>
+设计 <code>WeakHashMap</code>类是为了解决一个有趣的问题。如果有一个值，对应的键已经不再 使用了， 将会出现什么情况呢？ 假定对某个键的最后一次引用已经消亡，不再有任何途径引 用这个值的对象了。但是，由于在程序中的任何部分没有再出现这个键，所以，这个键 / 值 对无法从映射中删除。为什么垃圾回收器不能够删除它呢？ 难道删除无用的对象不是垃圾回 收器的工作吗？</p>
+<p>遗憾的是，事情没有这样简单。垃圾回收器跟踪活动的对象。只要映射对象是活动的， 其中的所有桶也是活动的， 它们不能被回收。因此，需要由程序负责从长期存活的映射表中 删除那些无用的值。 或者使用 <code>WeakHashMap</code>完成这件事情。当对键的唯一引用来自散列条目时， 这一数据结构将与垃圾回收器协同工作一起删除键值对。</p>
+<p>下面是这种机制的内部运行情况。<code>WeakHashMap</code> 使用弱引用（<code>weak references</code>) 保存键。 <code>WeakReference</code> 对象将引用保存到另外一个对象中，在这里，就是散列键。对于这种类型的 对象，垃圾回收器用一种特有的方式进行处理。通常，如果垃圾回收器发现某个特定的对象 已经没有他人引用了，就将其回收。然而， 如果某个对象只能由 <code>WeakReference</code> 引用， 垃圾 回收器仍然回收它，但要将引用这个对象的弱引用放人队列中。<code>WeakHashMap</code>将周期性地检 查队列， 以便找出新添加的弱引用。一个弱引用进人队列意味着这个键不再被他人使用， 并 且已经被收集起来。于是， <code>WeakHashMap</code>将删除对应的条目。</p>
+</blockquote>
+<p>除了<code>WeakHashMap</code>使用了弱引用，<code>ThreadLocal</code>类中也是用了弱引用。</p>
+<h4><span id="虚引用">虚引用</span></h4>
+<p>一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来获取一个对象的实例。为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。虚引用和弱引用对关联对象的回收都不会产生影响，如果只有虚引用活着弱引用关联着对象，那么这个对象就会被回收。它们的不同之处在于弱引用的<code>get</code>方法，虚引用的<code>get</code>方法始终返回<code>null</code>,弱引用可以使用<code>ReferenceQueue</code>,虚引用必须配合<code>ReferenceQueue</code>使用。</p>
+<p><code>JDK</code>中直接内存的回收就用到虚引用，由于<code>JVM</code>自动内存管理的范围是堆内存，而直接内存是在堆内存之外（其实是内存映射文件，自行去理解虚拟内存空间的相关概念），所以直接内存的分配和回收都是有<code>Unsafe</code>类去操作，<code>Java</code>在申请一块直接内存之后，会在堆内存分配一个对象保存这个堆外内存的引用，这个对象被垃圾收集器管理，一旦这个对象被回收，相应的用户线程会收到通知并对直接内存进行清理工作。</p>
+<hr>
+<h1><span id="三-什么是内存泄露内存泄露发生的场景有哪些">三、什么是内存泄露？内存泄露发生的场景有哪些？</span></h1>
+<hr>
+<p>当一个对象已经不需要再使用了，本该被回收时，而有另外一个正在使用的对象持有它的引用，从而就导致对象不能被回收。这种导致了本该被回收的对象不能被回收而停留在堆内存中，就产生了内存泄漏。</p>
+<p>以下是一些常见的内存泄漏场景：</p>
+<ul>
+<li>非静态内部类的静态实例<br>
+由于内部类默认持有外部类的引用，而静态实例属于类。所以，当外部类被销毁时，内部类仍然持有外部类的引用，致使外部类无法被GC回收。因此造成内存泄露。解决方案：可以将内部类设置为Static或者使用弱引用包裹外部类的引用。</li>
+<li>类的静态变量持有大数据对象<br>
+静态变量长期维持到大数据对象的引用，阻止垃圾回收。解决方案：尽量避免使用静态变量保存大数据对象。</li>
+<li>资源对象未关闭<br>
+资源性对象如Cursor、Stream、Socket，Bitmap，应该在使用后及时关闭。未在finally中关闭，会导致异常情况下资源对象未被释放的隐患。解决方案：及时关闭，及时释放。</li>
+<li>注册对象未反注册<br>
+我们常常写很多的Listener,未反注册会导致观察者列表里维持着对象的引用，阻止垃圾回收。解决方案：生命周期结束时及时反注册。</li>
+<li>Handler临时性内存泄露<br>
+Handler通过发送Message与主线程交互，Message发出之后是存储在MessageQueue中的，有些Message也不是马上就被处理的。  解决方案：可以将Handler设置为Static或者使用弱引用包裹外部类的引用。</li>
+<li>单例模式<br>
+当我们传递进来的是Context，那么当前对象就会持有第一次实例化的Context，而单例的生命周期和应用的生命周期一致，如果Context是Activity对象，那么就会产生内存泄漏。解决方案：将Context转为ApplicationContext，一些View等使用弱引用包裹。</li>
+</ul>
+<hr>
+<h1><span id="四-garbage-collector及常见回收算法">四、Garbage Collector及常见回收算法</span></h1>
+<hr>
+<p>GC是应用于堆内存无用对象的回收机制。</p>
+<hr>
+<h2><span id="如何判断对象是否是垃圾的算法">如何判断对象是否是垃圾的算法</span></h2>
+<p>垃圾回收机制有好几套算法，java语言规范没有明确的说明JVM 使用哪种垃圾回收算法,但回收算法一般要做两件基本事情：发现无用的信息对象和回收将无用对象占用的内存空间，使该空间可被程序再次使用。</p>
+<h4><span id="引用计数算法">引用计数算法</span></h4>
+<p>堆中每个对象（不是引用）都有一个引用计数器。当一个对象被创建并初始化赋值后，该变量计数设置为1。每当有一个地方引用它时，计数器值就加1（a = b， b被引用，则b引用的对象计数+1）。当引用失效时（一个对象的某个引用超过了生命周期（出作用域后）或者被设置为一个新值时），计数器值就减1。任何引用计数为0的对象可以被当作垃圾收集。当一个对象被垃圾收集时，它引用的任何对象计数减1。</p>
+<blockquote>
+<p>优点：引用计数收集器执行简单，判定效率高，交织在程序运行中。对程序不被长时间打断的实时环境比较有利（OC的内存管理使用该算法）。</p>
+<p>缺点： 难以检测出对象之间的循环引用。同时，引用计数器增加了程序执行的开销。所以Java语言并没有选择这种算法进行垃圾回收。</p>
+</blockquote>
+<p>早期的JVM使用引用计数，现在大多数JVM采用对象引用遍历（根搜索算法）。</p>
+<h4><span id="根搜索算法">根搜索算法</span></h4>
+<p><img src="//upload-images.jianshu.io/upload_images/1836169-d74bc1cd005cb8d0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/690/format/webp" alt=""></p>
+<p>根搜索算法是从离散数学中的图论引入的，程序把所有的引用关系看作一张图，从一个节点GC ROOT开始，寻找对应的引用节点，找到这个节点以后，继续寻找这个节点的引用节点，当所有的引用节点寻找完毕之后，剩余的节点则被认为是没有被引用到的节点，即无用的节点。如果这个对象是<strong>引用可达</strong>的, 则称之为<strong>活的(live)</strong>, 反之, 如果这个对象<strong>引用不可达</strong>, 则称之为<strong>死的(dead)</strong>, 也可以称之为<strong>垃圾(garbage)</strong>.这个<strong>引用可达与不可达</strong>就是相对于GC Root来说的，在上图中，左边4个对象就是活的，右边两个就是死的，也就是我们说的可以被回收的垃圾。</p>
+<hr>
+<h2><span id="回收垃圾对象内存的算法">回收垃圾对象内存的算法</span></h2>
+<p>找到了垃圾下一步就是回收，以下是常见的收集回收算法：</p>
+<h4><span id="标记清除算法">标记—清除算法</span></h4>
+<p>标记—清除算法是最基础的收集算法，为了解决引用计数法的问题而提出。它使用了根集的概念，它分为“标记”和“清除”两个阶段：首先标记出所需回收的对象，在标记完成后统一回收掉所有被标记的对象，它的标记过程其实就是前面的根搜索算法中判定垃圾对象的标记过程。</p>
+<blockquote>
+<p>优点：不需要进行对象的移动，并且仅对不存活的对象进行处理，在存活对象比较多的情况下极为高效。</p>
+<p>缺点：<br>
+1、标记和清除过程的效率都不高。这种方法需要使用一个空闲列表来记录所有的空闲区域以及大小。对空闲列表的管理会增加分配对象时的工作量。<br>
+2、标记清除后会产生大量不连续的内存碎片。虽然空闲区域的大小是足够的，但却可能没有一个单一区域能够满足这次分配所需的大小，因此本次分配还是会失败（在Java中就是一次OutOfMemoryError）不得不触发另一次垃圾收集动作。</p>
+</blockquote>
+<h4><span id="标记整理算法">标记—整理算法</span></h4>
+<p>该算法标记的过程与标记—清除算法中的标记过程一样，但对标记后出的垃圾对象的处理情况有所不同，它不是直接对可回收对象进行清理，而是让所有的对象都向一端移动，然后直接清理掉端边界以外的内存。在基于Compacting算法的收集器的实现中，一般增加句柄和句柄表。</p>
+<blockquote>
+<p>优点：经过整理之后，新对象的分配只需要通过指针碰撞便能完成（Pointer Bumping），相当简单。使用这种方法空闲区域的位置是始终可知的，也不会再有碎片的问题了。<br>
+   <br>
+缺点：GC暂停的时间会增长，因为你需要将所有的对象都拷贝到一个新的地方，还得更新它们的引用地址。</p>
+</blockquote>
+<h4><span id="复制算法">复制算法</span></h4>
+<p>该算法的提出是为了克服句柄的开销和解决堆碎片的垃圾回收。它将内存按容量分为大小相等的两块，每次只使用其中的一块（对象面），当这一块的内存用完了，就将还存活着的对象复制到另外一块内存上面（空闲面），然后再把已使用过的内存空间一次清理掉。</p>
+<p>复制算法比较适合于新生代（短生存期的对象），在老年代（长生存期的对象）中，对象存活率比较高，如果执行较多的复制操作，效率将会变低，所以老年代一般会选用其他算法，如标记—整理算法。一种典型的基于Coping算法的垃圾回收是stop-and-copy算法，它将堆分成对象区和空闲区，在对象区与空闲区的切换过程中，程序暂停执行。</p>
+<blockquote>
+<p>优点：<br>
+1、标记阶段和复制阶段可以同时进行。<br>
+2、每次只对一块内存进行回收，运行高效。<br>
+3、只需移动栈顶指针，按顺序分配内存即可，实现简单。<br>
+4、内存回收时不用考虑内存碎片的出现（得活动对象所占的内存空间之间没有空闲间隔）。</p>
+<p>缺点：需要一块能容纳下所有存活对象的额外的内存空间。因此，可一次性分配的最大内存缩小了一半。</p>
+</blockquote>
+<h4><span id="自适应算法">自适应算法</span></h4>
+<p>在特定的情况下，一些垃圾收集算法会优于其它算法。基于Adaptive算法的垃圾收集器就是监控当前堆的使用情况，并将选择适当算法的垃圾收集器。</p>
+<hr>
+<h1><span id="五-内存抖动">五、内存抖动</span></h1>
+<hr>
+<p>我们知道GC是系统为了回收垃圾释放内存而生的机制，那么是不是GC越频繁越好呢？内存抖动其实就是频繁GC造成的，表现就是UI卡顿。</p>
+<blockquote>
+<p>堆内存都有一定的大小，能容纳的数据是有限制的，当Java堆的大小太大时，垃圾收集会启动停止堆中不再应用的对象，来释放内存。当在极短时间内分配给对象和回收对象的过程就是内存抖动。</p>
+</blockquote>
+<p>内存抖动一般多是在循环语句中创建临时对象，在绘制时配置大量对象或者执行动画时创建大量临时对象造成的。<br>
+内存抖动会带来UI的卡顿，因为大量的对象创建，会很快消耗剩余内存，导致GC回收，GC会占用大量的帧绘制时间，从而导致UI卡顿。</p>
+<hr>
+<h1><span id="扩展堆内存分代算法">扩展：堆内存分代算法</span></h1>
+<hr>
+<p>Java的堆内存基于Generation算法（Generational Collector）划分为新生代、年老代和持久代。新生代又被进一步划分为Eden和Survivor区，最后Survivor由FromSpace（Survivor0）和ToSpace（Survivor1）组成。所有通过new创建的对象的内存都在堆中分配。<br>
+分代收集，是基于这样一个事实：不同的对象的生命周期是不一样的。因此，可以将不同生命周期的对象分代，不同的代采取不同的回收算法进行垃圾回收（GC），以便提高回收效率。</p>
+<h4><span id="年轻代young-generation">年轻代（Young Generation）</span></h4>
+<p>几乎所有新生成的对象首先都是放在年轻代的。新生代内存按照8:1:1的比例分为一个Eden区和两个Survivor(Survivor0,Survivor1)区。大部分对象在Eden区中生成。当新对象生成，Eden Space申请失败（因为空间不足等），则会发起一次GC(Scavenge GC)。回收时先将Eden区存活对象复制到一个Survivor0区，然后清空Eden区，当这个Survivor0区也存放满了时，则将Eden区和Survivor0区存活对象复制到另一个Survivor1区，然后清空Eden和这个Survivor0区，此时Survivor0区是空的，然后将Survivor0区和Survivor1区交换，即保持Survivor1区为空， 如此往复。当Survivor1区不足以存放 Eden和Survivor0的存活对象时，就将存活对象直接存放到老年代。当对象在Survivor区躲过一次GC的话，其对象年龄便会加1，默认情况下，如果对象年龄达到15岁，就会移动到老年代中。若是老年代也满了就会触发一次Full GC，也就是新生代、老年代都进行回收。新生代大小可以由-Xmn来控制，也可以用-XX:SurvivorRatio来控制Eden和Survivor的比例。</p>
+<h4><span id="年老代old-generation">年老代（Old Generation）</span></h4>
+<p>在年轻代中经历了N次垃圾回收后仍然存活的对象，就会被放到年老代中。因此，可以认为年老代中存放的都是一些生命周期较长的对象。内存比新生代也大很多(大概比例是1:2)，当老年代内存满时触发Major GC即Full GC，Full GC发生频率比较低，老年代对象存活时间比较长，存活率标记高。一般来说，大对象会被直接分配到老年代。所谓的大对象是指需要大量连续存储空间的对象，最常见的一种大对象就是大数组。比如：   <br>
+<code>byte[] data = new byte[4*1024*1024]</code>   <br>
+这种一般会直接在老年代分配存储空间，当然分配的规则并不是百分之百固定的，这要取决于当前使用的是哪种垃圾收集器组合和JVM的相关参数。</p>
+<h4><span id="持久代permanent-generation">持久代（Permanent Generation）</span></h4>
+<p>用于存放静态文件（class类、方法）和常量等。持久代对垃圾回收没有显著影响，但是有些应用可能动态生成或者调用一些class，例如Hibernate 等，在这种时候需要设置一个比较大的持久代空间来存放这些运行过程中新增的类。对永久代的回收主要回收两部分内容：废弃常量和无用的类。   <br>
+持久代空间在Java SE8特性中已经被移除。取而代之的是元空间（MetaSpace）。因此不会再出现“java.lang.OutOfMemoryError: PermGen error”错误。</p>
+<h1><span id="参考文献">参考文献</span></h1>
+<blockquote>
+<p>本文部分摘自：</p>
+<p><a href="https://www.jianshu.com/p/c0e5c13d5ecb" target="_blank" rel="noopener">https://www.jianshu.com/p/c0e5c13d5ecb</a><br>
+<a href="https://www.jianshu.com/p/825cca41d962" target="_blank" rel="noopener">https://www.jianshu.com/p/825cca41d962</a><br>
+<a href="https://www.jianshu.com/p/797395731747" target="_blank" rel="noopener">https://www.jianshu.com/p/797395731747</a><br>
+如有侵权，请联系我删除</p>
+</blockquote>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/article/HashMap ConcurrentHashMap源码解析/" data-toggle="tooltip" data-placement="top" title="HashMap ConcurrentHashMap源码解析">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Kotlin小技巧总结/" data-toggle="tooltip" data-placement="top" title="Kotlin小技巧总结">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/cdn/pay_ali.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/cdn/pay_wechat.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share" data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">一、Java的内存区域如何划分</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.0.0.1.</span> <span class="toc-nav-text">JVM角度分析</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.0.0.2.</span> <span class="toc-nav-text">操作系统上的进程角度分析</span></a></li></ol></li></ol><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">堆(Heap)和栈(Stack)</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">二、Java有哪些引用，以及应用场景</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">对象的生命周期</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.0.1.</span> <span class="toc-nav-text">1、创建阶段(Created)</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.0.2.</span> <span class="toc-nav-text">2、应用阶段(In Use)</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.0.3.</span> <span class="toc-nav-text">3、不可见阶段(Invisible)</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.0.4.</span> <span class="toc-nav-text">4、不可达阶段(Unreachable)</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.0.5.</span> <span class="toc-nav-text">5、收集阶段(Collected)</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.0.6.</span> <span class="toc-nav-text">6、终结阶段(Finalized)</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.0.7.</span> <span class="toc-nav-text">7、对象空间重新分配阶段(De-allocated)</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">四大引用及应用场景</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.2.0.1.</span> <span class="toc-nav-text">强引用</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.2.0.2.</span> <span class="toc-nav-text">软引用</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.2.0.3.</span> <span class="toc-nav-text">弱引用</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.2.0.4.</span> <span class="toc-nav-text">虚引用</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">三、什么是内存泄露？内存泄露发生的场景有哪些？</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">四、Garbage Collector及常见回收算法</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">如何判断对象是否是垃圾的算法</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.1.0.1.</span> <span class="toc-nav-text">引用计数算法</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.1.0.2.</span> <span class="toc-nav-text">根搜索算法</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text">回收垃圾对象内存的算法</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.2.0.1.</span> <span class="toc-nav-text">标记—清除算法</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.2.0.2.</span> <span class="toc-nav-text">标记—整理算法</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.2.0.3.</span> <span class="toc-nav-text">复制算法</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.2.0.4.</span> <span class="toc-nav-text">自适应算法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">五、内存抖动</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">扩展：堆内存分代算法</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">7.0.0.1.</span> <span class="toc-nav-text">年轻代（Young Generation）</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">7.0.0.2.</span> <span class="toc-nav-text">年老代（Old Generation）</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">7.0.0.3.</span> <span class="toc-nav-text">持久代（Permanent Generation）</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">参考文献</span></a></li>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                        
+                          <a class="tag" href="/tags/#性能优化" title="性能优化">性能优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/Google_acmer" target="_blank">CSDN Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/JinJieGu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JayGoo 2019 
+                    <br>
+                    Theme by <a href="https://github.com/YenYuHsuan/hexo-theme-beantech/">Hexo-BeanTech</a> 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("gujinjie.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'gujinjie.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="gujinjie.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
