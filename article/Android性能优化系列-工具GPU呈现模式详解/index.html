@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Android自绘控件开发与性能优化实践——以录音波浪动画为例 - JayGoo | Blog
+          Android性能优化系列-工具GPU呈现模式详解 - JayGoo | Blog
         
     </title>
 
-    <link rel="canonical" href="gujinjie.top/article/Android自绘控件开发与性能优化实践——以录音波浪动画为例/">
+    <link rel="canonical" href="gujinjie.top/article/Android性能优化系列-工具GPU呈现模式详解/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -71,7 +71,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/good.jpg')
+            background-image: url('/img/article_header/article_bg.jpg')
             /*post*/
         
     }
@@ -94,14 +94,12 @@
                             
                               <a class="tag" href="/tags/#性能优化" title="性能优化">性能优化</a>
                             
-                              <a class="tag" href="/tags/#控件开发" title="控件开发">控件开发</a>
-                            
                         </div>
-                        <h1>Android自绘控件开发与性能优化实践——以录音波浪动画为例</h1>
+                        <h1>Android性能优化系列-工具GPU呈现模式详解</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by JayGoo on
-                            2017-07-29
+                            2018-10-12
                         </span>
                     </div>
                 
@@ -243,92 +241,91 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p><img src="/cdn/20170822150341686327784.jpg" alt="这里写图片描述"></p>
-<p>本文实战性较强，主要目的是通过一个自定义控件的开发，引出我对自定义控件性能优化的一些思考和实践，欢迎各位喜欢移动开发的小伙伴来拍砖~</p>
-<a id="more"></a>
-<p>本文由于篇幅有限，只讲解思路，并没有放出大量源代码，如果对本项目感兴趣，文末会放出Demo，可以自行去Github上fork和star。</p>
+                <h1><span id="前言">前言</span></h1>
 <hr>
-<h1><span id="动画效果">动画效果</span></h1>
-<p>这是最近正在开发功能里的一个录音控件，我们的UI设计说做成某软件的效果，于是仿照它做了一个，相似度还是很高的：</p>
-<p><img src="/cdn/20170822150341681394396.gif" alt="这里写图片描述"></p>
+<p>我们在看一些手机评测视频时测试手机流畅度时或许会见过<code>安卓玄学曲线</code>，所谓中的安卓玄学曲线真名为<code>Profile GPU Rendering</code>。但其实这种强行将玄学曲线与手机流畅度挂钩是不合理的，<code>安卓玄学曲线</code>在系统“开发者选项中被称为<code>GPU显示配置文件</code>或<code>GPU呈现模式分析</code>。但是GPU呈现模式分析可以快速让开发者直观了解App在Android界面中渲染问题，从而进行调整和优化，为用户提供更好体验所设计，这也是Google推出这个工具的初心。</p>
 <hr>
-<h1><span id="知识储备">知识储备</span></h1>
-<p>众所周知，一般自绘动画我们都是在View中实现的，一般会重写onMeasure（测量）、onLayout（布局）、onDraw（绘制）三个方法。</p>
-<p>Android系统为了简化线程开发，将这三个过程都放在主线程中执行，以保证绘制系统的线程安全。</p>
-<p>整个绘制过程通过一个Choreographer定时器驱动调用更新，每16ms会刷新一次，通过树状结构存储的 ViewGroup，依次递归的调用到每个 View 的 onMeasure、onLayout、onDraw 方法，从而最后将每个 View 都绘制出来（为了保证绘制效率，并不是每个View的这些方法每个绘制周期都会调用，那些没有变化的不会被重绘）。</p>
-<p>但是由于普通的 View 都处于主线程中，Android 除了绘制之外，在主线程中还需要处理用户的各种点击事件。很多情况，在主线程中还需要运行额外的用户处理逻辑、轮询消息事件等。 如果主线程过于繁忙，不能及时的处理和响应用户的输入，会让用户的体验急剧降低。如果更严重的情况，当主线程延迟时间达到5s的时候，还会触发 ANR（Application Not Responding）。 如果界面的绘制和动画比较复杂，计算量比较大的情况，就不再适合使用 View 这种方式来绘制了。</p>
-<p>Android考虑到这种场景，提出了SurfaceView机制，它可以在非主线程进行图形绘制，释放了主线程的压力，所以我们可以把View的绘制放到SurfaceView中完成。如果对SurfaceView不太熟悉，可以自行百度，或参看demo中封装好的RenderView，这里由于篇幅限制，这里就不作详细介绍了。</p>
+<h1><span id="如何使用">如何使用</span></h1>
 <hr>
-<h1><span id="动画实现">动画实现</span></h1>
-<p>看了一下要实现的效果，感觉是由四条振幅不等的正弦曲线组成，这些曲线振幅中间比较高，两边比较低，应该有一个对称的衰减系数，然后这些曲线根据声音的大小上下波动，保持一个速率向右运动。</p>
-<p>这里再取回还给高中老师的数学知识，下面是正弦曲线的公式：y=Asin（ωx+φ）+k，其中A 代表的是振幅，对应的波峰和波谷的高度，即 y 轴上的距离；ω 是角速度，换成频率是 2πf，能够控制波形的宽度；φ 是初始相位，能够决定正弦曲线的初始 x 轴位置；k 是偏距，能够控制在 y 轴上的偏移量。</p>
-<p>那么我们只需根据时间改变φ，那么曲线就可以实现移动，通过一个对称衰减函数乘以A，就可实现曲线衰减变化，通过改变A的值可以实现上下波动。恩，完美，开干！</p>
-<p>这里我要推荐大家一个绘图网站 <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">https://www.desmos.com/calculator</a> ，它可以帮你将函数转换成相应的图形，十分方便。<br>
-函数很简单，正弦就行，主要是衰减函数的选取，这里要找一个对称的衰减函数，如图所示：<br>
-<img src="/cdn/20170822150341689743685.png" alt="衰减函数"><br>
-我们只要将每个点的x分别映射到衰减函数的一个对称区间，根据函数计算出相应的衰减系数，就可以实现振幅不同的波动曲线了。<br>
-最后通过一些调整，我们可以大致可以得出和目标效果图相似的曲线：<br>
-<img src="/cdn/20170822150341691690951.png" alt="曲线函数"><br>
-接下来，我们只需要在 SurfaceView 中使用 Path，通过上面的公式计算出一个个的点，然后画直线连接起来就行啦！效果如图所示：<br>
-<img src="/cdn/20170822150341694776583.png" alt="静态效果"></p>
-<p>然后就是让它动起来了，前面也说了，可以根据时间改变曲线的相位值φ来实现移动，我在封装好的RenderView中实现了一个叫做onRender的方法，它主要是代替onDraw工作的，我们传入时间millisPassed，定义位移系数offsetSpeed，那么相位值φ = π * millisPassed / offsetSpeed，每次渲染周期都将φ代入函数就可以让曲线实现位移效果了。最后再给一个volume变量，volume乘以一个初始振幅amplitude和根据横坐标算出的衰减系数，作为纵坐标，便实现了曲线形状和根据声音大小波动的效果。</p>
-<p>这里再总结下大致实现步骤：</p>
+<p>打开 Android 手机<code>设置</code> - <code>开发者选项</code> -<code>GPU显示配置文件</code>或<code>GPU呈现模式分析</code>，然后我们打开App就可以看到一堆颜色各异的柱状图。</p>
+<hr>
+<h1><span id="使用详解">使用详解</span></h1>
+<hr>
+<p><code>GPU呈现模式分析</code>柱状图每一根代表一帧，其高度表示“渲染这一帧耗时”，这些“柱”的高短、颜色、长度都会随着手机屏幕界面的变化而改变。经验丰富的程序员通过这个工具就可以大前提查看出 app 哪里跑的慢了，看颜色条就知道，结合状况就可以有的放矢的结合其他工具去仔细查找了。</p>
+<p>安卓系统以每秒60帧为满帧，以每帧16毫秒时为满帧，即1秒÷60帧得计算结果。按照这个规定，速度快于16ms为流畅，因此GPU呈现模式分析下会有一条绿线来判断是否流畅，这条<strong>绿线</strong>就是16毫秒(ms)时的线，即低于绿线为流畅。</p>
+<p>这个工具其实是最好用的了，很早就出现了，而且google一直在维护，更新，增强。仔细看这个工具有点如下优势：</p>
 <ul>
-<li>计算出函数曲线和对称衰减函数</li>
-<li>根据函数计算出需要绘制的点，通过Path连线</li>
-<li>根据时间改变曲线的φ，实现曲线位移效果</li>
-<li>根据volume和衰减函数改变振幅，实现曲线上下波动</li>
+<li>一是数据是试试刷新的</li>
+<li>二是查看效果直观，数据直接在我们需要的页面下面展示</li>
+<li>三是数据量丰富，图标不同颜色代表不同的任务，那个任务耗时一眼就可以查看出来，总之是这个工具是结合数据获取/展示/分析的一个很优秀的工具</li>
 </ul>
-<h1><span id="动画优化">动画优化</span></h1>
-<p>你以为效果实现就完事那就大错特错了！当我把动画运行到一个性能较差的低端机时，看到CPU的占有率达到30%多，有时候还会一卡一卡的时候，惊呆了……和想象的不一样啊！到底是哪里出了问题呢？<br>
-我们可以通过Android Studio的Monitor工具的CPU method trace查看到底是哪些方法占用了我的CPU：</p>
-<p><img src="/cdn/20170822150341698135867.jpg" alt="优化前"></p>
-<p>从CPU trace中可以看出calcValue和path的lineTo方法很耗时，占了一半的CPU时间，那么有什么方法可以降低呢？</p>
-<h2><span id="降低绘制密度">降低绘制密度</span></h2>
-<p>Ok，让我们review下绘制过程，第二步的时候我们需要计算曲线的点，然后通过Path连线这些点，而现在的手机屏幕1960x1080已经成为了标配，如果我们把宽度的像素点叫做采样点，每次我们要把每个采样点的x代入函数求出y，然后调用lineTo连线，那么我们每16ms都需要做出大量的计算。</p>
-<p>但是事实上人的肉眼是有一定容忍度的，特别是快速运动的动画，一些失真的地方，肉眼很难分辨，所以我们没必要把1080个点每个都算出来，经过试验发现我们只要在60个以上的采样点，效果还是十分的平滑，粗略计算，这样做可以将计算量减少到原来的1/16，于是可以释放大量的CPU时间（由于采样点的减少，图形会出现锯齿，我们可以通过Paint的抗锯齿属性优化）。</p>
-<p>总结：通过动态调节自定义的绘制密度，在绘制密度与最终实现效果中找到一个平衡点（即不影响最后的视觉效果，同时还能最大限度的减少计算量），这个是最直接，也最简单的优化方法。</p>
-<h2><span id="减少重复实时计算量">减少重复实时计算量</span></h2>
-<p>虽然现在的设备的CPU已经足够强大，但是由于每16ms中，系统要做大量工作，为了保证动画流畅稳定，我们还是要尽量的减少一些重复的计算。</p>
-<p>最常用的方法就是使用查表法，利用空间换时间（注意把握空间和时间的关系，莫要一味追求时间而牺牲大量内存空间，那么就得不偿失了）。</p>
-<p>学过计算机的都知道，CPU在计算加减乘是非常快的，但是除法是比较慢的，特别是浮点数除法，我们可以将这些浮点运算转换成整数除法，除数、被除数乘以一个统一的精确度，用到时再除以精确度，这个方法在大量浮点计算时是很有效的，但是注意处理整形溢出。另外还要避免一些乘方、开平方根等运算的重复计算。</p>
-<p>就本例来讲，calcValue方法是为了计算每个点代表的衰减系数，但其实我们计算衰减函数的时候对于每次固定的x，我们算出的衰减系数都是一样，这就会产生大量重复的计算。我们可以把这些计算好的值直接放入表中，然后通过查表的方式，下次就不需要重复计算这些复杂运算了。关于存储，如果数量不是很多建议使用SparseArray，它可以避免自动装箱，节约不少时间。理论上是这样的，但其实由于本例的衰减函数不是很复杂，这种做法的优化空间并不是很大，而且由于前面已经降低了绘制密度，已经减少了大量的计算，统计了下，耗时节约了几ms左右，但这确实也是一个优化的好方向，特别是一些复杂的运算，还是很有意义的。</p>
-<p>总结：尽量减少重复运算，对重复复杂的计算，可以适当使用空间换时间。尽量减少浮点数除法运算。</p>
-<p>经过前两步的优化，再看一下目前的CPU trace，发现已经降低了很多，动画也流畅了起来。</p>
-<p><img src="/cdn/20170822150341700157191.png" alt="优化后"></p>
-<h2><span id="内存泄漏">内存泄漏</span></h2>
-<p>CPU占有率降下去了，动画也流畅了，不过还有问题需要特别注意，那就是内存泄漏。</p>
-<p>Android 在内存分配和释放方面，采用了 JAVA 的垃圾回收 GC 模式。 当分配的内存不再使用的时候，系统会定时帮我们自动清理。这给我们应用开发带来了极大的便利，我们从此不再需要过多的关注内存的分配与回收，也因此减少很多内存使用的风险。但是由于一些不正确的操作，当一个对象已经不需要再使用了，本该被回收时，而另外一个正在使用的对象持有它的引用从而导致它不能被回收，这就导致本该被回收的对象不能被回收而停留在堆内存中，内存泄漏就产生了，内存泄漏时导致程序OOM的原因之一，而OOM就意味着Crash。</p>
-<p>常见的内存泄漏检测方法是通过手动GC以及监听Java heap的情况，通过查看Reference Tree的层级确定是否内存泄漏，通过MAT工具，分析具体泄漏原因，但是，不得不说，这个方法确实很复杂，如果不是很熟练，很难发现隐藏的一些内存泄漏，这里推荐使用LeakCanary，通过代码接入的方式，监听内存泄漏，它会以插件的形式伴随程序一起，如果发生内存泄漏，LeakCanary会给出泄漏的层级，十分清晰。</p>
-<p>就本例，我通过多次创建销毁Activity，检测程序是否发生了内存泄漏。<br>
-结果LeakCanary提示程序发生了内存泄漏，如图所示<br>
-<img src="/cdn/20170822150341702366284.png" alt="内存泄漏"></p>
-<p>RenderThread持有了Activity的隐式context，导致Activity不能释放资源，<br>
-追踪到代码，我们发现这样一段代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public RenderThread(SurfaceHolder holder) &#123;</span><br><span class="line">           super(&quot;RenderThread&quot;);</span><br><span class="line">		surfaceHolder = holder </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在 Java 中，非静态匿名内部类会持有其外部类的隐式引用，所以RenderThread所持有的context就是holder和它的Runable方法持有的引用，而Activity销毁时，因为Thread的持有强引用导致无法及时的释放掉内存，从而导致内存泄漏。</p>
-<p>解决方案就是，将RenderThread改为私有的静态内部类，这样它便不会持有其外部类的引用，另外可以对surfaceHolder使用弱引用，确保GC可以及时释放掉holder。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">surfaceHolder = new WeakReference&lt;&gt;(holder);</span><br></pre></td></tr></table></figure>
-<p>获取surfaceHolder时可以使用（注意判空）<code>surfaceHolder.get()</code></p>
-<p>总结：当然内存泄露不只这一类情况，情况还有很多，百度也有一大堆，就不再累述。如果想了解更多的内存优化方面的，可以关注<a href="http://hukai.me/blog/archives/" target="_blank" rel="noopener">胡凯的博客</a>，他从各个方面讲解性能优化，干货很多，目前我也只是消化了一部分，并应用到项目，任重而道远，有兴趣的可以关注一下。</p>
-<h2><span id="优化内存">优化内存</span></h2>
-<p>尽量减少内存的分配次数，因为每次GC都是会耗一定时间的，如果放到平时倒无所谓，但如果放到一个16ms的定时器中，如果GC的频率过高也会引起动画有卡顿感，合理的减少内存的分配次数还可以有效的避免产生内存抖动问题，优化动画体验。<br>
-这里其实已经做得不错，主要是总结下一些常用的方案：</p>
-<ol>
-<li>减少对象的重复创建，例如Paint，Path，Rect等</li>
-<li>减少大量临时对象的创建，对于那些无法避免，每次又必须分配的，我们可以采用对象池模型的方式来分配对象。对象池来解决频繁创建与销毁的问题，但是这里需要注意结束使用之后，需要手动释放对象池中的对象。</li>
-<li>减少一些资源操作，例如getColor，这个方法中会创建多个 StringBuilder 的变量</li>
-</ol>
-<h1><span id="总结">总结</span></h1>
-<p>通过一系列的优化，动画在中端手机上CPU稳定在2~3%左右，内存在2MB左右，在一些低端手机CPU占有率在控制在10%左右，内存在15MB左右（为什么内存这么高？我还没有研究），不过欣慰的是两者动画都十分流畅。</p>
-<p>本文介绍了从需求开始，如何一步步开发一个自定义控件，并通过降低绘制密度、减少重复实时计算量、避免和解决内存泄漏、如何优化内存等四方面对控件的性能进行了优化，希望能给大家平时开发工作带来一些启发和帮助，也希望大家可以提出更多更好的优化方案~</p>
-<p>限于笔者的水平和经验有限，本文如果有纰漏和错误的地方，欢迎大家指出。如果大家有更多更好的建议，欢迎一起分享讨论，共同进步。</p>
-<h1><span id="github">Github</span></h1>
-<p><a href="https://github.com/Jay-Goo/WaveLineView" target="_blank" rel="noopener">https://github.com/Jay-Goo/WaveLineView</a><br>
-欢迎各位Star，Mark</p>
-<blockquote>
-<p>原创不易，文章转载请注明出处。</p>
-</blockquote>
+<h2><span id="颜色含义">颜色含义</span></h2>
+<hr>
+<h4><span id="4x-5x-版本">4.x - 5.x 版本</span></h4>
+<p><img src="/cdn/gpu_5x.webp" alt=""></p>
+<ul>
+<li>
+<p>蓝色Update<br>
+这部分代表View创建和更新DisplayList的时间，如果这部分很高，那么表示我们有很多自定义的View，或者在onDraw当中进行了过于复杂的操作。</p>
+</li>
+<li>
+<p>紫色XFer<br>
+这部分在Android 4.0之后才有，表示将资源传递到渲染线程所花的时间。</p>
+</li>
+<li>
+<p>红色Execute<br>
+这部分代表Android 2D渲染器向OpenGL发送命令来绘制和重绘的时间，这些命令就是来自于前面生成的Display List，如果这部分很高，那么说明执行Display Lists中的命令花费了很多的时间。</p>
+</li>
+<li>
+<p>黄色Process<br>
+这部分代表了CPU等待GPU完成操作所花的时间，如果这部分很高，那么说明GPU当前很忙碌。</p>
+</li>
+</ul>
+<p>介绍下Android渲染一帧的整个过程：</p>
+<ul>
+<li>CPU测量，布局界面上变动的视图对象，然后绘制这些 View(onDraw方法) 生成界面一帧数据</li>
+<li>然后CPU把这计算出的这一帧数据传递给 GPU，这一帧数据也叫纹理，具体的去看 OpenGL的内容</li>
+<li>GPU根据CPU测量传递过来的纹理数据，去具体的绘制出2D 图形来</li>
+<li>CPU等待GPU通知绘制完成，CPU才可以去干别的事，要不CPU会一直等着。。。这才算是完成了一帧的渲染</li>
+<li></li>
+</ul>
+<p>我们现在再来看数据图，从下往上看，先是蓝色的 update 部分，蓝色执行的内容说白了就是执行有变动View 的Measure / Layout / onDraw 方法，然后生成一帧新的纹理。然后是紫色的 XFer 部分，传递 CPU 刚刚计算出来的这一帧给 GPU。然后红色的 Execute 部分是 Android 的2D渲染器通知 GPU 去绘制图形。最后黄色的 Process 部分是 CPU 等待 GPU通知绘制完成</p>
+<h4><span id="6x">6.X</span></h4>
+<p><img src="/cdn/gpu_6x.webp" alt=""></p>
+<ul>
+<li>
+<p>Swap Buffers：表示处理任务的时间，也可以说是CPU等待GPU完成任务的时间，线条越高，表示GPU做的事情越多。</p>
+</li>
+<li>
+<p>Command Issue：表示执行任务的时间，这部分主要是Android进行2D渲染显示列表的时间，为了将内容绘制到屏幕上，Android需要使用Open GL ES的API接口来绘制显示列表，红色线条越高表示需要绘制的视图更多。</p>
+</li>
+<li>
+<p>Sync &amp; Upload：表示的是准备当前界面上有待绘制的图片所耗费的时间，为了减少该段区域的执行时间，我们可以减少屏幕上的图片数量或者是缩小图片的大小。</p>
+</li>
+<li>
+<p>Draw：表示测量和绘制视图列表所需要的时间，蓝色线条越高表示每一帧需要更新很多视图，或者View的onDraw方法中做了耗时操作。</p>
+</li>
+<li>
+<p>Measure/Layout：表示布局的onMeasure与onLayout所花费的时间，一旦时间过长，就需要仔细检查自己的布局是不是存在严重的性能问题。</p>
+</li>
+<li>
+<p>Animation：表示计算执行动画所需要花费的时间，包含的动画有ObjectAnimator，ViewPropertyAnimator，Transition等等。一旦这里的执行时间过长，就需要检查是不是使用了非官方的动画工具或者是检查动画执行的过程中是不是触发了读写操作等等。</p>
+</li>
+<li>
+<p>Input Handling：表示系统处理输入事件所耗费的时间，粗略等于对事件处理方法所执行的时间。一旦执行时间过长，意味着在处理用户的输入事件的地方执行了复杂的操作。</p>
+</li>
+<li>
+<p>Misc Time/Vsync Delay：表示在主线程执行了太多的任务，导致UI渲染跟不上vSync的信号而出现掉帧的情况；出现该线条的时候，可以在Log中看到这样的日志。</p>
+</li>
+</ul>
+<p>6.x 中的图中，把颜色分的更新了，页更能表现出更多的任务来，仔细看最底下的深绿色新添加的，是我们需要仔关注的，表示 UI线程因为任务多，造成渲染界面延迟。其他的都是 4.x - 5.x 版本的东西。</p>
+<h2><span id="如何分析">如何分析</span></h2>
+<hr>
+<p>关于红色和黄色部分，这2部分的任务都不是在 UI 线程执行的，都是在渲染线程或是 GPU了来干的，所以红的和黄的耗时不一定就是表示界面卡顿了，我们要根据情况区别分析：比如列表中有大量的网络图片需要加载显示，因为这些网络图片都是使用单独线程来加载显示的，所以这个 UI 线程并不卡顿，但是要是我们加载大量 app 内部的 png 静态图片的话，那么肯定会卡的。</p>
+<p>举个例子，我们有100个东西需求显示，我们在初始帧时只显示10个，然后1S 内显示剩下的90个，这就相当于把100个东西放宽在1S 内显示完。要是我们要求这100个东西一定要在初始帧显示完，那么这么大的计算和渲染量肯定会卡帧的。</p>
+<p>所以我们在面临有大量 App 内静态png片显示时，可以对 ImageView 做一下延迟显示，在页面显示之后，再去显示图片。</p>
+<p><strong>蓝色和绿色部分是我们需要重点关注的，这是因为布局层级多，效率低，过度绘制造成的，另外图片量大，体积大也会造成浅蓝色耗时。</strong></p>
+<p><strong>深绿色也是我们关注的重点，这是新增的内容，反应的是 UI 线程渲染界面出现延迟，要是发现这里耗时了，肯定是 CPU在这个时间段干的事多了导致长耗时，我们可以使用 Trace View 去最终下在页面的生命周期函数内有耗时操作。</strong></p>
 
                 
 
@@ -337,12 +334,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/article/Kotlin --让Android开发更优雅更效率/" data-toggle="tooltip" data-placement="top" title="Kotlin --让Android开发更优雅更效率">&larr; Previous Post</a>
+                            <a href="/article/HashMap ConcurrentHashMap源码解析/" data-toggle="tooltip" data-placement="top" title="HashMap ConcurrentHashMap源码解析">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/article/ Android ANR 错误LOG查看/" data-toggle="tooltip" data-placement="top" title="Android ANR 错误LOG查看">Next Post &rarr;</a>
+                            <a href="/article/Android性能优化系列-基础概念/" data-toggle="tooltip" data-placement="top" title="Android性能优化系列-基础概念篇">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -394,6 +391,24 @@
             <!-- Tabe of Content -->
             <!-- Table of Contents -->
 
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">如何使用</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">使用详解</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">颜色含义</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.0.1.</span> <span class="toc-nav-text">4.x - 5.x 版本</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.0.2.</span> <span class="toc-nav-text">6.X</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">如何分析</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
                 
             <!-- Sidebar Container -->
             <div class="
@@ -413,8 +428,6 @@
                           <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
                         
                           <a class="tag" href="/tags/#性能优化" title="性能优化">性能优化</a>
-                        
-                          <a class="tag" href="/tags/#控件开发" title="控件开发">控件开发</a>
                         
                     </div>
                 </section>
