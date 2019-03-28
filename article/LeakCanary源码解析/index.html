@@ -267,9 +267,9 @@
 <li>监测的时机，什么时机去监测才能判定存在内存泄漏呢？</li>
 <li>如何分析内存泄漏呢？</li>
 </ul>
-<p>看到这里你是不是已经有一堆问题了呢？那么请继续看下去，我们通过源码来解惑：</p>
+<p>上面其实已经简单的介绍了LeakCanary的原理，但是你可能对有些步骤心存疑惑，不要紧，我们带着提出的问题接着往下看源码：</p>
 <h1><span id="refwatcher">RefWatcher</span></h1>
-<p>ReftWatcher是LeakCancay检测内存泄露的发起点。使用方法为，在对象生命周期即将结束的时候调用，其成员变量如下：</p>
+<p>ReftWatcher是LeakCancay检测内存泄露的发起点。使用方法是在对象生命周期即将结束的时候调用，其成员变量如下：</p>
 <pre><code>private final Executor watchExecutor;
 private final DebuggerControl debuggerControl;
 private final GcTrigger gcTrigger;
@@ -366,7 +366,7 @@ private final ExcludedRefs excludedRefs;
       }
     }
 </code></pre>
-<p>从上面的源码可以看出要想理解<code>removeWeaklyReachableReferences</code>原理，还要从<code>KeyedWeakReference</code>说起，而上面已经说了，KeyedWeakReference，继承自WeakReference，只是增加key(UUID)、name字段，那么<code>WeakReference</code>和<code>ReferenceQueue</code>是怎样工作的？</p>
+<p>从上面的源码可以看出要想理解<code>removeWeaklyReachableReferences</code>原理，还要从<code>KeyedWeakReference</code>说起，而上面已经说了，KeyedWeakReference，继承自WeakReference，只是增加key(UUID)、name字段，那么KeyedWeakReference和ReferenceQueue是怎样配合工作的？ReferenceQueue.poll()又是做什么的呢？</p>
 <h1><span id="weakreference和referencequeue">WeakReference和ReferenceQueue</span></h1>
 <p>ReferenceQueue是直接传入WeakReference中，每次WeakReference所指向的对象被GC后，这个弱引用都会被放入这个与之相关联的ReferenceQueue队列中，其核心代码如下：</p>
 <pre><code>  private static class ReferenceHandler extends Thread {
