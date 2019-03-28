@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          LeakCanary源码解析 - JayGoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="gujinjie.top/article/LeakCanary源码解析/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                            
+                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                            
+                              <a class="tag" href="/tags/#源码解析" title="源码解析">源码解析</a>
+                            
+                        </div>
+                        <h1>LeakCanary源码解析</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JayGoo on
+                            2019-01-15
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JayGoo的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/works/">works</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1><span id="前言">前言</span></h1>
+<hr>
+<p><a href="https://github.com/square/leakcanary" target="_blank" rel="noopener">LeakCanary</a>是一个Android内存检测工具，他让复杂的内存泄漏检测和分析变得简单起来，是性能优化的一大利器，那么如此好用的工具，我们一起看看它是怎么做到的。</p>
+<h1><span id="原理概述">原理概述</span></h1>
+<p>看过很多原理解析，大多数文章都是一入源码深似海，看的我一脸懵逼的进，一脸懵逼的出。个人觉得源码分析应该避重就轻，先了解大致框架，忽略其具体实现，然后逐步分模块攻克，这样才是科学有效的方法。下面我们一起先大致了解下<code>LeakCanary</code>是如何工作的，然后带着问题再去看源码：</p>
+<h3><span id="如何判定内存泄漏">如何判定内存泄漏</span></h3>
+<blockquote>
+<p><code>LeakCanary</code>的核心原理是基于<code>WeakReference</code>和<code>ReferenceQueue</code>进行检测，<code>WeakReference</code>的构造函数可以传入<code>ReferenceQueue</code>，当<code>WeakReference</code>指向的对&gt;象被GC回收时，会把<code>WeakReference</code>放入<code>ReferenceQueue</code>中证明其已经被回收，如果被成功回收那么可以通过<code>ReferenceQueue.poll()</code>取出，通过判断<code>ReferenceQueue</code>中内容来区分是否被成功回收，从而判定是否存在内存泄漏。</p>
+</blockquote>
+<h3><span id="leakcanary实现简述">LeakCanary实现简述</span></h3>
+<ol>
+<li><code>LeakCanary.install()</code>返回了一个RefWatcher,其中RefWatcher.queue就是一个ReferenceQueue的实例。</li>
+<li>每次检测对象内存是否泄露时，会生成一个<code>KeyedWeakReference</code>，继承自WeakReference并增加key(UUID)、name字段，对监控的对象进行唯一起名。</li>
+<li>RefWatcher是内存泄漏检测的发起点，在对象生命周期时调用<code>RefWatcher.watch(Object object)</code>，此时会把UUID放入<code>RefWatcher.retainedKeys</code>，并把对象跟RefWatcher.queue关联。</li>
+<li>通过<code>Runtime.gc()</code>和<code>System.runFinalization()</code>进行手动GC操作</li>
+<li>在<code>RefWatcher.removeWeaklyReachableReferences()</code>调用<code>queue.poll()</code>取出KeyedWeakReference，并从retainedKeys中删除。如果retainedKeys中key仍存在，则说明对象未被垃圾回收。反之则已经垃圾回收。</li>
+<li>如果对象未被垃圾回收，则执行分析。</li>
+</ol>
+<p>看完核心原理我们提出以下几个问题：</p>
+<ul>
+<li>RefWatcher如何工作的？</li>
+<li><code>WeakReference</code>和<code>ReferenceQueue</code>是怎样工作的？为什么能判断引用是否被回收了呢？</li>
+<li>如何判断监测对象已经被回收？</li>
+<li>监测的时机，什么时机去监测才能判定存在内存泄漏呢？</li>
+<li>如何分析内存泄漏呢？</li>
+</ul>
+<p>看到这里你是不是已经有一堆问题了呢？那么请继续看下去，我们通过源码来解惑：</p>
+<h1><span id="refwatcher">RefWatcher</span></h1>
+<p>ReftWatcher是LeakCancay检测内存泄露的发起点。使用方法为，在对象生命周期即将结束的时候调用，其成员变量如下：</p>
+<pre><code>private final Executor watchExecutor;
+private final DebuggerControl debuggerControl;
+private final GcTrigger gcTrigger;
+private final HeapDumper heapDumper;
+private final Set&lt;String&gt; retainedKeys;
+private final ReferenceQueue&lt;Object&gt; queue;
+private final HeapDump.Listener heapdumpListener;
+private final ExcludedRefs excludedRefs;
+</code></pre>
+<ul>
+<li><code>watchExecutor</code> 执行内存泄露检测的executor，用于后台运行</li>
+<li><code>debuggerControl</code> 用于查询是否正在调试中，调试中不会执行内存泄露检测</li>
+<li><code>queue</code>  用于判断弱引用所持有的对象是否已被GC</li>
+<li><code>gcTrigger</code> 用于在判断内存泄露之前，再给一次GC的机会</li>
+<li><code>headDumper</code> 用于在产生内存泄露室执行dump 内存heap</li>
+<li><code>heapdumpListener</code> 用于分析前面产生的dump文件，找到内存泄露的原因</li>
+<li><code>excludedRefs</code> 用于排除某些系统自己的bug导致的内存泄露</li>
+<li><code>retainedKeys</code> 持有那些待检测以及产生内存泄露的引用的key</li>
+</ul>
+<p>接下来看看watch如何利用这些工具来检测和分析内存泄漏的：</p>
+<pre><code>public void watch(Object watchedReference, String referenceName) {
+    checkNotNull(watchedReference, &quot;watchedReference&quot;);
+    checkNotNull(referenceName, &quot;referenceName&quot;);
+    //如果处于debug模式，则直接返回
+    if (debuggerControl.isDebuggerAttached()) {
+      return;
+    }
+    //记住开始观测的时间
+    final long watchStartNanoTime = System.nanoTime();
+    //生成一个随机的key，并加入set中
+    String key = UUID.randomUUID().toString();
+    retainedKeys.add(key);
+    //生成一个KeyedWeakReference
+    final KeyedWeakReference reference =
+        new KeyedWeakReference(watchedReference, key, referenceName, queue);
+    //调用watchExecutor，执行内存泄露的检测
+    watchExecutor.execute(new Runnable() {
+      @Override public void run() {
+        ensureGone(reference, watchStartNanoTime);
+      }
+    });
+  }
+</code></pre>
+<p>通过上面的代码我们可以看出LeakCanary的核心代码在<code>ensureGone</code>中：</p>
+<pre><code>Retryable.Result ensureGone(final KeyedWeakReference reference, final long watchStartNanoTime) {
+  long gcStartNanoTime = System.nanoTime();
+  //计算从调用watch到进行检测的时间段
+  long watchDurationMs = NANOSECONDS.toMillis(gcStartNanoTime - watchStartNanoTime);
+  //根据queue移除已被GC的对象的弱引用
+  removeWeaklyReachableReferences();
+	//如果内存已被回收或者处于debug模式，直接返回    
+  if (debuggerControl.isDebuggerAttached()) {
+    // The debugger can create false leaks.
+    return RETRY;
+  }
+  if (gone(reference)) {
+    return DONE;
+  }
+  //如果内存依旧没被释放，则再给一次gc的机会，进行二次确认
+  gcTrigger.runGc();
+  removeWeaklyReachableReferences();
+  if (!gone(reference)) {
+    //走到这里，认为内存确实泄露了
+    long startDumpHeap = System.nanoTime();
+    long gcDurationMs = NANOSECONDS.toMillis(startDumpHeap - gcStartNanoTime);
+
+    File heapDumpFile = heapDumper.dumpHeap();
+    if (heapDumpFile == RETRY_LATER) {
+      // Could not dump the heap.
+      return RETRY;
+    }
+    long heapDumpDurationMs = NANOSECONDS.toMillis(System.nanoTime() - startDumpHeap);
+
+    HeapDump heapDump = heapDumpBuilder.heapDumpFile(heapDumpFile).referenceKey(reference.key)
+        .referenceName(reference.name)
+        .watchDurationMs(watchDurationMs)
+        .gcDurationMs(gcDurationMs)
+        .heapDumpDurationMs(heapDumpDurationMs)
+        .build();
+
+    heapdumpListener.analyze(heapDump);
+  }
+  return DONE;
+}
+</code></pre>
+<p>首先分解下上面的代码，大致可以分为三大部分：<code>removeWeaklyReachableReferences</code>、内存泄漏判定策略、内存泄漏分析。下面我们一一进行分析：<br>
+首先是<code>removeWeaklyReachableReferences</code>的源码：</p>
+<pre><code>  private void removeWeaklyReachableReferences() {
+      // WeakReferences are enqueued as soon as the object to which they point to becomes weakly
+      // reachable. This is before finalization or garbage collection has actually happened.
+      KeyedWeakReference ref;
+      while ((ref = (KeyedWeakReference) queue.poll()) != null) {
+        retainedKeys.remove(ref.key);
+      }
+    }
+</code></pre>
+<p>从上面的源码可以看出要想理解<code>removeWeaklyReachableReferences</code>原理，还要从<code>KeyedWeakReference</code>说起，而上面已经说了，KeyedWeakReference，继承自WeakReference，只是增加key(UUID)、name字段，那么<code>WeakReference</code>和<code>ReferenceQueue</code>是怎样工作的？</p>
+<h1><span id="weakreference和referencequeue">WeakReference和ReferenceQueue</span></h1>
+<p>ReferenceQueue是直接传入WeakReference中，每次WeakReference所指向的对象被GC后，这个弱引用都会被放入这个与之相关联的ReferenceQueue队列中，其核心代码如下：</p>
+<pre><code>  private static class ReferenceHandler extends Thread {
+          ReferenceHandler(ThreadGroup g, String name) {
+              super(g, name);
+          }
+    
+          public void run() {
+              for (;;) {
+                  Reference&lt;Object&gt; r;
+                  synchronized (lock) {
+                      if (pending != null) {
+                      //此时引用所指向的对象已被GC，变为不可达
+                          r = pending;
+                          pending = r.discovered;
+                          r.discovered = null;
+                      } else {
+                          //....
+                          try {
+                              try {
+                                  lock.wait();
+                              } catch (OutOfMemoryError x) { }
+                          } catch (InterruptedException x) { }
+                          continue;
+                      }
+                  }
+    
+                  // Fast path for cleaners
+                  if (r instanceof Cleaner) {
+                      ((Cleaner)r).clean();
+                      continue;
+                  }
+    
+                  //引用所指向的对象已被GC了，将引用入队，进行后续处理
+                  ReferenceQueue&lt;Object&gt; q = r.queue;
+                  if (q != ReferenceQueue.NULL) q.enqueue(r);
+              }
+          }
+      }
+    
+      static {
+          ThreadGroup tg = Thread.currentThread().getThreadGroup();
+          for (ThreadGroup tgn = tg;
+               tgn != null;
+               tg = tgn, tgn = tg.getParent());
+          Thread handler = new ReferenceHandler(tg, &quot;Reference Handler&quot;);
+          /* If there were a special system-only priority greater than
+           * MAX_PRIORITY, it would be used here
+           */
+          handler.setPriority(Thread.MAX_PRIORITY);
+          handler.setDaemon(true);
+          handler.start();
+      }
+</code></pre>
+<p>在Reference类加载的时候，Java虚拟机会创建一个最大优先级的后台线程，这个线程的工作原理就是不断检测pending是否为null，如果不为null，就将其放入ReferenceQueue中，pending不为null的情况就是，引用所指向的对象已被GC，变为不可达,最后让其入队ReferenceQueue。</p>
+<p>Reference.enqueue()可以把自己放入ReferenceQueue的单链表中，源码如下：</p>
+<pre><code>  boolean enqueue(Reference&lt;? extends T&gt; reference) {
+          synchronized (lock) {
+              if (enqueueLocked(reference)) {
+                  lock.notifyAll();
+                  return true;
+              }
+              return false;
+          }
+      }
+</code></pre>
+<p>其中<code>enqueueLocked</code>的原理如下：</p>
+<blockquote>
+<p><code>ReferenceQueue</code>有两个字段，<code>head</code>和<code>tail</code>，分别指向链表的<code>head</code>和<code>tail</code>。<br>
+当没有元素时，<code>head = tail = null</code>；<br>
+只有一个元素时，<code>head = tail = r1</code>, <code>r1.queueNext = r1</code>；<br>
+当有两个元素时，<code>head = r1</code>, <code>tail = r2</code>, <code>r1.queueNext = r2</code>, <code>r2.queueNext = r2</code>。<br>
+以此类推……通过ReferenceQueue的<code>head/tail</code>以及<code>Reference.queueNext</code>构成单链表。</p>
+</blockquote>
+<p>只要我们在构造弱引用的时候指定了ReferenceQueue，每当弱引用所指向的对象被内存回收的时候，我们就可以在queue.poll()中找到这个引用。<code>ReferenceQueue.poll()</code>会把已经放入ReferenceQueue队列中的Reference取出。如果没有Reference可取，就返回null。如果我们期望一个对象被回收，那如果在接下来的预期时间之后，我们发现它依然没有出现在ReferenceQueue中，那就可以判定它的内存泄露了，LeakCanary检测内存泄露的核心原理就在这里。</p>
+<h1><span id="监测时机">监测时机</span></h1>
+<p>以上我们已经知道了LeakCanary判定内存泄漏的原理了，那么什么时候去监测判定呢？这个可以看AndroidWatchExecutor的实现：</p>
+<pre><code>public final class AndroidWatchExecutor implements Executor {
+
+    //....
+
+    private void executeDelayedAfterIdleUnsafe(final Runnable runnable) {
+        // This needs to be called from the main thread.
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+          @Override public boolean queueIdle() {
+            backgroundHandler.postDelayed(runnable, DELAY_MILLIS);
+            return false;
+          }
+        });
+      }
+</code></pre>
+<p>这里有个用法：<code>IdleHandler</code>，你想了解更多IdleHandler用法，请参看<a href="https://mp.weixin.qq.com/s/KpeBqIEYeOzt_frANoGuSg" target="_blank" rel="noopener">Bugly的一篇文章</a>,这里不做过多介绍。它的核心原理就是在MessageQueue空闲等待消息时给使用者一个回调，如果返回false那么就会移除它，返回true就会在下次message处理完的时候继续回调，如果AndroidWatchExecutor会在主线程空闲的时候，派发一个后台任务，这个后台任务会在DELAY_MILLIS时间之后执行。LeakCanary设置的是5秒。</p>
+<h1><span id="如何分析内存泄漏">如何分析内存泄漏</span></h1>
+<p>LeakCanary 分析内存泄露用到了一个和Mat类似的工具叫做<a href="https://github.com/square/haha" target="_blank" rel="noopener">HaHa</a>，核心用法如下：</p>
+<pre><code>  public AnalysisResult checkForLeak(File heapDumpFile, String referenceKey) {
+      long analysisStartNanoTime = System.nanoTime();
+
+      if (!heapDumpFile.exists()) {
+        Exception exception = new IllegalArgumentException(&quot;File does not exist: &quot; + heapDumpFile);
+        return failure(exception, since(analysisStartNanoTime));
+      }
+
+      try {
+        HprofBuffer buffer = new MemoryMappedFileBuffer(heapDumpFile);
+        HprofParser parser = new HprofParser(buffer);
+        Snapshot snapshot = parser.parse();
+
+        Instance leakingRef = findLeakingReference(referenceKey, snapshot);
+
+        // False alarm, weak reference was cleared in between key check and heap dump.
+        if (leakingRef == null) {
+          return noLeak(since(analysisStartNanoTime));
+        }
+
+        return findLeakTrace(analysisStartNanoTime, snapshot, leakingRef);
+      } catch (Throwable e) {
+        return failure(e, since(analysisStartNanoTime));
+      }
+    }
+</code></pre>
+<p>返回的<code>ActivityResult</code>对象中包含了对象到<code>GC root</code>的最短路径。LeakCanary在dump出<code>hprof</code>文件后，会启动一个IntentService进行分析：<code>HeapAnalyzerService</code>在分析出结果之后会启动<code>DisplayLeakService</code>用来发起Notification 以及将结果记录下来写在文件里面，以后每次启动<code>LeakAnalyzerActivity</code>就从文件里读取历史结果。</p>
+<h1><span id="excludedref">ExcludedRef</span></h1>
+<p>由于某些安卓厂商系统的bug，Activity在finish之后仍然会被某些系统组件给hold住。LeakCanary列出了一些很常见的，比如三星、华为的手机Activity会被AudioManager给hold住，还有比如Activity中如果有会获取键盘焦点的view，在Activity finish之后view会被InputMethodManager给hold住，因为view会持有Activity造成Activity泄漏，除非有新的view获取键盘焦点。LeakCanary提供了<code>AndroidExcludedRefs</code>来忽略这些我们无法控制的内存泄漏。</p>
+<h1><span id="leakcanary的不足">LeakCanary的不足</span></h1>
+<p>LeakCanary只支持4.0以上，原因是其中在watch每个Activity时适用了Application的<code>registerActivityLifecycleCallback</code>函数，这个函数只在4.0上才支持，但是在4.0以下也是可以用的，可以在Application中将返回的RefWatcher存下来，然后在基类Activity的onDestroy函数中调用。</p>
+<p>由于我们知道了其是通过<code>registerActivityLifecycleCallback</code>来watch的，那么在service场景和一个Activity多个Fragment场景也无法正常工作，需要在onDestroy时手动watch才可以。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Android Hook技术防范漫谈/" data-toggle="tooltip" data-placement="top" title="Android Hook技术防范漫谈">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/cdn/pay_ali.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/cdn/pay_wechat.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share" data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">原理概述</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.0.1.</span> <span class="toc-nav-text">如何判定内存泄漏</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.0.2.</span> <span class="toc-nav-text">LeakCanary实现简述</span></a></li></ol></li></ol><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">RefWatcher</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">WeakReference和ReferenceQueue</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">监测时机</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">如何分析内存泄漏</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">ExcludedRef</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">LeakCanary的不足</span></a></li>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                        
+                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#源码解析" title="源码解析">源码解析</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/Google_acmer" target="_blank">CSDN Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/JinJieGu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JayGoo 2019 
+                    <br>
+                    Theme by <a href="https://github.com/YenYuHsuan/hexo-theme-beantech/">Hexo-BeanTech</a> 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("gujinjie.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'gujinjie.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="gujinjie.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
