@@ -88,9 +88,9 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
-                            
                               <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                            
+                              <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
                             
                               <a class="tag" href="/tags/#源码解析" title="源码解析">源码解析</a>
                             
@@ -146,14 +146,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -248,7 +248,7 @@
 <p>看过很多原理解析，大多数文章都是一入源码深似海，看的我一脸懵逼的进，一脸懵逼的出。个人觉得源码分析应该避重就轻，先了解大致框架，忽略其具体实现，然后逐步分模块攻克，这样才是科学有效的方法。下面我们一起先大致了解下<code>LeakCanary</code>是如何工作的，然后带着问题再去看源码：</p>
 <h3><span id="如何判定内存泄漏">如何判定内存泄漏</span></h3>
 <blockquote>
-<p><code>LeakCanary</code>的核心原理是基于<code>WeakReference</code>和<code>ReferenceQueue</code>进行检测，<code>WeakReference</code>的构造函数可以传入<code>ReferenceQueue</code>，当<code>WeakReference</code>指向的对&gt;象被GC回收时，会把<code>WeakReference</code>放入<code>ReferenceQueue</code>中证明其已经被回收，如果被成功回收那么可以通过<code>ReferenceQueue.poll()</code>取出，通过判断<code>ReferenceQueue</code>中内容来区分是否被成功回收，从而判定是否存在内存泄漏。</p>
+<p><code>LeakCanary</code>的核心原理是基于<code>WeakReference</code>和<code>ReferenceQueue</code>进行检测，WeakReference的构造函数可以传入ReferenceQueue，当WeakReference指向的对象被GC回收时，会把WeakReference放入ReferenceQueue中证明其已经被回收，如果被成功回收那么可以通过<code>ReferenceQueue.poll()</code>取出，通过判断ReferenceQueue中内容来区分是否被成功回收，从而判定是否存在内存泄漏。</p>
 </blockquote>
 <h3><span id="leakcanary实现简述">LeakCanary实现简述</span></h3>
 <ol>
@@ -586,9 +586,9 @@ private final ExcludedRefs excludedRefs;
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
-                        
                           <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
                         
                           <a class="tag" href="/tags/#源码解析" title="源码解析">源码解析</a>
                         
