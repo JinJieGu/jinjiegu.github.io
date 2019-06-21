@@ -146,14 +146,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -249,12 +249,12 @@
 <li>[文件头+文件数据+数据描述符]{此处可重复n次}+核心目录+目录结束标识</li>
 </ul>
 <p>核心目录决定zip中每个文件或目录的名称，以及关于条目的其他元数据以及到ZIP文件的偏移量，指向实际条目数据。这允许相对快速地读取zip的文件列表，因为不必读取整个zip查看文件的列表。 只有核心目录中存在的文件或者目录才是有效的。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/531277-23f4714b1f1c971a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/800/format/webp" alt=""></p>
+<p><img src="/cdn/walle-1.jpg" alt=""></p>
 <p>ZIP文件通过读取核心目录结束标示来进行文件的追加zip，可以只操作核心目录进行删除操作。中央目录中的文件条目的顺序不必与归档中的文件条目的顺序一致。</p>
 <p>ZIP格式使用特定的4字节“签名”来表示文件中的各种结构。每个文件条目由特定签名标记。中央目录记录的结束用其特定签名指示，并且中央目录中的每个条目以4字节的中心文件头部签名开始。</p>
 <p>大多数签名以短整数0x4b50结尾，以小端顺序存储。作为ASCII字符串查看，这是“PK”，发明人Phil Katz的缩写。因此，当在文本编辑器中查看.ZIP文件时，文件的前两个字节通常是“PK”。</p>
 <p>mac可以通过工具 <a href="https://link.jianshu.com?t=http://ridiculousfish.com/hexfiend/files/Hex_Fiend_2.5.dmg" target="_blank" rel="noopener">Hex_Fiend</a>可以更好的理解zip的格式。下面简单讲一个例子</p>
-<p><img src="//upload-images.jianshu.io/upload_images/531277-d07fade63c8caa10.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt=""></p>
+<p><img src="/cdn/walle-2.jpg" alt=""></p>
 <p>阅读ZIP的文件格式，我们知道目录结束可以通过目录结束标示得到核心目录的偏移位置。目录结束标示以504B0506开始，第16位记录核心目录的偏移量E2020000，也就是738，在编辑器738位置是504B0102，也就是Central directory file header的位置。</p>
 <h1><span id="apk-signature-scheme-v2">APK Signature Scheme v2</span></h1>
 <hr>
@@ -265,7 +265,7 @@
       3. ZIP Central Directory
       4. ZIP End of Central Directory
 </code></pre>
-<p><img src="//upload-images.jianshu.io/upload_images/737862-0c87b83377dec6dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/779/format/webp" alt=""></p>
+<p><img src="/cdn/walle-3.jpg" alt=""></p>
 <p>APK Signature Scheme v2提供更多保护是指除了区块2，在签名之后任意其他区块的更改都无法通过签名验证。v1 中仅验证未解压的文件内容，可以在签名后进行内容的修改，比如在apk META-INF路径下插入渠道文件。</p>
 <ul>
 <li>
@@ -338,7 +338,7 @@
 <p>首先通过ZIP <code>End of Central Directory</code>中存储的信息找出ZIP <code>Central Directory</code>数据偏移量，然后就可以找到APK Signing Block的位置。<br>
 与此同时存在magic的值为<code>APK Sig Block 42</code>也就表示APK Signing Block的结尾，剩下的通过<code>size of block</code>可以找出APK Signing Block的起始位置。</p>
 <p><code>End of Central Directory</code> 格式如下：</p>
-<p><img src="//upload-images.jianshu.io/upload_images/737862-8bb9d939ce558f46.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/579/format/webp" alt=""></p>
+<p><img src="/cdn/walle-4.jpg" alt=""></p>
 </li>
 </ul>
 <ul>
@@ -350,8 +350,7 @@
 <p>签名后的APK完整性验证</p>
 </li>
 </ul>
-<p><img src="//upload-images.jianshu.io/upload_images/737862-9b97265236b83f14.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/716/format/webp" alt=""></p>
-<p>apk-sections.png</p>
+<p><img src="/cdn/walle-5.jpg" alt=""></p>
 <p>被保护的部分包括1,3,4,这三个部分不能修，但是EOCD中<code>offset of start of central directory,relative to start of archive</code>可以修改。</p>
 <h3><span id="得到的有用信息">得到的有用信息</span></h3>
 <ol>
