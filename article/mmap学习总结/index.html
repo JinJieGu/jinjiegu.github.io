@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          mmap学习总结 - JayGoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="gujinjie.top/article/mmap学习总结/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                            
+                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                            
+                              <a class="tag" href="/tags/#源码解析" title="源码解析">源码解析</a>
+                            
+                        </div>
+                        <h1>mmap学习总结</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JayGoo on
+                            2019-06-28
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JayGoo的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/works/">works</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1><span id="mmap学习总结">mmap学习总结</span></h1>
+<blockquote>
+<p>本文涉及源码基于 <a href="https://elixir.bootlin.com/linux/v5.1/source/mm/mmap.c" target="_blank" rel="noopener">Linux 5.1</a>，本文部分内容摘自参考文章，仅供学习使用，如有侵权，请联系我删除。</p>
+</blockquote>
+<h2><span id="一-mmap基础概念">一、mmap基础概念</span></h2>
+<p><code>mmap</code>是一种内存映射文件的方法，它将一个文件或其他对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中的一段虚拟地址一一対映的关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必调用<code>read</code>，<code>write</code>等系统调用函数。内核空间对这段区域的修改也直接反映到用户空间，从而可以实现不同进程间的文件共享。</p>
+<h3><span id="vm_area_struct">vm_area_struct</span></h3>
+<p>Linux内核使用<code>vm_area_struct</code>结构体来表示一个独立的虚拟内存区域，一个进程使用多个<code>vm_area_struct</code>结构体表示不同类型的虚拟内存区域，各个<code>vm_area_struct</code>结构体使用链表或树形结构链接，方便进程快速访问。</p>
+<p><img src="/cdn/vm_area_struct.png" alt=""><br>
+<code>vm_area_struct</code>在内核中具体定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * This struct defines a memory VMM memory area. There is one of these</span><br><span class="line"> * per VM-area/task.  A VM area is any part of the process virtual memory</span><br><span class="line"> * space that has a special rule for the page-fault handlers (ie a shared</span><br><span class="line"> * library, the executable area etc).</span><br><span class="line"> */</span><br><span class="line">struct vm_area_struct &#123;</span><br><span class="line">    /* The first cache line has the info for VMA tree walking. */</span><br><span class="line"></span><br><span class="line">    /* 在vm_mm内的起始地址 */</span><br><span class="line">    unsigned long vm_start;</span><br><span class="line"></span><br><span class="line">    /* 在vm_mm中结束地址后的第一个字节*/</span><br><span class="line">    unsigned long vm_end;</span><br><span class="line"></span><br><span class="line">    /* linked list of VM areas per task, sorted by address */</span><br><span class="line">    /* 在一个地址空间中所有的VMA都按照地址空间次序通过该字段简单的链接在一起，这是链表的首尾指针*/</span><br><span class="line">    struct vm_area_struct *vm_next, *vm_prev;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 和链表一样，所有的VMA都存储在一个红黑树上以加快查找速度。</span><br><span class="line">     * 当发生缺页时能快速的找到正确的区域，尤其是大量的映射区域时速度提升较明显</span><br><span class="line">     */</span><br><span class="line">    struct rb_node vm_rb;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * Largest free memory gap in bytes to the left of this VMA.</span><br><span class="line">     * Either between this VMA and vma-&gt;vm_prev, or between one of the</span><br><span class="line">     * VMAs below us in the VMA rbtree and its -&gt;vm_prev. This helps</span><br><span class="line">     * get_unmapped_area find a free area of the right size.</span><br><span class="line">     * 帮助get_unmapped_area找到合适大小的空闲区域。</span><br><span class="line">     */</span><br><span class="line">    unsigned long rb_subtree_gap;</span><br><span class="line"></span><br><span class="line">    /* Second cache line starts here. */</span><br><span class="line"></span><br><span class="line">    /* 这个VMA所属的地址空间结构 mm_struct*/</span><br><span class="line">    struct mm_struct *vm_mm;</span><br><span class="line"></span><br><span class="line">    /* 这个VMA对应的每个PTE里的保护标志位，负责访问权限 */</span><br><span class="line">    pgprot_t vm_page_prot;</span><br><span class="line"></span><br><span class="line">    /* 这个VMA的保护标志位和属性标志位，定义在mm.h */</span><br><span class="line">    unsigned long vm_flags;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * For areas with an address space and backing store,</span><br><span class="line">     * linkage into the address_space-&gt;i_mmap interval tree.</span><br><span class="line">     */</span><br><span class="line">    struct &#123;</span><br><span class="line">        struct rb_node rb;</span><br><span class="line">        unsigned long rb_subtree_last;</span><br><span class="line">    &#125; shared;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * A file&apos;s MAP_PRIVATE vma can be in both i_mmap tree and anon_vma</span><br><span class="line">     * list, after a COW of one of the file pages.	A MAP_SHARED vma</span><br><span class="line">     * can only be in the i_mmap tree.  An anonymous MAP_PRIVATE, stack</span><br><span class="line">     * or brk vma (with NULL file) can only be in an anon_vma list.</span><br><span class="line">     */</span><br><span class="line">    struct list_head anon_vma_chain; /* Serialized by mmap_sem &amp; * page_table_lock */</span><br><span class="line">    /* Serialized by page_table_lock */</span><br><span class="line">    /* 每个进程都有一个anon_vma，是用于链接所有vm_area_struct的头结点，通过vm_area_struct的anon_vma_node构成双循环链表 */</span><br><span class="line">    struct anon_vma *anon_vma;	</span><br><span class="line"></span><br><span class="line">    /* 主要包含针对这个区域可以使用的系统函数，如与磁盘作同步操作时所需函数的指针(open、close)等 */</span><br><span class="line">    const struct vm_operations_struct *vm_ops;</span><br><span class="line"></span><br><span class="line">    /* Information about our backing store: */</span><br><span class="line"></span><br><span class="line">    /* 在已被映射文件里对齐页面的偏移 PAGE_SIZE*/</span><br><span class="line">    unsigned long vm_pgoff;</span><br><span class="line"></span><br><span class="line">    /* 指向被映射的文件的指针，可以为NULL*/</span><br><span class="line">    struct file * vm_file;</span><br><span class="line"></span><br><span class="line">    void * vm_private_data;		/* was vm_pte (shared mem) */</span><br><span class="line"></span><br><span class="line">    atomic_long_t swap_readahead_info;</span><br><span class="line">#ifndef CONFIG_MMU</span><br><span class="line">    struct vm_region *vm_region;	/* NOMMU mapping region */</span><br><span class="line">#endif</span><br><span class="line">#ifdef CONFIG_NUMA</span><br><span class="line">    struct mempolicy *vm_policy;	/* NUMA policy for the VMA */</span><br><span class="line">#endif</span><br><span class="line">    struct vm_userfaultfd_ctx vm_userfaultfd_ctx;</span><br><span class="line">&#125; __randomize_layout;</span><br></pre></td></tr></table></figure>
+<p><code>vm_area_struct</code>包含区域起始和终止地址以及其他相关信息，其中<code>vm_ops</code>用于调用所有针对这个区域可以使用的<a href="https://elixir.bootlin.com/linux/v5.1/source/include/linux/mm.h#L421" target="_blank" rel="noopener">系统函数</a>。这样进程可以通过<code>vm_area_struct</code>获取到针对某一虚拟内存区域的任何所需操作信息。<code>mmap()</code>函数就是要创建一个新的<code>vm_area_struct</code>结构，并将其与文件的物理磁盘地址相连。</p>
+<hr>
+<h2><span id="二-mmap源码解析">二、mmap源码解析</span></h2>
+<p>mmap在内核中的原型是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE6(mmap_pgoff, unsigned long, addr, unsigned long, len,</span><br><span class="line">		unsigned long, prot, unsigned long, flags,</span><br><span class="line">		unsigned long, fd, unsigned long, pgoff)</span><br><span class="line">&#123;</span><br><span class="line">	return ksys_mmap_pgoff(addr, len, prot, flags, fd, pgoff);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里直接调用了ksys_mmap_pgoff：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">unsigned long ksys_mmap_pgoff(unsigned long addr, unsigned long len,</span><br><span class="line">			      unsigned long prot, unsigned long flags,</span><br><span class="line">			      unsigned long fd, unsigned long pgoff)</span><br><span class="line">&#123;</span><br><span class="line">	struct file *file = NULL;</span><br><span class="line">	unsigned long retval;</span><br><span class="line"></span><br><span class="line">	if (!(flags &amp; MAP_ANONYMOUS)) &#123; //文件映射</span><br><span class="line">		audit_mmap_fd(fd, flags);</span><br><span class="line">		file = fget(fd);//获取file结构体</span><br><span class="line">		if (!file)</span><br><span class="line">			return -EBADF;</span><br><span class="line">		if (is_file_hugepages(file))//如果是hugepages文件则调整len</span><br><span class="line">			len = ALIGN(len, huge_page_size(hstate_file(file)));</span><br><span class="line">		retval = -EINVAL;</span><br><span class="line">		if (unlikely(flags &amp; MAP_HUGETLB &amp;&amp; !is_file_hugepages(file)))</span><br><span class="line">			goto out_fput;</span><br><span class="line">	&#125; else if (flags &amp; MAP_HUGETLB) &#123;//匿名映射大页内存</span><br><span class="line">		struct user_struct *user = NULL;</span><br><span class="line">		struct hstate *hs;</span><br><span class="line"></span><br><span class="line">		hs = hstate_sizelog((flags &gt;&gt; MAP_HUGE_SHIFT) &amp; MAP_HUGE_MASK);</span><br><span class="line">		if (!hs)</span><br><span class="line">			return -EINVAL;</span><br><span class="line"></span><br><span class="line">		len = ALIGN(len, huge_page_size(hs));//如果是hugepages文件则调整len</span><br><span class="line">		/*</span><br><span class="line">		 * VM_NORESERVE is used because the reservations will be</span><br><span class="line">		 * taken when vm_ops-&gt;mmap() is called</span><br><span class="line">		 * A dummy user value is used because we are not locking</span><br><span class="line">		 * memory so no accounting is necessary</span><br><span class="line">		 */</span><br><span class="line">		 //从hugepages文件创建一个名为anon_hugepage的file结构体来</span><br><span class="line">		file = hugetlb_file_setup(HUGETLB_ANON_FILE, len,</span><br><span class="line">				VM_NORESERVE,</span><br><span class="line">				&amp;user, HUGETLB_ANONHUGE_INODE,</span><br><span class="line">				(flags &gt;&gt; MAP_HUGE_SHIFT) &amp; MAP_HUGE_MASK);</span><br><span class="line">		if (IS_ERR(file))</span><br><span class="line">			return PTR_ERR(file);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  // 清空flags中这两个标志位，因为Linux用不到它们</span><br><span class="line">	flags &amp;= ~(MAP_EXECUTABLE | MAP_DENYWRITE);</span><br><span class="line"></span><br><span class="line">	//文件映射、匿名映射都会调到这里来</span><br><span class="line">	retval = vm_mmap_pgoff(file, addr, len, prot, flags, pgoff);</span><br><span class="line">out_fput:</span><br><span class="line">	if (file)</span><br><span class="line">		fput(file);</span><br><span class="line">	return retval;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从注释中可以看出ksys_mmap_pgoff只是做了一些准备，继续往下看vm_mmap_pgoff：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">unsigned long vm_mmap_pgoff(struct file *file, unsigned long addr,</span><br><span class="line">	unsigned long len, unsigned long prot,</span><br><span class="line">	unsigned long flag, unsigned long pgoff)</span><br><span class="line">&#123;</span><br><span class="line">	unsigned long ret;</span><br><span class="line">	struct mm_struct *mm = current-&gt;mm;</span><br><span class="line">	unsigned long populate;</span><br><span class="line">	LIST_HEAD(uf);//初始化userfaultfd链表</span><br><span class="line"></span><br><span class="line">	ret = security_mmap_file(file, prot, flag);</span><br><span class="line">	if (!ret) &#123;</span><br><span class="line">		if (down_write_killable(&amp;mm-&gt;mmap_sem))</span><br><span class="line">			return -EINTR;</span><br><span class="line">			//这里才是所有体系结构中创建新内存区域的主要函数</span><br><span class="line">		ret = do_mmap_pgoff(file, addr, len, prot, flag, pgoff,</span><br><span class="line">				    &amp;populate, &amp;uf);</span><br><span class="line">		up_write(&amp;mm-&gt;mmap_sem);</span><br><span class="line">		userfaultfd_unmap_complete(mm, &amp;uf);//等待userfaultfd处理完成</span><br><span class="line">		if (populate)</span><br><span class="line">			mm_populate(ret, populate);</span><br><span class="line">	&#125;</span><br><span class="line">	return ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>do_mmap_pgoff又调用了do_mmap方法，这里就直接看do_mmap的源码了，由于篇幅原因不再贴全部代码，感兴趣的可以看下<a href="https://elixir.bootlin.com/linux/v5.1/source/mm/mmap.c#L1384" target="_blank" rel="noopener">do_mmap源码</a>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * The caller must hold down_write(&amp;current-&gt;mm-&gt;mmap_sem).</span><br><span class="line"> */</span><br><span class="line">unsigned long do_mmap(struct file *file, unsigned long addr,</span><br><span class="line">			unsigned long len, unsigned long prot,</span><br><span class="line">			unsigned long flags, vm_flags_t vm_flags,</span><br><span class="line">			unsigned long pgoff, unsigned long *populate,</span><br><span class="line">			struct list_head *uf)</span><br><span class="line">&#123;</span><br><span class="line">	struct mm_struct *mm = current-&gt;mm;</span><br><span class="line">	</span><br><span class="line">	//一些参数合法性检查</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	/* Obtain the address to map to. we verify (or select) it and ensure</span><br><span class="line">	 * that it represents a valid section of the address space.</span><br><span class="line">	 */</span><br><span class="line">	 //找出内存映射所需的空闲线性地址空间，分配一个起始地址</span><br><span class="line">	addr = get_unmapped_area(file, addr, len, pgoff, flags);</span><br><span class="line">	if (offset_in_page(addr))</span><br><span class="line">		return addr;</span><br><span class="line"></span><br><span class="line">	if (flags &amp; MAP_FIXED_NOREPLACE) &#123;</span><br><span class="line">	  //查找给定地址所属的vma，如果该区域不存在则返回离请求地址最近的vma</span><br><span class="line">		struct vm_area_struct *vma = find_vma(mm, addr);</span><br><span class="line"></span><br><span class="line">		if (vma &amp;&amp; vma-&gt;vm_start &lt; addr + len)</span><br><span class="line">			return -EEXIST;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if (prot == PROT_EXEC) &#123;</span><br><span class="line">		pkey = execute_only_pkey(mm);</span><br><span class="line">		if (pkey &lt; 0)</span><br><span class="line">			pkey = 0;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/* Do simple checking here so the lower-level routines won&apos;t have</span><br><span class="line">	 * to. we assume access permissions have been handled by the open</span><br><span class="line">	 * of the memory object, so we don&apos;t do any here.</span><br><span class="line">	 */</span><br><span class="line">	 //获取VM标志位，并根据文件存取权限对它们进行检查</span><br><span class="line">	vm_flags |= calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |</span><br><span class="line">			mm-&gt;def_flags | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;</span><br><span class="line"></span><br><span class="line">	...设置flags</span><br><span class="line"></span><br><span class="line">	addr = mmap_region(file, addr, len, vm_flags, pgoff, uf);</span><br><span class="line">	...</span><br><span class="line">	return addr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由此可见<code>get_unmapped_area</code>主要做了两件事：</p>
+<ul>
+<li><a href="https://elixir.bootlin.com/linux/v5.1/source/mm/mmap.c#L2182" target="_blank" rel="noopener">get_unmapped_area</a>找出内存映射所需的空闲线性地址。如果文件存在则调用基于文件系统和设备的<code>file-&gt;f_op-&gt;get_unmapped_area</code>否则调用<code>shmem_get_unmapped_area</code></li>
+<li><a href="https://elixir.bootlin.com/linux/v5.1/source/mm/mmap.c#L1702" target="_blank" rel="noopener">mmap_region</a>实现地址映射</li>
+</ul>
+<p>下面再看看mmap_region是如何实现地址映射的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">unsigned long mmap_region(struct file *file, unsigned long addr,</span><br><span class="line">		unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,</span><br><span class="line">		struct list_head *uf)</span><br><span class="line">&#123;</span><br><span class="line">	struct mm_struct *mm = current-&gt;mm;</span><br><span class="line">	struct vm_area_struct *vma, *prev;</span><br><span class="line">	int error;</span><br><span class="line">	struct rb_node **rb_link, *rb_parent;</span><br><span class="line">	unsigned long charged = 0;</span><br><span class="line"></span><br><span class="line">  ...检查地址空间是否超限，修正就得区域保证新的映射可用，检查mmap后会不会超内存限制</span><br><span class="line"></span><br><span class="line">	//如果可以和已有的VMA进行合并，则直接使用该vma</span><br><span class="line">	vma = vma_merge(mm, prev, addr, addr + len, vm_flags,</span><br><span class="line">			NULL, file, pgoff, NULL, NULL_VM_UFFD_CTX);</span><br><span class="line">	if (vma)</span><br><span class="line">		goto out;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	 * Determine the object being mapped and call the appropriate</span><br><span class="line">	 * specific mapper. the address has already been validated, but</span><br><span class="line">	 * not unmapped, but the maps are removed from the list.</span><br><span class="line">	 */</span><br><span class="line">	 //申请一个vma进行map</span><br><span class="line">	vma = vm_area_alloc(mm);</span><br><span class="line">	if (!vma) &#123;</span><br><span class="line">		error = -ENOMEM;</span><br><span class="line">		goto unacct_error;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	vma-&gt;vm_start = addr;//起始地址</span><br><span class="line">	vma-&gt;vm_end = addr + len;//结束地址</span><br><span class="line">	vma-&gt;vm_flags = vm_flags;</span><br><span class="line">	vma-&gt;vm_page_prot = vm_get_page_prot(vm_flags);</span><br><span class="line">	vma-&gt;vm_pgoff = pgoff;</span><br><span class="line"></span><br><span class="line">	if (file) &#123;//文件映射</span><br><span class="line">		...排斥文件操作，如read，write</span><br><span class="line"></span><br><span class="line">		/* -&gt;mmap() can change vma-&gt;vm_file, but must guarantee that</span><br><span class="line">		 * vma_link() below can deny write-access if VM_DENYWRITE is set</span><br><span class="line">		 * and map writably if VM_SHARED is set. This usually means the</span><br><span class="line">		 * new file must not have been exposed to user-space, yet.</span><br><span class="line">		 */</span><br><span class="line">		vma-&gt;vm_file = get_file(file);</span><br><span class="line">		error = call_mmap(file, vma);//调用文件系统提供的映射函数</span><br><span class="line">		if (error)</span><br><span class="line">			goto unmap_and_free_vma;</span><br><span class="line"></span><br><span class="line">		/* Can addr have changed??</span><br><span class="line">		 *</span><br><span class="line">		 * Answer: Yes, several device drivers can do it in their</span><br><span class="line">		 *         f_op-&gt;mmap method. -DaveM</span><br><span class="line">		 * Bug: If addr is changed, prev, rb_link, rb_parent should</span><br><span class="line">		 *      be updated for vma_link()</span><br><span class="line">		 */</span><br><span class="line">		WARN_ON_ONCE(addr != vma-&gt;vm_start);</span><br><span class="line"></span><br><span class="line">		//文件系统提供的mmap函数可能会修改映射的一些参数。在这里需要在调用vma_link前回置</span><br><span class="line">		addr = vma-&gt;vm_start;</span><br><span class="line">		vm_flags = vma-&gt;vm_flags;</span><br><span class="line">	&#125; else if (vm_flags &amp; VM_SHARED) &#123;//匿名共享映射</span><br><span class="line">		error = shmem_zero_setup(vma);//这里是映射到了/dev/zero这个文件，很巧妙，不需要提前将页面清0</span><br><span class="line">		if (error)</span><br><span class="line">			goto free_vma;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		vma_set_anonymous(vma);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  //将vma链接回进程mm中</span><br><span class="line">	vma_link(mm, vma, prev, rb_link, rb_parent);</span><br><span class="line">	</span><br><span class="line">	...一旦vma拒绝写入，请撤消临时拒绝计数</span><br><span class="line"></span><br><span class="line">	file = vma-&gt;vm_file;</span><br><span class="line"></span><br><span class="line">	...一些异常和释放处理</span><br><span class="line">	return error;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过上面的代码可以看出mmap就是在进程mm中创建或扩展一个vma映射到某个文件，而共享、私有、文件、匿名这些mmap的属性都通过一些标记位进而决定了进程在访问这些内存时内核的行为，mmap仅负责创建一个映射而已。<br>
+这里重点说一下文件映射和匿名映射的处理。</p>
+<p>文件映射调用方法 <code>call_mmap(file, vma)</code> 其实是调用了 <code>file-&gt;f_op-&gt;mmap(file, vma)</code>，它是文件系统提供的mmap函数，因为除了进程vma需要file的信息外，文件的file结构体也需要记录自己的地址空间到底映射到了哪里，用于文件映射逆向解析，当某些情况需要解映射的时候比如内存不足时可以找到该进程，如果该进程不能解映射则会被杀死进程。</p>
+<p>内存映射读取文件时，进程访问vma内的地址，但vma也是通过<code>vma-&gt;vm_file</code>找到该文件的file结构体的，通过file的<code>address_space</code>中的缓存页去读取文件内容，这样内存地址是映射了，但如果该文件已经缓存了所需的目的页，实际也并没有多申请内存页。</p>
+<p>匿名映射实际也映射了文件，只是映射到了<code>/dev/zero</code>上，这样有个好处是，不需要对所有页面进行提前置0，只有当访问到某具体页面的时候才会申请一个0页。当CPU第一个引用mmap区域的页面时，会引发缺页中断，内核会在物理存储器中找到一个合适的牺牲页面，如果该页面被修改过，就将这个页面换出来，用二进制零覆盖牺牲页面并更新页表，将这个页面标记为是驻留在存储器中的。注意在磁盘和存储器之间并没有实际的数据传送。因为这个原因，映射到匿名文件的区域的页面有时也叫做请求二进制零的页（demand zero page)。</p>
+<p>另外由于使用mmap分配内存，内核需要清零页面，并且mmap分配的内存都是页对齐的，所以使用mmap有一定的消耗。所以glibc才设定大于128k使用mmap，一般使用 <code>sbrk()</code> 函数分配内存。</p>
+<hr>
+<h2><span id="三-mmap使用">三、mmap使用</span></h2>
+<p>一般使用mmap实现内存映射有两种方法，第一种是映射文件到进程的虚拟地址空间，第二种是使用匿名内存映射，主要使用场景如下：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>私有映射</th>
+<th>共享映射</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件映射</td>
+<td>通常用于加载动态库 <br>flags=MAP_PRIVATE</td>
+<td>通常用于内存映射IO、进程间通信、读写文件。<br>FD=-1，flags=MAP_SHARED</td>
+</tr>
+<tr>
+<td>匿名映射</td>
+<td>通常用于内存分配 <br>fd=-1，flags=MAP_ANONYMOUS或MAP_PRIVATE</td>
+<td>通常用于进程间内存共享，常用于父子进程之间通信<br>FD=-1，flags=MAP_ANONYMOUS或MAP_SHARED</td>
+</tr>
+</tbody>
+</table>
+<h3><span id="函数原型">函数原型</span></h3>
+<blockquote>
+<p>void *mmap(void *addr, size_t length, int prot, int flags,int fd, off_t offset);</p>
+</blockquote>
+<p><strong>返回值说明：</strong><br>
+成功执行时，<code>mmap()</code>返回被映射区的指针。失败时，<code>mmap()</code>返回<code>MAP_FAILED</code>[其值为(void *)-1]， error被设为以下的某个值：</p>
+<ul>
+<li>EACCES：访问出错</li>
+<li>EAGAIN：文件已被锁定，或者太多的内存已被锁定</li>
+<li>EBADF：fd不是有效的文件描述词</li>
+<li>EINVAL：一个或者多个参数无效</li>
+<li>ENFILE：已达到系统对打开文件的限制</li>
+<li>ENODEV：指定文件所在的文件系统不支持内存映射</li>
+<li>ENOMEM：内存不足，或者进程已超出最大内存映射数量</li>
+<li>EPERM：权能不足，操作不允许</li>
+<li>ETXTBSY：已写的方式打开文件，同时指定MAP_DENYWRITE标志</li>
+<li>SIGSEGV：试着向只读区写入</li>
+<li>SIGBUS：试着访问不属于进程的内存区</li>
+</ul>
+<p><strong>参数：</strong></p>
+<ul>
+<li>start: 映射区开始的地址</li>
+<li>length: 映射区的长度</li>
+<li>prot: 期望的内存保护标志， 不能与文件的打开模式冲突，它的值可以使一个或者多个以下位的组合 :
+<ul>
+<li>PROT_EXEC: 页内容可以被执行</li>
+<li>PROT_READ: 页内容可以被读取</li>
+<li>PROT_WRITE: 页内容可以被写入</li>
+<li>PROT_NONE: 页不可访问</li>
+</ul>
+</li>
+<li>flags: 指定 映射对象的类型 ，映射选项和映射页是否可以共享。它的值可以使一个或者多个以下位的组合
+<ul>
+<li>MAX_FIXD: 使用指定的映射起始地址，如果由start和len参数指定的内存重叠与现存的映射空间，重叠部分将会被丢弃。如果指定的起始地址不可用，操作将会失败。并且起始地址必须落在页边界上。</li>
+<li>MAX_SHARED: 与其他所有映射这个对象的进程共享映射空间。对共享区的写入，相当于输出到文件。直到msync()或者munmap()被调用，文件实际上不会被更新。</li>
+<li>MAP_PRIVATE: 建立一个写入时拷贝的私有映射。内存区域的写入不会影响到原文件。这个标志和以上标志是互斥的，只能使用其中一个。</li>
+<li>MAP_NORESERVE: 不要为这个映射保留交换空间。当交换空间被保留，对映射区的修改可能会得到保证。当交换空间不被保留，同时内存不足时，对映射区的修改会引起段异常信号。</li>
+<li>MAP_LOCKED: 锁定映射区的页面，从而防止页面被交换出内存。一般是要求实时性的应用程序和一些对安全要求较高的程序使用(禁止将RAM中的数据换出到磁盘文件上)。</li>
+<li>MAP_GROWNSDOWN: 用于堆栈，告诉内核VM系统，映射区可以向下扩展。</li>
+<li>MAP_ANONMOUS: 匿名映射，映射区不与任何文件关联。</li>
+<li>MAP_POPULATE: 问文件映射通过预读的方式准备好页表，随后对映射区的访问不会被缺页异常阻塞。</li>
+<li>MAP_NONBLOCK: 仅和MAP_POPULATE一起使用时才有意义。不执行预读，只为已存在于内存中的页面建立页表入口。</li>
+<li>MAP_HUGETLB (since Linux 2.6.32): 申请HugePage，HugePage能减少页表项的使用，进而较少TLB失效的可能，并且在RAM中不会被换入换出。</li>
+</ul>
+</li>
+<li>fd: 有效的文件描述符。如果指定了MAP_ANONYMOUS，为了兼容问题，应该设置fd为-1。</li>
+<li>offset: 应映射对象内容的起点，即文件中的起点。</li>
+</ul>
+<hr>
+<p><strong>相关函数：</strong></p>
+<blockquote>
+<p>int munmap( void * addr, size_t len )</p>
+</blockquote>
+<p>成功执行时，返回<code>0</code>，失败时返回<code>-1</code>，error时返回与<code>mmap()</code>一致。</p>
+<p>该方法在进程地址空间中解除一个映射关系，<code>addr</code>是调用<code>mmap()</code>时返回的地址，<code>len</code>是映射区的大小，当映射关系解除后，对原来映射地址的访问将导致段发生错误发生。</p>
+<hr>
+<blockquote>
+<p>int msync( void * addr, size_t len, int flags )</p>
+</blockquote>
+<p>成功执行时，返回<code>0</code>，失败时返回<code>-1</code>，error时返回与<code>mmap()</code>一致。</p>
+<p>进程在映射空间的对共享内容的改变并不直接写回磁盘文件中，往往在调用<code>munmap()</code>后才执行该操作，可以通过调用<code>msync()</code>实现磁盘上文件内容与共享内存区的内容一致。</p>
+<h3><span id="mmap映射普通文件">mmap映射普通文件</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;sys/mman.h&gt;</span><br><span class="line">#include &lt;sys/ioctl.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/stat.h&gt;</span><br><span class="line"></span><br><span class="line">#define PAGE_SIZE 4096</span><br><span class="line"></span><br><span class="line">void mmap(char *str)&#123;</span><br><span class="line">    int fd;</span><br><span class="line">    unsigned char *p_map;</span><br><span class="line"></span><br><span class="line">    //练习goto</span><br><span class="line">    end:</span><br><span class="line">    munmap(p_map, PAGE_SIZE);</span><br><span class="line"></span><br><span class="line">    fd = open(&quot;../test.dat&quot;, O_RDWR | O_APPEND | O_CREAT);</span><br><span class="line">    if (fd &lt; 0) &#123;</span><br><span class="line">        printf(&quot;open failed!\n&quot;);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    p_map = (unsigned char *) mmap(0, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);</span><br><span class="line">    if (p_map == MAP_FAILED) &#123;</span><br><span class="line">        printf(&quot;mmap failed!\n&quot;);</span><br><span class="line">        goto end;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    printf(&quot;original file: %s\n&quot;, p_map);</span><br><span class="line">    printf(&quot;overwritten str : %s\n&quot;, str);</span><br><span class="line"></span><br><span class="line">    // 复制数据</span><br><span class="line">    memcpy(p_map, str, strlen(str));</span><br><span class="line">    msync(p_map, strlen(str), MS_SYNC);</span><br><span class="line"></span><br><span class="line">    printf(&quot;overwritten file: %s\n&quot;, p_map);</span><br><span class="line">    close(fd);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char **argv) &#123;</span><br><span class="line">    mmap(&quot;666&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="参考">参考</span></h2>
+<p><a href="http://ju.outofmemory.cn/entry/224106" target="_blank" rel="noopener">http://ju.outofmemory.cn/entry/224106</a><br>
+<a href="https://blog.csdn.net/zancijun1666/article/details/82929848" target="_blank" rel="noopener">https://blog.csdn.net/zancijun1666/article/details/82929848</a><br>
+<a href="https://www.cnblogs.com/huxiao-tee/p/4660352.html" target="_blank" rel="noopener">https://www.cnblogs.com/huxiao-tee/p/4660352.html</a><br>
+Understanding the Linux Virtual Memory Manager. Mel Gorman著</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/LeakCanary源码解析/" data-toggle="tooltip" data-placement="top" title="LeakCanary源码解析">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/cdn/pay_ali.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/cdn/pay_wechat.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share" data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">mmap学习总结</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">一、mmap基础概念</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">vm_area_struct</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">二、mmap源码解析</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">三、mmap使用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">函数原型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">mmap映射普通文件</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">参考</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#精品博文" title="精品博文">精品博文</a>
+                        
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                          <a class="tag" href="/tags/#源码解析" title="源码解析">源码解析</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/Google_acmer" target="_blank">CSDN Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/JinJieGu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JayGoo 2019 
+                    <br>
+                    Theme by <a href="https://github.com/YenYuHsuan/hexo-theme-beantech/">Hexo-BeanTech</a> 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("gujinjie.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'gujinjie.top';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="gujinjie.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
